@@ -56,6 +56,15 @@ function hideBot(hole) {
   hole.classList.remove("up");
 }
 
+function findHole(key) {
+  for (const hole of holes) {
+    if (hole.dataset.key === key) {
+      return hole;
+    }
+  }
+  return null;
+}
+
 function rankFor(score) {
   if (score >= 25) {
     return "Legendary bopper";
@@ -184,4 +193,34 @@ board.addEventListener("mousemove", (event) => {
 // A right-click mid-game shouldn't open the browser's menu.
 board.addEventListener("contextmenu", (event) => {
   event.preventDefault();
+});
+
+// Enter in the name box starts the round.
+nameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    startGame();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  // Keys typed into the form belong to the form, not the game.
+  if (event.target === nameInput || event.target === speedSelect) {
+    return;
+  }
+  // Holding a key repeats keydown. One press should mean one bop.
+  if (event.repeat) {
+    return;
+  }
+
+  if (event.code === "Space") {
+    event.preventDefault();
+    startGame();
+  } else if (event.key === "Escape") {
+    endGame();
+  } else {
+    const hole = findHole(event.key.toLowerCase());
+    if (hole !== null) {
+      bop(hole);
+    }
+  }
 });
