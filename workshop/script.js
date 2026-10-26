@@ -1,28 +1,25 @@
 const KEYS = ["q", "w", "e", "a", "s", "d", "z", "x", "c"];
 const POP_DELAYS = { slow: 1100, normal: 850, fast: 600 };
 
-let playerName = prompt("What should we call you?") || "";
-playerName = playerName.trim();
-if (playerName === "") {
-  playerName = "Player";
+function askName() {
+  let answer = prompt("What should we call you?") || "";
+  answer = answer.trim();
+  if (answer === "") {
+    return "Player";
+  }
+  return answer;
 }
 
-let speed = prompt("Choose a speed: slow, normal, or fast") || "";
-speed = speed.trim().toLowerCase();
-
-let popDelay = POP_DELAYS[speed];
-if (popDelay === undefined) {
-  speed = "normal";
-  popDelay = POP_DELAYS.normal;
+function askSpeed() {
+  let answer = prompt("Choose a speed: slow, normal, or fast") || "";
+  answer = answer.trim().toLowerCase();
+  if (POP_DELAYS[answer] === undefined) {
+    return "normal";
+  }
+  return answer;
 }
 
-const greeting = document.querySelector("#greeting");
-greeting.textContent = `Hi, ${playerName}! Speed: ${speed}. MISAbot pops up every ${popDelay / 1000} seconds.`;
-
-const board = document.querySelector("#board");
-const holes = [];
-
-for (const key of KEYS) {
+function createHole(key) {
   const hole = document.createElement("div");
   hole.className = "hole";
   hole.dataset.key = key;
@@ -37,11 +34,57 @@ for (const key of KEYS) {
   label.textContent = key.toUpperCase();
 
   hole.append(bot, label);
-  board.append(hole);
-  holes.push(hole);
+  return hole;
 }
 
-console.log("Holes on the board:", holes.length);
+function createBoard(boardElement) {
+  const holes = [];
+  for (const key of KEYS) {
+    const hole = createHole(key);
+    boardElement.append(hole);
+    holes.push(hole);
+  }
+  return holes;
+}
 
-// Peek: show MISAbot in the middle hole so you can see the board working.
-holes[4].classList.add("up");
+function randomHole(holes, previousHole) {
+  let index = Math.floor(Math.random() * holes.length);
+  while (holes[index] === previousHole) {
+    index = Math.floor(Math.random() * holes.length);
+  }
+  return holes[index];
+}
+
+function showBot(hole) {
+  hole.classList.add("up");
+}
+
+function hideBot(hole) {
+  hole.classList.remove("up");
+}
+
+const playerName = askName();
+const speed = askSpeed();
+const popDelay = POP_DELAYS[speed];
+
+const greeting = document.querySelector("#greeting");
+greeting.textContent = `Hi, ${playerName}! Speed: ${speed}. Watch MISAbot pop up for 10 seconds.`;
+
+const holes = createBoard(document.querySelector("#board"));
+let currentHole = null;
+
+function popUp() {
+  if (currentHole !== null) {
+    hideBot(currentHole);
+  }
+  currentHole = randomHole(holes, currentHole);
+  showBot(currentHole);
+}
+
+const popTimer = setInterval(popUp, popDelay);
+
+setTimeout(() => {
+  clearInterval(popTimer);
+  hideBot(currentHole);
+  greeting.textContent = `Demo over, ${playerName}. Next, you'll get to bop it.`;
+}, 10000);
