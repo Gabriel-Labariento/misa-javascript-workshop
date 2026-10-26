@@ -1,4 +1,6 @@
-const KEYS = ["q", "w", "e", "a", "s", "d", "z", "x", "c"];
+import { createBoard, randomHole, findHole, showBot, hideBot } from "./board.js";
+import rankFor from "./rank.js";
+
 const POP_DELAYS = { slow: 1100, normal: 850, fast: 600 };
 const ROUND_SECONDS = 30;
 
@@ -11,72 +13,6 @@ const startButton = document.querySelector("#start-button");
 const scoreDisplay = document.querySelector("#score");
 const timeDisplay = document.querySelector("#time");
 const message = document.querySelector("#message");
-
-function createHole(key) {
-  const hole = document.createElement("div");
-  hole.className = "hole";
-  hole.dataset.key = key;
-
-  const bot = document.createElement("img");
-  bot.className = "bot";
-  bot.src = "assets/misabot.png";
-  bot.alt = "";
-
-  const label = document.createElement("span");
-  label.className = "key";
-  label.textContent = key.toUpperCase();
-
-  hole.append(bot, label);
-  return hole;
-}
-
-function createBoard(boardElement) {
-  const holes = [];
-  for (const key of KEYS) {
-    const hole = createHole(key);
-    boardElement.append(hole);
-    holes.push(hole);
-  }
-  return holes;
-}
-
-function randomHole(holes, previousHole) {
-  let index = Math.floor(Math.random() * holes.length);
-  while (holes[index] === previousHole) {
-    index = Math.floor(Math.random() * holes.length);
-  }
-  return holes[index];
-}
-
-function showBot(hole) {
-  hole.classList.add("up");
-}
-
-function hideBot(hole) {
-  hole.classList.remove("up");
-}
-
-function findHole(key) {
-  for (const hole of holes) {
-    if (hole.dataset.key === key) {
-      return hole;
-    }
-  }
-  return null;
-}
-
-function rankFor(score) {
-  if (score >= 25) {
-    return "Legendary bopper";
-  }
-  if (score >= 15) {
-    return "Quick hands";
-  }
-  if (score >= 5) {
-    return "Nice warm-up";
-  }
-  return "MISAbot got away this time";
-}
 
 const holes = createBoard(board);
 
@@ -218,7 +154,7 @@ document.addEventListener("keydown", (event) => {
   } else if (event.key === "Escape") {
     endGame();
   } else {
-    const hole = findHole(event.key.toLowerCase());
+    const hole = findHole(holes, event.key.toLowerCase());
     if (hole !== null) {
       bop(hole);
     }
