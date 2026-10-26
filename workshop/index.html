@@ -9,8 +9,31 @@
   <body>
     <main class="game">
       <h1>Bop the Bot</h1>
-      <p id="greeting">Open the console to see your first message.</p>
+      <p id="greeting">Type your name, choose a speed, and press Start.</p>
+
+      <fieldset id="controls" class="controls">
+        <label>
+          Name
+          <input id="player-name" type="text" placeholder="Player" maxlength="20" />
+        </label>
+        <label>
+          Speed
+          <select id="speed">
+            <option value="slow">Slow</option>
+            <option value="normal" selected>Normal</option>
+            <option value="fast">Fast</option>
+          </select>
+        </label>
+        <button id="start-button" type="button">Start</button>
+      </fieldset>
+
+      <div class="stats">
+        <p>Score: <strong id="score">0</strong></p>
+        <p>Time: <strong id="time">30</strong>s</p>
+      </div>
+
       <div id="board" class="board"></div>
+      <p id="message" class="message" role="status"></p>
     </main>
 
     <script src="script.js"></script>
