@@ -1,0 +1,266 @@
+---
+title: 06 · Follow the mouse
+description: Meet the mouse events, read the mouse position, prevent default actions, and handle many elements with one listener.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+import EventLab from '../../../components/EventLab.astro';
+
+Clicking works. This step uses more of the mouse: a hammer follows the pointer over the board, swings when you press, and bops the instant the button goes down. One listener will handle all nine holes.
+
+## Meet the mouse events
+
+`click` is one of several mouse events. Each fires at a different moment:
+
+| Event | Fires when |
+| --- | --- |
+| `mousedown` | A mouse button is pressed down over the element |
+| `mouseup` | A mouse button is released over the element |
+| `click` | The main button is pressed and released on the same element |
+| `dblclick` | Two clicks happen quickly on the same element |
+| `contextmenu` | The right button is clicked, just before the browser's menu opens |
+| `mousemove` | The mouse moves while over the element |
+| `mouseenter` | The mouse moves onto the element |
+| `mouseleave` | The mouse moves off the element |
+
+Try them in the lab below. Move over the pad, click once, double-click, and right-click. Watch the order the events arrive in, and how `clientX` and `offsetX` change as you move.
+
+<EventLab kind="mouse" />
+
+<Predict question="You click a button once. In what order do these three events fire?" options={['click, mousedown, mouseup', 'mousedown, mouseup, click', 'mousedown, click, mouseup']} answer={1}>
+`click` needs both a press and a release on the same element, so it always comes last. A double-click produces that sequence twice, then `dblclick`.
+</Predict>
+
+## React on press, not release
+
+Because `click` waits for the release, it feels slightly late in a fast game. `mousedown` fires the moment the button goes down, which is why games often use it.
+
+`event.button` tells you which button was pressed: `0` is the main (usually left) button, `1` is the middle button or wheel, and `2` is the secondary (usually right) button.
+
+<Playground>
+```html
+<div id="pad">Press here with different buttons</div>
+```
+```css
+#pad { padding: 30px; text-align: center; background: #eef7f7; border: 2px dashed #19aab1; border-radius: 10px; user-select: none; }
+```
+```js
+const pad = document.querySelector("#pad");
+
+pad.addEventListener("mousedown", (event) => {
+  console.log(`mousedown, button ${event.button}`);
+});
+
+pad.addEventListener("click", () => {
+  console.log("click");
+});
+```
+</Playground>
+
+Press and hold the main button on the pad: `mousedown` appears right away, but `click` waits until you let go. The right button produces a `mousedown` with button `2` and no `click` at all.
+
+## Where is the mouse?
+
+Mouse events carry the pointer's position in pixels:
+
+- `event.clientX` and `event.clientY` measure from the top-left corner of the visible window.
+- `event.offsetX` and `event.offsetY` measure from the top-left corner of the element under the mouse.
+
+<Playground>
+```html
+<p id="spot">Move the mouse over this area.</p>
+```
+```css
+body { min-height: 150px; }
+```
+```js
+const spot = document.querySelector("#spot");
+
+document.addEventListener("mousemove", (event) => {
+  spot.textContent = `clientX: ${event.clientX}, clientY: ${event.clientY}`;
+});
+```
+</Playground>
+
+`mousemove` fires many times a second while the mouse moves, so keep the work inside it small.
+
+An element styled with `position: fixed` is placed using window coordinates, so setting its `left` and `top` to `clientX` and `clientY` moves it to the pointer. CSS needs a unit, so add `"px"`.
+
+## Practice: make a dot follow the mouse
+
+<Exercise id="follow-dot">
+Listen for `mousemove` on `document`, and move `#dot` to the mouse by setting `dot.style.left` and `dot.style.top`. The dot is already `position: fixed`.
+</Exercise>
+
+## Hover in, hover out
+
+`mouseenter` and `mouseleave` fire once each as the mouse crosses an element's edge. Moving between the element's children doesn't fire them again.
+
+<Playground>
+```html
+<div id="card">Hover over me</div>
+<p id="note">The mouse is outside.</p>
+```
+```css
+#card { padding: 24px; text-align: center; background: #d9f3f2; border-radius: 10px; }
+```
+```js
+const card = document.querySelector("#card");
+const note = document.querySelector("#note");
+
+card.addEventListener("mouseenter", () => {
+  note.textContent = "The mouse is on the card.";
+});
+
+card.addEventListener("mouseleave", () => {
+  note.textContent = "The mouse left the card.";
+});
+```
+</Playground>
+
+If you only want an element to change color on hover, CSS's `:hover` does that without JavaScript. Use the events when hovering should *do* something: show a different element, start a timer, or, in our game, reveal the hammer.
+
+(There's also a `mouseover` and `mouseout` pair that fires again whenever the mouse moves onto a child element. Tick the box in the lab above to compare them.)
+
+## Stop the browser's default action
+
+Some events come with a built-in reaction. A right-click opens the browser's menu, and clicking a link opens a new page. `event.preventDefault()` cancels that default reaction:
+
+<Playground>
+```html
+<div id="zone">Right-click me</div>
+```
+```css
+#zone { padding: 24px; text-align: center; background: #fff3d6; border-radius: 10px; }
+```
+```js
+const zone = document.querySelector("#zone");
+
+zone.addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+  console.log("No menu here!");
+});
+```
+</Playground>
+
+Use this sparingly. People expect right-click menus to work, so only block them where they get in the way, like on a game board.
+
+## One listener for many elements
+
+Instead of adding a listener to every button, you can add one to their shared parent. A click on a child reaches the parent too, because events **bubble** up through the elements that contain the target. This pattern is called **event delegation**.
+
+<Playground>
+```html
+<div id="snacks">
+  <button>Turon</button>
+  <button>Taho</button>
+  <button>Banana cue</button>
+</div>
+```
+```js
+const snacks = document.querySelector("#snacks");
+
+snacks.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (button === null) {
+    return;
+  }
+  console.log(`You picked ${button.textContent}`);
+});
+```
+</Playground>
+
+`event.target.closest("button")` starts at the clicked element and walks up through its parents until it finds one that matches the selector. It returns `null` if none do, as when you click the gap between buttons.
+
+Delegation means fewer listeners, and it works for elements you add later, too.
+
+## Practice: one listener for a whole palette
+
+<Exercise id="palette">
+Add a single click listener to `#palette`. When a swatch is clicked, even on the text inside it, set `#preview`'s background to the swatch's `data-color`, and its text to the swatch's name. Clicking the gap between swatches should do nothing.
+</Exercise>
+
+## Apply it to the game
+
+### Add the hammer
+
+Add the hammer to `workshop/index.html`, right after `</main>`:
+
+```html title="In workshop/index.html, after </main>"
+    </main>
+
+    <div id="hammer" class="hammer" aria-hidden="true">🔨</div>
+```
+
+`style.css` keeps it hidden until it has the class `visible`, tilts it when it has the class `swing`, and hides the normal pointer over the board while the hammer shows. `aria-hidden="true"` keeps screen readers from announcing the emoji.
+
+### Find the new elements
+
+At the top of `workshop/script.js`, look up the board and the hammer with the other elements:
+
+```js title="Add before const controls"
+const board = document.querySelector("#board");
+const hammer = document.querySelector("#hammer");
+```
+
+Then pass `board` to `createBoard`, since we now have it in a variable:
+
+```js title="Replace the createBoard line"
+const holes = createBoard(board);
+```
+
+### Bop with one listener
+
+Delete `handleHoleClick` and the `for` loop that added a listener to each hole. Replace them with one `mousedown` listener on the board:
+
+```js title="Add after the startButton listener"
+// One listener on the board handles all nine holes.
+board.addEventListener("mousedown", (event) => {
+  if (event.button !== 0) {
+    return;
+  }
+  hammer.classList.add("swing");
+  const hole = event.target.closest(".hole");
+  if (hole !== null) {
+    bop(hole);
+  }
+});
+```
+
+Only the main button counts, so a right-click can't score. `closest(".hole")` finds the hole whether you pressed MISAbot, the key label, or the hole's background. Pressing the gap between holes gives `null`, which bops nothing.
+
+### Move and swing the hammer
+
+```js title="Add after the mousedown listener"
+document.addEventListener("mouseup", () => {
+  hammer.classList.remove("swing");
+});
+
+board.addEventListener("mouseenter", () => {
+  hammer.classList.add("visible");
+});
+
+board.addEventListener("mouseleave", () => {
+  hammer.classList.remove("visible");
+});
+
+board.addEventListener("mousemove", (event) => {
+  hammer.style.left = `${event.clientX}px`;
+  hammer.style.top = `${event.clientY}px`;
+});
+
+// A right-click mid-game shouldn't open the browser's menu.
+board.addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
+```
+
+The `mouseup` listener sits on `document`, not the board. If a player presses on the board and drags off before letting go, the release happens outside the board, and the hammer should still straighten up.
+
+## Run and check
+
+Move the mouse over the board: the pointer turns into a hammer. Press and hold: the hammer swings down, and if MISAbot is under it, the score goes up before you even let go. Right-clicking the board does nothing, and moving off the board brings the normal pointer back.
+
+<Checkpoint id="06-mouse" />

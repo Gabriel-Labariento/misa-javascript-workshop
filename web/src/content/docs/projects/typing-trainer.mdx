@@ -1,0 +1,91 @@
+---
+title: "Project: typing trainer"
+description: Build a page that shows a phrase, checks each key you type, and reports your speed and accuracy.
+---
+
+## The project
+
+Build a page that helps someone practice typing. It shows a phrase, highlights each character as the player types it correctly or incorrectly, and reports speed and accuracy when the phrase is finished.
+
+The trainer doesn't need accounts, leaderboards, or a long library of texts. One player, a handful of phrases, and honest numbers are enough for the first complete version.
+
+## What the finished program should do
+
+At minimum, the trainer should:
+
+- show one phrase at a time;
+- react to every key the player types, without a text box;
+- mark correct and incorrect characters as the player goes;
+- handle Backspace;
+- start timing at the first key and stop at the last character; and
+- report words per minute and accuracy, then offer another phrase.
+
+You may also add difficulty levels, a countdown before starting, or a sound for mistakes. Pick features you'd actually use.
+
+## Milestone 0: an empty page that runs
+
+Create a folder with `index.html`, `style.css`, and `main.js`, loading `main.js` with `type="module"`. Make `main.js` log a message, and open the page with Live Preview.
+
+This first run checks the folder, files, and server before there's enough code to hide a setup problem.
+
+## Milestone 1: show a phrase as separate characters
+
+Store one phrase in a variable. Display it so each character is its own element, which you'll need to color characters one by one. Creating a `<span>` per character in a loop works well.
+
+Decide how a space should look. Learners often miss that a space is a character they have to type.
+
+Checkpoint question: if you change the phrase in one place, does the whole display update?
+
+## Milestone 2: listen to the keyboard
+
+Add a `keydown` listener on `document`. Log `event.key` for a few keys to see what arrives, including Shift, Backspace, and Space.
+
+Decide which keys count as typing. Characters have a `key` that's exactly one character long, while keys like `"Shift"` and `"ArrowLeft"` are longer. That difference makes a simple filter.
+
+Checkpoint question: does pressing Shift on its own do nothing, while Shift + A types a capital A?
+
+## Milestone 3: compare each key with the phrase
+
+Track the position the player is on. When a character key arrives, compare it with the phrase's character at that position, mark the span as correct or incorrect with a class, and move forward.
+
+Decide what a mistake does. The player can move on with the mistake marked, or the trainer can wait until the right key is pressed. Both are reasonable; choose one and describe it on the page.
+
+## Milestone 4: Backspace and the default actions
+
+Make Backspace move back one position and clear that character's mark. Call `preventDefault()` for Space, so the page doesn't scroll, and for Backspace, which some browsers once used to go back a page.
+
+Leave other keys alone, so browser shortcuts still work.
+
+Checkpoint question: can a player fix a mistake and finish the phrase with a perfect result?
+
+## Milestone 5: time and results
+
+Start the clock on the first character key, not when the page loads. When the last character is typed, stop it and calculate:
+
+- **Words per minute:** by convention, every five characters count as one word. Divide that by the minutes taken.
+- **Accuracy:** correct keystrokes divided by all character keystrokes, as a percentage. Decide whether a fixed mistake still counts against accuracy.
+
+Show both on the page, formatted to whole numbers.
+
+## Milestone 6: organize and repeat
+
+Move the phrases into a `phrases.js` module that exports an array. Pick a random phrase for each round, ideally not the one just finished. Put the round logic in a class, such as `TypingRound`, with methods for typing a key, going back, and reporting results.
+
+Add a way to start the next phrase from the keyboard, such as pressing Enter after the results appear.
+
+## Decisions that belong to you
+
+- Whether mistakes block progress or are just marked.
+- Whether capital letters and punctuation must match exactly.
+- What counts toward accuracy after a correction.
+- How results are shown: a sentence, a card, or a running display while typing.
+
+Make one choice at a time, and write down why it helps the person practicing.
+
+## Test the finished version
+
+Type a phrase perfectly, then type one with three mistakes you fix and one you don't. Hold a key down and check what happens with repeated `keydown` events. Press Shift, Control, and the arrow keys mid-phrase. Calculate one result by hand and compare it with the page.
+
+## If you want to take it further
+
+Possible directions include a best-score record with `localStorage`, a list of your weakest keys, a timed mode that counts phrases completed in sixty seconds, or a theme of phrases from a subject you're studying. Pick one that changes how you'd practice.

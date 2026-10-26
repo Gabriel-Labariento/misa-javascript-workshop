@@ -1,0 +1,12 @@
+---
+title: Browser playground
+description: Edit and run any checkpoint of the game in your browser, without installing anything.
+tableOfContents: false
+---
+import WorkshopPlayground from '../../components/WorkshopPlayground.astro';
+
+Use this page when local setup isn't working, or when you want to try a checkpoint without switching Git branches. Pick a checkpoint, edit the files in the tabs, and press **▶ Run** (or **Ctrl+Enter** in the editor). Your edits are saved in this browser, separately for each checkpoint.
+
+<WorkshopPlayground />
+
+The preview is a sandboxed page, so click inside it before using the keyboard controls. When a lesson says to create a file, use **New file**; modules import each other with paths like `"./board.js"`, just as they do on your computer.

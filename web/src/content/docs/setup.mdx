@@ -1,0 +1,151 @@
+---
+title: Start with setup
+description: Install the tools, download the workshop project, and open the game in your browser.
+---
+Start here as soon as you arrive. Setup can take a few minutes, and getting it out of the way means we can keep coding once the workshop begins.
+
+You need three things: **Git** to download the project and save versions, **VS Code** to edit files, and a **browser** to run the game. JavaScript is already built into every browser, so there is no language to install.
+
+Choose the section for your computer. Each one includes the full process. If a tool is already installed, its install command may say so; that's fine.
+
+<details>
+<summary>Windows setup</summary>
+
+### 1. Install Git and VS Code
+
+Open **Windows Terminal** or **PowerShell** from the Start menu. [WinGet](https://learn.microsoft.com/windows/package-manager/winget/) comes with current versions of Windows 10 and 11. Run these commands one at a time:
+
+```powershell
+winget install --id Git.Git -e
+winget install --id Microsoft.VisualStudioCode -e
+```
+
+Each command may ask you to accept an agreement. Close the terminal when both finish, then open it again so it can find the new programs.
+
+Microsoft Edge is already on Windows and works well for this workshop. If you prefer Chrome, install it with `winget install --id Google.Chrome -e`.
+
+### 2. Check the tools and add Live Preview
+
+```powershell
+git --version
+code --version
+code --install-extension ms-vscode.live-server
+```
+
+Git and VS Code should each print a version. The last command installs **Live Preview**, Microsoft's VS Code extension that serves your files from a local web address.
+
+### 3. Download and open the workshop
+
+Run one command at a time. If you already cloned the repository, skip `git clone` and open your existing `misa-javascript-workshop` folder.
+
+```powershell
+git clone https://github.com/youth-of-may/misa-javascript-workshop.git
+cd misa-javascript-workshop
+git checkout 00-start
+git checkout -b my-game
+cd workshop
+code .
+```
+
+`git clone` downloads the project. The two `checkout` commands load our starting point and create a personal branch named `my-game`. `cd` moves into a folder, and `code .` opens the current folder in VS Code.
+
+</details>
+
+<details>
+<summary>macOS setup</summary>
+
+### 1. Install Homebrew, Git, and VS Code
+
+Open **Terminal** from Applications → Utilities. [Homebrew](https://brew.sh/) lets you install the workshop tools from the command line. Run its official installer:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Read the prompts before confirming. When it finishes, Homebrew may print two **Next steps** commands for adding `brew` to your shell. Copy and run those commands before continuing.
+
+Install the tools:
+
+```bash
+brew install git
+brew install --cask visual-studio-code
+```
+
+Safari works, but its developer tools stay hidden until you turn on **Show features for web developers** in Safari's Advanced settings. Chrome or Firefox show them right away: `brew install --cask google-chrome`.
+
+### 2. Check the tools and add Live Preview
+
+Close and reopen Terminal, then run:
+
+```bash
+git --version
+code --version
+code --install-extension ms-vscode.live-server
+```
+
+Git and VS Code should each print a version. The last command installs **Live Preview**, Microsoft's VS Code extension that serves your files from a local web address.
+
+### 3. Download and open the workshop
+
+Run one command at a time. If you already cloned the repository, skip `git clone` and open your existing `misa-javascript-workshop` folder.
+
+```bash
+git clone https://github.com/youth-of-may/misa-javascript-workshop.git
+cd misa-javascript-workshop
+git checkout 00-start
+git checkout -b my-game
+cd workshop
+code .
+```
+
+`git clone` downloads the project. The two `checkout` commands load our starting point and create a personal branch named `my-game`. `cd` moves into a folder, and `code .` opens the current folder in VS Code.
+
+</details>
+
+## Open the game in your browser
+
+In VS Code's file list, right-click `index.html` and choose **Show Preview**. Live Preview starts a small local server and shows the page inside VS Code. Its address looks like `http://127.0.0.1:3000/index.html`.
+
+Copy that address into Chrome, Edge, or Firefox. You'll do most of your checking there, because the browser's **developer tools** include the console where JavaScript messages appear.
+
+| Browser | Open the console |
+| --- | --- |
+| Chrome or Edge on Windows | **F12**, or **Ctrl+Shift+J** |
+| Chrome or Edge on macOS | **Cmd+Option+J** |
+| Firefox | **Ctrl+Shift+K**, or **Cmd+Option+K** on macOS |
+| Safari | **Cmd+Option+C** after turning on web developer features |
+
+You should see `Hello, world!` in the console. When you save a file, Live Preview refreshes the page. If a change doesn't show up, reload the browser tab.
+
+### Why a local server?
+
+Double-clicking `index.html` opens it with a `file://` address. That works for the first two parts of the workshop, but browsers refuse to load JavaScript modules from `file://` pages, and Part 3 uses modules. Starting with Live Preview now means nothing changes later.
+
+If a command fails, go to [troubleshooting](../help/). You can also use the browser playground below.
+
+<details>
+<summary>Use the browser playground if local setup is not working</summary>
+
+[Open the workshop playground](../playground/) if the Windows or macOS setup is giving you trouble. It runs on this website, so there is nothing to install.
+
+1. Choose a checkpoint from the menu. Start with `00-start`.
+2. Edit the files in the tabs, then press **▶ Run**. The game appears in the preview, and console messages appear under it.
+3. Follow the matching lesson in this guide. When a lesson says to create a new file, use **New file**.
+4. Your edits stay in this browser, one saved copy per checkpoint. **Reset checkpoint** brings back the original files.
+
+The playground skips local Git practice for now. Use **Download file** to keep copies of your files.
+
+</details>
+
+## If Git needs your name
+
+Before your first commit, configure the name and email you want attached to this repository's commits:
+
+```bash
+git config user.name "Your Name"
+git config user.email "YOUR_GITHUB_NOREPLY_EMAIL"
+```
+
+Replace the email text with the private commit email from your [GitHub email settings](https://github.com/settings/emails), or an email you're comfortable using. These settings identify commits; they don't sign you in.
+
+[Continue to the workshop welcome →](../)

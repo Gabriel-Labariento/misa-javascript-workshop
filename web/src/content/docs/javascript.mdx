@@ -1,0 +1,100 @@
+---
+title: What is JavaScript?
+description: See what JavaScript does on a web page, where it runs, and how the browser runs your code.
+---
+import Playground from '../../components/Playground.astro';
+
+JavaScript is the programming language of the web. Every major browser can run it, which means any page you open can include JavaScript that reacts to what you do.
+
+A web page usually has three layers, each in its own language:
+
+| Layer | Language | Its job | Example |
+| --- | --- | --- | --- |
+| Content | HTML | What is on the page | A button that says Like |
+| Style | CSS | How it looks | The button is teal and rounded |
+| Behavior | JavaScript | What happens | Clicking the button adds one to a count |
+
+Here are all three working together. Press **▶ Run**, then click the button in the preview. The **HTML** and **CSS** tabs hold the other two layers.
+
+<Playground>
+```html
+<button id="like">♡ Like</button>
+<p><span id="count">0</span> likes</p>
+```
+```css
+#like { padding: 8px 16px; color: white; font-weight: 700; background: #087a80; border: 0; border-radius: 999px; cursor: pointer; }
+```
+```js
+const likeButton = document.querySelector("#like");
+const count = document.querySelector("#count");
+let likes = 0;
+
+likeButton.addEventListener("click", () => {
+  likes += 1;
+  count.textContent = likes;
+});
+```
+</Playground>
+
+You'll understand every line of that example by the middle of the workshop.
+
+## JavaScript shows up in familiar products
+
+JavaScript started inside browsers, and it still powers the interactive parts of almost every website. It has also spread to servers, phone apps, and desktop programs.
+
+Electron is a framework for building desktop apps with web technology. Its showcase lists Visual Studio Code, Slack, Discord, Notion, and WhatsApp among the apps built with it. The editor you'll use today is one of them. [Browse the Electron showcase](https://www.electronjs.org/apps).
+
+In Stack Overflow's 2025 Developer Survey, 66% of the developers who answered the language question said they had done extensive work in JavaScript over the past year. That was more than any other language listed. [See the survey results](https://survey.stackoverflow.co/2025/technology/).
+
+## Where JavaScript runs
+
+- **In the browser.** This is what we'll use. The browser runs your code when a page loads, and your code can read and change the page.
+- **Outside the browser.** Tools such as Node.js run JavaScript on servers and on your own computer. You don't need them for this workshop.
+
+The language is the same in both places. What changes is what your code can reach: browser code can change a page and listen for clicks, while server code can read files and answer web requests.
+
+## What we will make
+
+Our game, Bop the Bot, will:
+
+1. build a 3 × 3 board with a loop;
+2. pop MISAbot into a random hole on a timer;
+3. let the player bop it with the mouse or the keyboard; and
+4. keep score, run a 30-second clock, and report accuracy at the end.
+
+HTML gives the game its board and buttons. CSS makes MISAbot slide up and down. JavaScript decides where MISAbot appears, listens for the player, and keeps score. The browser shows the result, and VS Code is where we edit the files.
+
+## Your first mental model
+
+When a page loads, the browser reads the HTML from top to bottom. When it reaches a `<script>` tag, it runs that JavaScript file from top to bottom too.
+
+Then something important happens: the script finishes, but the page stays alive. It keeps **listening**. When the player clicks, presses a key, or a timer goes off, the browser runs the piece of code you attached to that moment. Most of the game happens this way, in small bursts of code that answer events.
+
+You don't need to memorize syntax before starting. Every lesson has runnable examples on the page. Predict what each one will do, run it, then change one thing and run it again. After an idea makes sense on its own, we'll use it in the game.
+
+<details>
+<summary>Coming from the Python workshop?</summary>
+
+Many ideas carry over. The spelling changes:
+
+| Python | JavaScript |
+| --- | --- |
+| `print("Hi")` | `console.log("Hi")` |
+| `input("Name? ")` | `prompt("Name? ")` (for now) |
+| `name = "Alex"` | `const name = "Alex";` or `let name = "Alex";` |
+| `favorite_snack` | `favoriteSnack` (camelCase) |
+| `True`, `False`, `None` | `true`, `false`, `null` (and `undefined`) |
+| `and`, `or`, `not` | `&&`, `\|\|`, `!` |
+| `==` | `===` |
+| `if ...:` / `elif ...:` / `else:` | `if (...) { }` / `else if (...) { }` / `else { }` |
+| `for snack in snacks:` | `for (const snack of snacks) { }` |
+| list `["a", "b"]` | array `["a", "b"]` |
+| dictionary `{"taho": 25}` | object `{ taho: 25 }` |
+| `def greet(name):` | `function greet(name) { }` |
+| `f"Hi, {name}!"` | `` `Hi, ${name}!` `` |
+
+Blocks use braces `{ }` instead of indentation, although we still indent so the code is easy to read. Statements end with semicolons.
+
+</details>
+
+[Next: Git and GitHub →](../git-github/)

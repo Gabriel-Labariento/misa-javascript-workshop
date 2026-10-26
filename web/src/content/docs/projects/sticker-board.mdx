@@ -1,0 +1,81 @@
+---
+title: "Project: sticker board"
+description: Build a board where you place emoji stickers with a click, drag them around, and delete them with the keyboard.
+---
+
+## The project
+
+Build a board for decorating with stickers. Clicking places the chosen sticker where you clicked. Stickers can be dragged to new spots, selected, and deleted. A later version can save the board so it's still there tomorrow.
+
+The board doesn't need image uploads, layers, or undo history. A palette of emoji and a board that responds well to the mouse are enough for the first complete version.
+
+## What the finished program should do
+
+At minimum, the board should:
+
+- let the player pick a sticker from a small palette;
+- place the chosen sticker exactly where the board is clicked;
+- drag a placed sticker to a new position;
+- select a sticker with a click and show which one is selected; and
+- delete the selected sticker with the Delete or Backspace key.
+
+You might also add sizes, rotation, or a "clear board" button. Every feature adds another state to keep track of, so add them one at a time.
+
+## Milestone 0: an empty page that runs
+
+Create a folder with `index.html`, `style.css`, and `main.js`, loading `main.js` with `type="module"`. Make the page show a large empty board with a visible border, and open it with Live Preview.
+
+## Milestone 1: place a sticker where you click
+
+Add a `click` listener to the board. Create an element holding one emoji, and position it inside the board using the click's coordinates.
+
+The board should be `position: relative`, and each sticker `position: absolute`. Then `left` and `top` measure from the board's corner. `event.offsetX` gives the position inside the element you clicked, but if the click lands on an existing sticker, it measures from the sticker instead. Subtracting the board's `getBoundingClientRect()` from `event.clientX` always measures from the board.
+
+Checkpoint question: does a sticker appear centered on the click, not with its corner on the click?
+
+## Milestone 2: choose from a palette
+
+Add a row of emoji buttons. Clicking one makes it the current sticker, and the button should look selected. One listener on the palette with `closest()` handles every button, as in lesson 06.
+
+Checkpoint question: does clicking the palette itself, between buttons, avoid changing anything?
+
+## Milestone 3: a class for stickers
+
+Create a `Sticker` class in its own module. It can create its element, store its emoji and position, and offer methods like `moveTo(x, y)` and `remove()`. Keep the board's stickers in an array.
+
+From now on, change a sticker through its methods instead of reaching into its element from everywhere.
+
+## Milestone 4: drag stickers
+
+Dragging is three events working together: `mousedown` on a sticker starts a drag, `mousemove` moves it, and `mouseup` ends it. Listen for `mousemove` and `mouseup` on `document`, not the sticker, so the drag continues even when the mouse moves faster than the sticker.
+
+Placing and dragging now compete: releasing a drag fires a `click` on the board. Decide how the board tells a drag from a click. One approach is to remember whether the mouse moved more than a few pixels.
+
+Checkpoint question: can you drag a sticker quickly to the far corner without dropping it?
+
+## Milestone 5: select and delete
+
+Clicking a sticker selects it; show this with a class, like an outline. Pressing Delete or Backspace removes the selected sticker from the page and from your array. Pressing Escape clears the selection.
+
+Make sure Backspace doesn't trigger while someone is typing in a text box, if you add one later. Check `event.target`, as in lesson 07.
+
+## Milestone 6: save the board
+
+Store each sticker's emoji and position as an array of plain objects with `JSON.stringify`, and save it with `localStorage` after every change. On page load, rebuild the stickers from the saved data.
+
+Treat loading as untrusted: wrap it in `try`/`catch`, and skip entries missing an emoji or a position.
+
+## Decisions that belong to you
+
+- Whether stickers can overlap, and which one appears on top.
+- Whether stickers can be dragged partly off the board.
+- Whether placing a sticker also selects it.
+- Whether the board saves automatically or with a button.
+
+## Test the finished version
+
+Place five stickers, drag two, delete one, and reload the page. Click the very edge of the board, drag a sticker off the board and release it, and press Delete with nothing selected. Try right-clicking a sticker. Nothing should break, and every result should match what you expect.
+
+## If you want to take it further
+
+Possible directions include pointer events so the board works on phones (see [Mouse, touch, and pen](../../moving-forward/pointer-events/)), keyboard nudging with the arrow keys, sticker sizes with the mouse wheel's `wheel` event, or snapping to a grid.

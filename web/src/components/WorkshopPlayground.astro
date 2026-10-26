@@ -1,0 +1,20 @@
+---
+import mapping from '../data/checkpoints.json';
+const examples = import.meta.glob('../examples/**/*.txt', { query: '?raw', import: 'default', eager: true });
+const data = mapping.map((item) => ({
+  id: item.id,
+  title: item.title,
+  expected: item.expected,
+  files: item.files.map((name) => ({ name, code: String(examples[`../examples/${item.id}/${name}.txt`]) })),
+}));
+---
+
+<js-ide class="ide-block" data-checkpoints={JSON.stringify(data)}>
+  <div class="ide-fallback">
+    <p>The playground needs JavaScript. You can still copy each checkpoint’s files from its lesson or from the <a href="../checkpoints/">checkpoint list</a>.</p>
+  </div>
+</js-ide>
+
+<script>
+  import '../lib/playground/client.js';
+</script>

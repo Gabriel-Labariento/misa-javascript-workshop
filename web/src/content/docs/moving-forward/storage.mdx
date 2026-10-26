@@ -1,0 +1,102 @@
+---
+title: Remember a high score
+description: Save and load data with localStorage and JSON so a high score survives closing the page.
+---
+import Playground from '../../../components/Playground.astro';
+
+When you reload the game, everything resets. JavaScript variables live only while the page is open. To remember a high score, store it in the browser with **localStorage**.
+
+## Save and load a value
+
+`localStorage` keeps small pieces of text for each website, even after the browser closes.
+
+<Playground>
+```js
+localStorage.setItem("bestScore", "21");
+
+const saved = localStorage.getItem("bestScore");
+console.log(saved);
+console.log(typeof saved);
+console.log(localStorage.getItem("somethingElse"));
+
+localStorage.removeItem("bestScore");
+```
+</Playground>
+
+- `setItem(key, value)` saves a value under a name.
+- `getItem(key)` reads it back, or gives `null` if nothing was saved under that name.
+- `removeItem(key)` deletes it.
+
+These examples run in a sandbox that forgets everything between runs. In your real game, values stay until the player clears their browser data.
+
+## Everything comes back as text
+
+`localStorage` stores strings only. Numbers come back as text, so convert them before doing math:
+
+<Playground>
+```js
+localStorage.setItem("bestScore", 21);
+
+const saved = localStorage.getItem("bestScore");
+console.log(saved + 1);
+console.log(Number(saved) + 1);
+
+const missing = Number(localStorage.getItem("neverSaved"));
+console.log(missing);
+```
+</Playground>
+
+`Number(null)` is `0`, which works out nicely for a first-time player who has no best score yet.
+
+## Store an object with JSON
+
+To store an object or an array, turn it into text with `JSON.stringify`, and back with `JSON.parse`. **JSON** is a text format that looks almost exactly like JavaScript objects.
+
+<Playground>
+```js
+const best = { playerName: "Bea", score: 21, speed: "fast" };
+
+localStorage.setItem("best", JSON.stringify(best));
+console.log(localStorage.getItem("best"));
+
+const loaded = JSON.parse(localStorage.getItem("best"));
+console.log(loaded.playerName, loaded.score);
+```
+</Playground>
+
+## Expect it to fail sometimes
+
+Some browsers block storage in private windows or when a site's data is restricted, and then reading `localStorage` can throw an error. Saved text can also be damaged. Wrap storage code in `try`/`catch`, so the game still works when storage doesn't:
+
+<Playground>
+```js
+function loadBest() {
+  try {
+    const text = localStorage.getItem("best");
+    return text ? JSON.parse(text) : null;
+  } catch (error) {
+    console.log(`Couldn't load the best score: ${error.message}`);
+    return null;
+  }
+}
+
+localStorage.setItem("best", "{ this is not JSON");
+console.log(loadBest());
+```
+</Playground>
+
+`try` runs a block of code. If anything inside it throws an error, JavaScript skips to `catch` instead of stopping the whole program. Here, the damaged text makes `JSON.parse` throw, and the function returns `null`.
+
+## Add a high score to the game
+
+1. Add a place for it in `index.html`, such as `<p>Best: <strong id="best">0</strong></p>` inside the stats.
+2. In `game.js`, load the best score in the constructor and show it.
+3. In `stop()`, compare the round's score with the best. If it's higher, save it with `localStorage.setItem` and update the display.
+
+Use a specific key, like `"bop-the-bot:best"`, so your game's data doesn't collide with other projects running on the same address, such as Live Preview's.
+
+## Practice: a best score per speed
+
+Save a separate best score for each speed, so a slow-speed record doesn't hide fast-speed progress. One object in JSON works well: `{ "slow": 12, "normal": 18, "fast": 9 }`. Show the best for the selected speed, and update it when the player changes the menu. That last part needs a `change` event listener on the select box.
+
+Never store passwords or private details in `localStorage`. Any script on the page can read it. [MDN's localStorage page](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) has the details.

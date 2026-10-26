@@ -1,0 +1,70 @@
+---
+title: 10 · Test and personalize
+description: Check your finished game on purpose, make it your own, and save a version you can share.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+
+Your finished game builds its board, runs 30-second rounds, and answers both the mouse and the keyboard. Let someone else play it before you make your final commit.
+
+## Try inputs on purpose
+
+Testing means looking for the cases that break things, not only the ones that work. Try each row:
+
+| Try this | What should happen |
+| --- | --- |
+| Press Start with an empty name box | The round starts, and the messages call you Player |
+| Click MISAbot, then an empty hole | The score goes up once, and the miss counts toward accuracy |
+| Press the key in MISAbot's hole, with Caps Lock on | The bop still counts |
+| Hold a key down over MISAbot | Only one bop counts |
+| Right-click the board | No menu opens, and nothing scores |
+| Type `Mary Ann` in the name box | The space types normally, and no round starts |
+| Press Space, then Escape | A round starts, then ends with your result |
+| Let the timer reach 0 | MISAbot disappears, and Start works again |
+| Press Start twice quickly | Only one round runs; the timer doesn't speed up |
+
+To check the end-of-round message without playing a perfect round, expose the game to the console for a moment. Add this line at the end of `main.js`:
+
+```js title="Temporary last line of workshop/main.js"
+window.game = game;
+```
+
+Modules keep their variables private, so this deliberately makes `game` a global. Start a round, then type into the console:
+
+```js title="Type in the browser console during a round"
+game.score = 30;
+game.stop();
+```
+
+The message should end with `Legendary bopper!`. Try scores of 15, 5, and 0 to see the other titles. Delete the `window.game` line afterward; it's only for testing.
+
+## Make one change
+
+Make the game yours. Pick one of these, change it, and play again:
+
+- **Round length.** Change `ROUND_SECONDS` in `game.js`. A 15-second round makes a good warm-up.
+- **Speed.** Change the numbers in `POP_DELAYS`. Smaller numbers mean less time to react.
+- **Titles.** Rewrite the messages in `rank.js` so they sound like you and your friends.
+- **Keys.** Change `KEYS` in `board.js`. A number pad works too: `["7", "8", "9", "4", "5", "6", "1", "2", "3"]`. Keep exactly nine keys, one per hole.
+- **Colors.** Change `--teal` and `--teal-dark` at the top of `style.css`.
+
+Avoid asking for details the game doesn't need, such as student numbers.
+
+## Save the finished version
+
+From `workshop`:
+
+```bash
+git status
+git add .
+git commit -m "Finish my Bop the Bot game"
+```
+
+`git add .` stages every changed file in the current folder, including the new modules. Check the `git status` list first, so you only commit files you mean to.
+
+Trade laptops with a neighbor, or play each other's versions. Compare scores, and tell them what you changed. There's no score you're supposed to get.
+
+If an edit breaks the game, open the console and read the first red line, including its file name and line number. The [troubleshooting page](../../help/) explains common errors. [Recovery checkpoints](../../checkpoints/) are there if you need a working reference while keeping your version safe.
+
+When you're ready to share a link that anyone can play, follow [Put your game online](../../moving-forward/publishing/).
+
+<Checkpoint id="09-classes" />

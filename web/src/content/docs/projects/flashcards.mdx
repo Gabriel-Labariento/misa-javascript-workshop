@@ -1,0 +1,79 @@
+---
+title: "Project: flashcard deck"
+description: Build a study deck you flip, browse, and sort into piles with keyboard shortcuts, using classes and modules.
+---
+
+## The project
+
+Build a flashcard page for studying. It shows the front of a card; flipping reveals the back. The player moves through the deck and marks each card as known or still learning. Keyboard shortcuts make studying fast, and buttons keep it usable with a mouse or a touch screen.
+
+The deck doesn't need accounts, sharing, or spaced-repetition algorithms. One deck you can study well from the keyboard is enough for the first version.
+
+## What the finished program should do
+
+At minimum, the deck should:
+
+- show one card at a time, front first;
+- flip with Space and with a button;
+- move to the next and previous cards with the arrow keys and with buttons;
+- mark a card as known or learning, with keys such as 1 and 2; and
+- show progress, such as "Card 4 of 12 · 3 known".
+
+You might also shuffle the deck, study only the learning pile, or add new cards from a form.
+
+## Milestone 0: an empty page that runs
+
+Create a folder with `index.html`, `style.css`, and `main.js`, loading `main.js` with `type="module"`. Open it with Live Preview and confirm the console shows a test message.
+
+## Milestone 1: cards as data
+
+Create `cards.js` and export an array of objects, each with a `front` and a `back`. Pick a subject you're actually studying, with at least eight cards. Import the array in `main.js` and log it.
+
+Checkpoint question: can you add a card by editing only `cards.js`?
+
+## Milestone 2: show one card
+
+Display the first card's front. Add a Flip button that switches between front and back. Keep track of which side is showing in a variable, and update the page from that variable instead of checking what the page currently says.
+
+## Milestone 3: a Deck class
+
+Create a `Deck` class in its own module. It holds the cards and the current position, and offers methods like `next()`, `previous()`, `flip()`, and a getter for the current card. Decide what happens at the ends: stop at the first and last cards, or wrap around.
+
+Your page code should ask the deck what to show, then display it. Display code and deck logic stay in separate places.
+
+## Milestone 4: keyboard shortcuts
+
+Add a `keydown` listener on `document`:
+
+- Space flips the card. Call `preventDefault()` so the page doesn't scroll.
+- Left and right arrows move through the deck.
+- 1 marks the card as known, and 2 as still learning.
+
+Ignore repeats, so holding an arrow doesn't fly through the whole deck. Show the shortcuts on the page so people can discover them.
+
+Checkpoint question: does every shortcut also have a button, for people without a keyboard?
+
+## Milestone 5: track progress
+
+Store each card's status in the deck. Show the position, the number known, and the number still learning. When every card is known, show a short message and offer to study again.
+
+## Milestone 6: study the hard ones
+
+Add a mode that cycles only through cards marked "learning". Think about what should happen when the last learning card is marked known during this mode.
+
+Save statuses with `localStorage` so progress survives a reload, using the card's front text, or an id you add to each card, as the key.
+
+## Decisions that belong to you
+
+- Whether moving to a new card flips it back to the front automatically.
+- Whether the deck wraps around at the ends.
+- Whether marking a card also moves to the next one.
+- How a card's flip looks: an instant swap, or a CSS animation.
+
+## Test the finished version
+
+Study a full deck using only the keyboard, then again using only the mouse. Hold an arrow key down. Press Space while focused on a button and check that the card flips only once. Mark every card as known and reload the page. Try a deck with a single card.
+
+## If you want to take it further
+
+Possible directions include shuffling with `Math.random()`, a form for adding cards, importing cards from text typed as `front | back` lines with `split()`, or a timed quiz mode. The [Work with text](../../moving-forward/text/) lesson helps with the import format.

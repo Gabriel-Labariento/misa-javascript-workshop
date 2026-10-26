@@ -1,0 +1,91 @@
+---
+title: Put your game online
+description: Make your own copy on GitHub, upload your game branch, and turn on GitHub Pages so anyone can play it.
+---
+
+GitHub gives your project a page that other people can open in a browser. With **GitHub Pages**, it can also host your game, so friends can play it from a link without installing anything. Your local files appear online only after you push them.
+
+Before publishing, read through the project for names, student numbers, tokens, passwords, or anything else you didn't mean to share.
+
+## Make your copy on the GitHub website
+
+1. Sign in to [GitHub](https://github.com/).
+2. Open the [MISA JavaScript workshop repository](https://github.com/youth-of-may/misa-javascript-workshop).
+3. Select **Fork** near the upper-right corner of the repository page.
+4. Choose your account as the owner. You can keep the suggested repository name or choose a new one.
+5. Create the fork and wait for GitHub to open its page.
+
+A **fork** is a repository under your account that begins with another repository's history. Look at the owner name near the top of the page to confirm that you're viewing your copy.
+
+The main parts of a GitHub repository page are:
+
+- **Code**, where you browse files and copy the repository URL;
+- **Commits**, where you inspect saved versions; and
+- the **README**, which explains what the project does and how to run it.
+
+## Connect your local project to your fork
+
+The workshop repository is already named `origin` on your laptop. Keep that connection so the checkpoint recovery instructions still work.
+
+Check it from the terminal:
+
+```bash
+git remote -v
+```
+
+On your fork's GitHub page, select the green **Code** button and copy the HTTPS URL. It looks like `https://github.com/YOUR_USERNAME/misa-javascript-workshop.git`.
+
+Add that URL under the name `mine`:
+
+```bash
+git remote add mine https://github.com/YOUR_USERNAME/misa-javascript-workshop.git
+git remote -v
+```
+
+Replace the example URL with the exact one copied from your page. `origin` should still point to the workshop, while `mine` should point to your fork.
+
+## Upload your game branch
+
+Check that you're on your own branch and that the work you want is committed:
+
+```bash
+git branch --show-current
+git status
+```
+
+If your branch is named `my-game`, push it with:
+
+```bash
+git push -u mine my-game
+```
+
+GitHub may open a browser sign-in or use your computer's credential manager. Your account password isn't used directly as an HTTPS Git credential.
+
+Return to your fork's page and refresh it. GitHub may show a banner for the recently pushed `my-game` branch. You can also open the branch menu above the file list and select `my-game`.
+
+The `-u` option remembers the connection between the local and GitHub branches. Later, while you're on `my-game`, this shorter command uploads new commits:
+
+```bash
+git push
+```
+
+## Turn on GitHub Pages
+
+1. On your fork's page, open **Settings**, then **Pages** in the sidebar.
+2. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
+3. Choose the `my-game` branch and the `/ (root)` folder, then select **Save**.
+4. Wait a minute or two, then refresh the Pages settings. GitHub shows your site's address at the top.
+
+Your game lives in the `workshop` folder, so add `workshop/` to the end of the address:
+
+```text title="Your game's address"
+https://YOUR_USERNAME.github.io/misa-javascript-workshop/workshop/
+```
+
+GitHub Pages serves files over `https://`, so your modules load just like they do with Live Preview. Each time you push new commits to `my-game`, the site updates within a few minutes.
+
+## Share and keep building
+
+Send the link to a friend and ask them to play without your help. Watch where they get stuck: that tells you which instruction on the page needs to be clearer. Add a short README to your repository that explains the controls.
+
+Commit local changes before bringing down work from GitHub. GitHub's guide to [configuring a publishing source for GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) covers the Pages settings in more detail. The free [Pro Git book](https://git-scm.com/book/en/v2) is useful when you want to understand branches and remotes beyond this workshop.

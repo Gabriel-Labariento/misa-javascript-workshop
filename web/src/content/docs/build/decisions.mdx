@@ -1,0 +1,228 @@
+---
+title: 02 · Make decisions
+description: Clean text with methods, compare values, and use if, else, and fallbacks before choosing a game speed.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+
+This step cleans up the player's name, asks for a speed, and gives every answer a sensible fallback. A player who presses Cancel or types something unexpected should still get a working game.
+
+## Clean text with methods
+
+`prompt()` returns exactly what the player typed, extra spaces and capital letters included. A **method** is an operation attached to a value. You call it with a dot after the value, followed by parentheses.
+
+<Playground>
+```js
+const answer = "  FAST ";
+const clean = answer.trim().toLowerCase();
+
+console.log(clean);
+console.log(clean.length);
+console.log(answer.length);
+console.log(clean.toUpperCase());
+console.log("banana cue".includes("cue"));
+```
+</Playground>
+
+- `trim()` removes spaces from both ends.
+- `toLowerCase()` and `toUpperCase()` change letter case.
+- `includes()` checks whether one string appears inside another.
+
+Each method returns a new string, so `answer` still holds `"  FAST "`. Chaining `.trim().toLowerCase()` runs the methods from left to right. `length` is a **property**, not a method, so it has no parentheses.
+
+## Compare values
+
+A **comparison** produces a boolean: `true` or `false`.
+
+<Playground>
+```js
+console.log(3 === 3);
+console.log("3" === 3);
+console.log("fast" !== "slow");
+console.log(5 > 2, 5 >= 5, 2 < 1, 2 <= 2);
+```
+</Playground>
+
+`===` checks that two values are equal and have the same type. `!==` checks that they're different.
+
+JavaScript also has `==`, which converts types before comparing. That makes `"3" == 3` true and even `"" == 0` true, which hides bugs. Use `===` and `!==` every time.
+
+<Predict question="What does this print?" options={['true true', 'true false', 'false false']} answer={1}>
+```js
+console.log("5" == 5);
+console.log("5" === 5);
+```
+
+`==` turns `"5"` into the number `5` first, so it prints `true`. `===` sees a string and a number and prints `false`. Sticking with `===` means you never have to remember the conversion rules.
+</Predict>
+
+## Choose which block runs
+
+`if` runs a block of code only when its condition is true. `else if` checks another condition when the earlier ones were false. `else` handles everything left.
+
+<Playground>
+```js
+const weather = "rainy";
+
+if (weather === "sunny") {
+  console.log("Bring sunglasses.");
+} else if (weather === "rainy") {
+  console.log("Bring an umbrella.");
+} else {
+  console.log("Check outside before leaving.");
+}
+```
+</Playground>
+
+This prints `Bring an umbrella.` The condition goes in parentheses, and the block goes in braces `{ }`. JavaScript only runs the first block whose condition is true, then skips the rest. Change `weather` to `"sunny"` and to `"windy"` to see each branch.
+
+The indentation inside the braces is for people. JavaScript reads the braces, but indented code is much easier to follow.
+
+## Combine conditions
+
+- `&&` (and) is true only when both sides are true.
+- `||` (or) is true when at least one side is true.
+- `!` (not) flips `true` and `false`.
+
+<Playground>
+```js
+const age = 19;
+const hasStudentId = true;
+
+console.log(age >= 18 && hasStudentId);
+console.log(age < 12 || age >= 60);
+console.log(!hasStudentId);
+```
+</Playground>
+
+Predict each line before you run it. They print `true`, `false`, and `false`.
+
+## Practice: price a movie ticket
+
+<Exercise id="ticket-price">
+The **Given** box sets `age` and `hasStudentId` for you. Set `price` using these rules, in this order:
+
+1. Kids under 12 and seniors 60 or older pay 120.
+2. Anyone else with a student ID pays 180.
+3. Everyone else pays 250.
+
+The checks run your code with several different ages and IDs.
+</Exercise>
+
+## Truthy, falsy, and fallbacks
+
+An `if` condition doesn't have to be a boolean. JavaScript treats a few values as **falsy**: `false`, `0`, `""` (an empty string), `null`, `undefined`, and `NaN`. Every other value is **truthy**.
+
+`||` uses this. It gives back the left side if it's truthy, and otherwise the right side. That makes it a handy way to supply a fallback:
+
+<Playground>
+```js
+console.log("" || "Player");
+console.log("Bea" || "Player");
+console.log(null || "normal");
+
+const answer = prompt("Your name?") || "";
+console.log(`Cleaned: "${answer.trim()}"`);
+```
+</Playground>
+
+When the player presses Cancel, `prompt()` returns `null`, and `null.trim()` would crash because `null` has no methods. `prompt(...) || ""` swaps `null` for an empty string, so string methods always work.
+
+<Predict question="What does this print?" options={['An empty line', 'Player', 'null']} answer={1}>
+```js
+const typed = "   ";
+console.log(typed.trim() || "Player");
+```
+
+`typed.trim()` is `""`, which is falsy, so `||` falls back to `"Player"`.
+</Predict>
+
+## Practice: clean up an answer
+
+<Exercise id="taho-answer">
+Ask whether the player likes taho. Clean the answer with `trim()` and `toLowerCase()`, then log exactly one message: `Great choice!` for yes, `More for me!` for no, and `Please answer yes or no.` for anything else, including Cancel. When you press **Run**, a real prompt appears. The checks answer it for you in four different ways.
+</Exercise>
+
+## Repeat with while
+
+A `while` loop repeats its block as long as its condition stays true:
+
+<Playground>
+```js
+let countdown = 3;
+
+while (countdown > 0) {
+  console.log(countdown);
+  countdown -= 1;
+}
+
+console.log("Go!");
+```
+</Playground>
+
+`countdown -= 1` subtracts one and stores the result back in `countdown`. Each pass makes the number smaller, so the condition eventually becomes false and the loop stops.
+
+Without that line, `countdown` would stay at 3 forever: an **infinite loop**. In a normal page, an infinite loop freezes the tab. The examples on this site stop a loop after a second and explain what happened. Delete the `countdown -= 1;` line and run it to see the message.
+
+We'll use `while` in the game in lesson 04, to keep MISAbot from popping up in the same hole twice.
+
+## Apply it to the game
+
+Replace all of `workshop/script.js`, one part at a time. Start with the name. The `||` fallback handles Cancel, and the `if` handles a blank answer:
+
+```js title="Start of workshop/script.js"
+let playerName = prompt("What should we call you?") || "";
+playerName = playerName.trim();
+if (playerName === "") {
+  playerName = "Player";
+}
+```
+
+Next, ask for a speed and clean the answer the same way:
+
+```js title="Add after the name"
+let speed = prompt("Choose a speed: slow, normal, or fast") || "";
+speed = speed.trim().toLowerCase();
+```
+
+Then choose how many milliseconds MISAbot waits between pops. A millisecond is a thousandth of a second, so 850 milliseconds is 0.85 seconds:
+
+```js title="Add after the speed"
+let popDelay;
+if (speed === "slow") {
+  popDelay = 1100;
+} else if (speed === "fast") {
+  popDelay = 600;
+} else {
+  speed = "normal";
+  popDelay = 850;
+}
+```
+
+The `else` block covers every other answer, including `"turbo"` and an empty string, so the game always ends up with a real speed.
+
+Finally, show the choices:
+
+```js title="Add at the end"
+const greeting = document.querySelector("#greeting");
+greeting.textContent = `Hi, ${playerName}! Speed: ${speed}. MISAbot pops up every ${popDelay / 1000} seconds.`;
+console.log("Pop delay in milliseconds:", popDelay);
+```
+
+`popDelay / 1000` turns milliseconds into seconds for the message.
+
+## Run and check
+
+Reload the page and try each of these:
+
+| Name | Speed | The page should say |
+| --- | --- | --- |
+| Press Cancel | `  FAST ` | `Hi, Player! Speed: fast. MISAbot pops up every 0.6 seconds.` |
+| `  Bea ` | `turbo` | `Hi, Bea! Speed: normal. MISAbot pops up every 0.85 seconds.` |
+| `Cy` | Press Cancel | `Hi, Cy! Speed: normal. MISAbot pops up every 0.85 seconds.` |
+
+Input is what the player types. Processing is the cleaning and the `if` decisions. Output is the greeting.
+
+<Checkpoint id="02-decisions" />

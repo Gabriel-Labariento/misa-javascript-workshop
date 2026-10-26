@@ -1,0 +1,92 @@
+---
+title: Reuse with inheritance
+description: Create a specialized class by extending an existing one, calling super, and overriding methods.
+---
+import Playground from '../../../components/Playground.astro';
+
+Inheritance connects two classes when one is a more specific kind of the other. An officer is a member with extra responsibilities. That's a reasonable **is-a relationship**. A cluster *contains* members, but a cluster isn't itself a member, so inheritance would be the wrong fit there.
+
+## Extend a working class
+
+The general class is the **parent class** (also called the base class or superclass). The specialized one is the **child class** (or subclass). `extends` declares the relationship:
+
+<Playground>
+```js
+class Member {
+  constructor(memberName) {
+    this.memberName = memberName;
+    this.events = 0;
+  }
+
+  attend() {
+    this.events += 1;
+  }
+
+  introduce() {
+    return `${this.memberName}, ${this.events} events so far`;
+  }
+}
+
+class Officer extends Member {
+  constructor(memberName, role) {
+    super(memberName);
+    this.role = role;
+  }
+
+  introduce() {
+    return `${super.introduce()} · ${this.role}`;
+  }
+}
+
+const bea = new Member("Bea");
+const cy = new Officer("Cy", "Treasurer");
+
+cy.attend();
+cy.attend();
+console.log(bea.introduce());
+console.log(cy.introduce());
+console.log(cy instanceof Member);
+```
+</Playground>
+
+- `super(memberName)` runs the parent's constructor, which sets `memberName` and `events`. A child constructor must call `super(...)` before it uses `this`.
+- `cy.attend()` works even though `Officer` never defines `attend`. Child classes **inherit** every method they don't replace.
+- `introduce()` in `Officer` **overrides** the parent's version. Inside it, `super.introduce()` calls the parent's version, so the child adds to it instead of repeating it.
+- `instanceof` checks whether an object was made from a class or one of its children.
+
+## Make a harder game mode
+
+Inheritance is useful for game modes: a new mode is a game with a few rules changed. Here's a **survival** mode that ends after three misses, instead of when time runs out. Add it to `workshop/game.js`, below the `Game` class:
+
+```js title="Add to workshop/game.js"
+export class SurvivalGame extends Game {
+  bop(hole) {
+    super.bop(hole);
+    if (this.isPlaying && this.misses >= 3) {
+      this.stop();
+    }
+  }
+}
+```
+
+It reuses everything from `Game` and changes one rule: after each bop, three misses end the round. To try it, import it in `main.js` with `import Game, { SurvivalGame } from "./game.js";` and create `new SurvivalGame(...)` with the same arguments as before.
+
+Notice that `main.js` doesn't need any other change. It calls `game.start()`, `game.bop()`, and `game.stop()`, and both classes answer those calls.
+
+## Check the relationship before inheriting
+
+Inheritance removes repeated code, but that alone isn't enough reason to use it. Ask:
+
+1. Is every child object genuinely a kind of the parent?
+2. Should it keep most of the parent's behavior?
+3. Could someone understand the relationship without reading every method?
+
+If the answer is no, give one object another as a property instead. A `Game` *has* holes; it isn't a hole. Most JavaScript code uses a little inheritance and a lot of objects that hold other objects.
+
+## Practice: add a golden bot
+
+Create a mode where MISAbot sometimes appears golden and is worth three points. Make a `GoldenGame` class that extends `Game` and overrides `popUp()`: call `super.popUp()`, then give the current hole a `golden` class about one time in five. Override `bop()` so that bopping a golden bot adds two extra points.
+
+You'll also need a little CSS for `.hole.golden`, such as a gold background, and you'll need to remove the class when MISAbot moves on. Decide whether misses on a golden bot should count double.
+
+[MDN's guide to class inheritance](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends) covers `extends` and `super` in more detail.

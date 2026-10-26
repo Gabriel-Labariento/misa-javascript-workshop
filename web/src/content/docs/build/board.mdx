@@ -1,0 +1,267 @@
+---
+title: 03 · Build the board
+description: Learn arrays, for loops, and objects, then create elements with JavaScript to draw the game board.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+import Stepper from '../../../components/Stepper.astro';
+
+This checkpoint draws the 3 × 3 board. Nine holes is too many to write by hand, so we'll keep their keys in an array and let a loop build them. We'll learn arrays, loops, and objects on their own first.
+
+## Keep an ordered group in an array
+
+An **array** stores several values in order. Square brackets create it, and commas separate its items.
+
+<Playground>
+```js
+const snacks = ["turon", "taho", "banana cue"];
+
+console.log(snacks);
+console.log(snacks[0]);
+console.log(snacks[2]);
+console.log(snacks.length);
+console.log(snacks[snacks.length - 1]);
+console.log(snacks[3]);
+```
+</Playground>
+
+Each item has an **index**, its position in the array. Counting starts at zero, so `snacks[0]` is `"turon"`. `length` is the number of items, which makes `snacks[snacks.length - 1]` the last one.
+
+`snacks[3]` asks for a fourth item that doesn't exist. JavaScript doesn't stop with an error; it quietly gives `undefined`. When a value is unexpectedly `undefined`, check your indexes first.
+
+Arrays can change while the program runs:
+
+<Playground>
+```js
+const snacks = ["turon", "taho"];
+
+snacks.push("kwek-kwek");
+snacks[1] = "fishball";
+
+console.log(snacks);
+console.log(snacks.length);
+console.log(snacks.includes("taho"));
+```
+</Playground>
+
+`push()` adds an item to the end. Assigning through an index replaces an item. `includes()` checks whether a value is in the array.
+
+The array was made with `const`, yet its contents changed. `const` only stops the *variable* from pointing at a different array. The array itself can still grow and change.
+
+<Predict question="What does this print?" options={['"taho"', 'undefined', 'An error']} answer={1}>
+```js
+const snacks = ["turon", "taho"];
+console.log(snacks[2]);
+```
+
+The array has indexes `0` and `1`. Index `2` is past the end, so the result is `undefined`, with no error. (If you know Python, this is where you would expect an `IndexError`.)
+</Predict>
+
+## Repeat work with for...of
+
+A `for...of` loop takes each item from an array in turn, puts it in a variable, and runs the block:
+
+<Playground>
+```js
+const snacks = ["turon", "taho", "banana cue"];
+
+for (const snack of snacks) {
+  console.log(`I would try ${snack}`);
+}
+```
+</Playground>
+
+The block runs three times. `snack` holds a different string each time.
+
+<Stepper kind="loop" />
+
+### Count with a classic for loop
+
+Sometimes you need a counter instead of items. The classic `for` loop has three parts, separated by semicolons:
+
+<Playground>
+```js
+for (let i = 0; i < 3; i++) {
+  console.log(`Question ${i + 1}`);
+}
+```
+</Playground>
+
+1. `let i = 0` runs once, before the loop starts.
+2. `i < 3` is checked before every pass. The loop stops when it's false.
+3. `i++` runs after every pass. It adds one to `i`.
+
+Use the classic loop when you need the number. When you only need each item, `for...of` is easier to read.
+
+## Store named values in an object
+
+An array answers "what's at position 0?" An **object** answers "what's stored under this name?" It holds **properties**: names (called keys) paired with values.
+
+<Playground>
+```js
+const prices = { taho: 25, turon: 20 };
+
+console.log(prices.taho);
+console.log(prices["turon"]);
+
+prices.taho = 30;
+prices.fishball = 1;
+console.log(prices);
+
+console.log(prices.kwekKwek);
+```
+</Playground>
+
+- **Dot notation** (`prices.taho`) reads a property when you know its name while writing the code.
+- **Bracket notation** (`prices["turon"]`) works with any string, including one stored in a variable: `prices[snack]`.
+- Assigning to a property changes it, or creates it if it doesn't exist yet.
+- Reading a property that doesn't exist gives `undefined`, like the missing array index.
+
+### Arrays of objects
+
+Real data is often an array of objects: one object per thing, all with the same property names.
+
+<Playground>
+```js
+const order = [
+  { name: "Taho", price: 25, quantity: 2 },
+  { name: "Turon", price: 20, quantity: 3 },
+];
+
+for (const item of order) {
+  console.log(`${item.name}: ₱${item.price * item.quantity}`);
+}
+```
+</Playground>
+
+Inside the loop, `item` is one whole object, so `item.name` and `item.price` read its parts. `*` multiplies.
+
+## Practice: total a merienda order
+
+<Exercise id="order-total">
+`order` is given. Use a `for...of` loop to log one line per item, like `2 × Taho = ₱50`, and add each item's cost to `total`. The last line already logs the total. The checks also try a different order, so let the loop do the work.
+</Exercise>
+
+## Make elements with JavaScript
+
+So far we've changed text that was already in the HTML. JavaScript can also create new elements and add them to the page:
+
+<Playground>
+```html
+<ul id="menu"></ul>
+```
+```js
+const menu = document.querySelector("#menu");
+const snacks = ["turon", "taho", "banana cue"];
+
+for (const snack of snacks) {
+  const item = document.createElement("li");
+  item.textContent = snack;
+  item.className = "snack";
+  item.dataset.snack = snack;
+  menu.append(item);
+}
+
+console.log(`Items on the menu: ${menu.children.length}`);
+console.log(menu.children[0]);
+```
+</Playground>
+
+- `document.createElement("li")` makes a new element. It isn't on the page yet.
+- `className` sets its `class` attribute, which CSS uses for styling.
+- `dataset.snack` sets a `data-snack` attribute: a place to keep your own information on an element.
+- `append()` puts the element inside another one, which adds it to the page.
+
+`classList` adds and removes single classes without replacing the others. The game uses it to show MISAbot: CSS slides the bot up whenever its hole has the class `up`.
+
+```js
+hole.classList.add("up");      // show the bot
+hole.classList.remove("up");   // hide it again
+```
+
+## Practice: make a button for each cluster
+
+<Exercise id="cluster-chips">
+`clusters` is given. For each one, create a `<button>` with the class `chip`, put the cluster's name inside it, and add it to `#toolbar`.
+</Exercise>
+
+## Apply it to the game
+
+Add an empty board to `workshop/index.html`, right after the greeting:
+
+```html title="In workshop/index.html, after the greeting"
+      <p id="greeting">Open the console to see your first message.</p>
+      <div id="board" class="board"></div>
+```
+
+`style.css` already turns `.board` into a 3 × 3 grid and styles every `.hole`. JavaScript only needs to create them.
+
+In `workshop/script.js`, add two settings at the very top:
+
+```js title="Top of workshop/script.js"
+const KEYS = ["q", "w", "e", "a", "s", "d", "z", "x", "c"];
+const POP_DELAYS = { slow: 1100, normal: 850, fast: 600 };
+```
+
+Q W E, A S D, and Z X C form a 3 × 3 grid on the keyboard, matching the board. Each hole gets one of them, and the player will press them in lesson 07. Capitalized names like `KEYS` are a common way to mark settings the program never changes.
+
+The `POP_DELAYS` object replaces the speed `if` chain from the last lesson. Delete the `let popDelay;` block and use a lookup instead:
+
+```js title="Replace the popDelay if/else block"
+let popDelay = POP_DELAYS[speed];
+if (popDelay === undefined) {
+  speed = "normal";
+  popDelay = POP_DELAYS.normal;
+}
+```
+
+`POP_DELAYS[speed]` uses bracket notation because the key is in a variable. An answer like `"turbo"` isn't a key, so the lookup gives `undefined` and we fall back to normal.
+
+Keep the greeting lines, then build the board at the end of the file:
+
+```js title="Add at the end of workshop/script.js"
+const board = document.querySelector("#board");
+const holes = [];
+
+for (const key of KEYS) {
+  const hole = document.createElement("div");
+  hole.className = "hole";
+  hole.dataset.key = key;
+
+  const bot = document.createElement("img");
+  bot.className = "bot";
+  bot.src = "assets/misabot.png";
+  bot.alt = "";
+
+  const label = document.createElement("span");
+  label.className = "key";
+  label.textContent = key.toUpperCase();
+
+  hole.append(bot, label);
+  board.append(hole);
+  holes.push(hole);
+}
+
+console.log("Holes on the board:", holes.length);
+
+// Peek: show MISAbot in the middle hole so you can see the board working.
+holes[4].classList.add("up");
+```
+
+Each pass makes one hole with two things inside: MISAbot's picture and the key label. `holes.push(hole)` keeps every hole in an array, so later code can pick one. The `alt=""` tells screen readers the picture is decoration.
+
+## Run and check
+
+Reload the page and answer the prompts. You should see nine holes labeled Q to C, with MISAbot peeking out of the middle one (S). The console says `Holes on the board: 9`.
+
+You can also type JavaScript straight into the console. Try these one at a time:
+
+```js title="Type in the browser console"
+holes[0].classList.add("up");
+holes[4].classList.remove("up");
+holes.length
+```
+
+<Checkpoint id="03-board" />

@@ -1,0 +1,54 @@
+---
+title: Checkpoints and safe recovery
+description: Return to a working reference without losing your own game edits.
+---
+import CheckpointTable from '../../components/CheckpointTable.astro';
+
+Keep building on `my-game` during the lesson. You don't need to change branches at every milestone.
+
+## Find a working reference
+
+<CheckpointTable />
+
+Every checkpoint is a complete, working version of the game at that point. Open its `workshop/index.html` with Live Preview, or use the **Playground** link to run it in your browser without switching branches.
+
+## Save your work first
+
+Run these commands from `workshop`. Saving a file in your editor is necessary before staging it. A commit can preserve unfinished or broken code too.
+
+```bash
+git branch --show-current
+git status
+git add .
+git commit -m "Save my game before using a checkpoint"
+git status
+```
+
+Write down the branch name printed by the first command. `git add .` stages files under the current folder. Check the status list and make sure it contains only files you mean to save. If Git says there is nothing to commit and the tree is clean, continue. If the final status still lists changes outside `workshop`, ask a helper to preserve those too before switching.
+
+## Start a recovery branch
+
+For example, to recover to the finished mouse lesson:
+
+```bash
+git fetch origin
+git checkout -b recovery-mouse origin/06-mouse
+```
+
+Use a new name such as `recovery-mouse-2` if you already created `recovery-mouse`. This starts a local branch at the reference checkpoint. It doesn't merge your customized code into the reference files. You can continue your edits there, or copy a small change from your saved version with a helper.
+
+To return to your earlier version, commit any new work on the recovery branch, then:
+
+```bash
+git checkout my-game
+```
+
+Replace `my-game` with the branch name you wrote down if it was different. Your saved commit remains on that branch. Don't use force checkout, hard reset, or file deletion to get past a warning.
+
+## Copy instead of switching
+
+Each lesson ends with a **Full working files** section. Before replacing a file, commit your edits as above or save a separate copy outside the repository. Then copy the reference block into the named file. This changes your current file, so save it and reload the page.
+
+## Playground checkpoints
+
+The [browser playground](../playground/) has every checkpoint in its menu. It keeps a separate saved copy of your edits for each checkpoint, in this browser only. **Reset checkpoint** replaces your edits with the reference files, so download anything you want to keep first.

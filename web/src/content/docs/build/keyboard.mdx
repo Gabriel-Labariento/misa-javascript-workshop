@@ -1,0 +1,256 @@
+---
+title: 07 · Use the keyboard
+description: Listen for keydown and keyup, tell key from code, handle repeats and modifiers, and add keyboard controls to the game.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+import EventLab from '../../../components/EventLab.astro';
+
+The mouse is covered. This step lets players bop with Q W E, A S D, and Z X C, start a round with Space, stop it with Escape, and press Enter in the name box. It also deals with the surprises keyboards bring: held keys, capital letters, and keys typed into text boxes.
+
+## Listen for keys
+
+Two events cover most keyboard work:
+
+- `keydown` fires when a key goes down, and keeps firing while it's held.
+- `keyup` fires once, when the key is released.
+
+Key events go to the element that has **focus**: the text box you're typing in, the button you tabbed to, or the page itself when nothing else is focused. Like clicks, they bubble up, so a listener on `document` hears keys pressed anywhere on the page. That's the usual place for game controls.
+
+<Playground>
+```html
+<p id="last">Click here, then press any key.</p>
+```
+```js
+const last = document.querySelector("#last");
+
+document.addEventListener("keydown", (event) => {
+  last.textContent = `You pressed ${event.key}`;
+  console.log(event.key, event.code);
+});
+```
+</Playground>
+
+The preview is its own small page, so click inside it before pressing keys. Otherwise your key presses go to this lesson page instead.
+
+## Look inside a key event
+
+The lab below shows the two most useful properties for every key you press. Click the dashed box first, then try letters, Shift + 1, the arrow keys, Space, and holding a key down.
+
+<EventLab kind="keyboard" />
+
+## key or code?
+
+- `event.key` is what the key means right now: the character it types, or a name like `"Enter"`.
+- `event.code` is which physical key was pressed, named by its position on a standard US keyboard.
+
+| You press | `event.key` | `event.code` |
+| --- | --- | --- |
+| A | `"a"` | `"KeyA"` |
+| Shift + A | `"A"` | `"KeyA"` |
+| 1 | `"1"` | `"Digit1"` |
+| Shift + 1 | `"!"` | `"Digit1"` |
+| Space bar | `" "` | `"Space"` |
+| Enter | `"Enter"` | `"Enter"` |
+| Esc | `"Escape"` | `"Escape"` |
+| Up arrow | `"ArrowUp"` | `"ArrowUp"` |
+
+Use `key` for most shortcuts: letters, Enter, Escape, arrows. Use `code` when the position matters more than the character. Space is a good example: `event.code === "Space"` reads more clearly than comparing to a string with one space in it.
+
+Watch out for capital letters. With Shift or Caps Lock on, pressing Q gives `"Q"`. Calling `event.key.toLowerCase()` handles both.
+
+<Predict question="A player holds Shift and presses the 1 key. What is event.key?" options={['"1"', '"!"', '"Digit1"']} answer={1}>
+With Shift held, the 1 key types `!`, so `event.key` is `"!"`. `event.code` is still `"Digit1"`, because it names the physical key.
+</Predict>
+
+## Held keys repeat
+
+Hold a key down, and after a short pause the keyboard starts repeating it. Each repeat fires another `keydown`, with `event.repeat` set to `true`:
+
+<Playground>
+```html
+<p>Click here, then hold down any key for a second.</p>
+<p id="counts">keydown: 0 · repeats: 0 · keyup: 0</p>
+```
+```js
+const counts = document.querySelector("#counts");
+let downs = 0;
+let repeats = 0;
+let ups = 0;
+
+function show() {
+  counts.textContent = `keydown: ${downs} · repeats: ${repeats} · keyup: ${ups}`;
+}
+
+document.addEventListener("keydown", (event) => {
+  downs += 1;
+  if (event.repeat) {
+    repeats += 1;
+  }
+  show();
+});
+
+document.addEventListener("keyup", () => {
+  ups += 1;
+  show();
+});
+```
+</Playground>
+
+In a game, a held key shouldn't count as twenty bops. Ignoring events where `event.repeat` is `true` keeps one press to one action.
+
+## Modifier keys
+
+Shift, Control, Alt (Option on a Mac), and the Windows or Command key are **modifiers**. Every key event says which ones were held: `event.shiftKey`, `event.ctrlKey`, `event.altKey`, and `event.metaKey`.
+
+<Playground>
+```html
+<p>Click here, then press Ctrl + S (or Command + S on a Mac).</p>
+```
+```js
+document.addEventListener("keydown", (event) => {
+  const saving = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s";
+  if (saving) {
+    event.preventDefault();
+    console.log("Saved! (Pretend we saved something.)");
+  }
+});
+```
+</Playground>
+
+`preventDefault()` stops the browser from opening its own Save dialog. Only take over a familiar shortcut when your page really does that job.
+
+## Stop the browser's default action
+
+Some keys have built-in jobs. Space and the arrow keys scroll the page, and Enter submits forms. If your listener handles one of these keys, call `event.preventDefault()` so the page doesn't also scroll. Leave every other key alone, or typing elsewhere on the page will break.
+
+## Practice: move a player with the arrow keys
+
+<Exercise id="arrow-mover">
+Move the 🙂 by 20 pixels for each arrow key press: right and down add to `x` and `y`, left and up subtract. Update `player.style.left` and `player.style.top`, and call `preventDefault()` for arrow keys only. Click the preview before testing with **Run**.
+</Exercise>
+
+## Which element hears the key?
+
+Typing in a text box fires `keydown` on the box first, and then the event bubbles up to `document`. So a listener on `document` also hears everything typed into forms:
+
+<Playground>
+```html
+<input id="note" placeholder="Type here, then click outside and type again" />
+```
+```css
+#note { width: 100%; max-width: 360px; padding: 6px 8px; }
+```
+```js
+const note = document.querySelector("#note");
+
+document.addEventListener("keydown", (event) => {
+  if (event.target === note) {
+    console.log(`Typed into the box: ${event.key}`);
+  } else {
+    console.log(`Shortcut key: ${event.key}`);
+  }
+});
+```
+</Playground>
+
+`event.target` tells you where the key went. Game shortcuts should skip keys typed into form fields; otherwise, pressing Space in the name box would start a round instead of typing a space.
+
+## Practice: add keyboard shortcuts to a search box
+
+<Exercise id="search-box">
+Many sites let you press `/` to jump to the search box. Build that, plus two keys inside the box:
+
+- **Enter** shows `Searching for "QUERY"…` in `feedback`, with the query trimmed. If the box is empty, show `Type something first.`
+- **Escape** clears the box and the message.
+- **/** anywhere else on the page moves focus into the box with `search.focus()`. Typing `/` inside the box should still work normally.
+</Exercise>
+
+## Apply it to the game
+
+### Add a hint
+
+Add a line under the message in `workshop/index.html`, so players know the keys:
+
+```html title="In workshop/index.html, after the message"
+      <p id="message" class="message" role="status"></p>
+      <p class="hint">Bop with your mouse or the key shown in each hole. Space starts. Escape stops.</p>
+```
+
+### Find a hole by its key
+
+Each hole stores its key in `data-key`. Add a function after `hideBot` that searches the holes for a key, using a loop and an early return:
+
+```js title="Add after hideBot in workshop/script.js"
+function findHole(key) {
+  for (const hole of holes) {
+    if (hole.dataset.key === key) {
+      return hole;
+    }
+  }
+  return null;
+}
+```
+
+It returns `null` for any key that isn't on the board, like Shift or `p`.
+
+### Enter in the name box
+
+At the end of the file, listen for Enter on the name box itself:
+
+```js title="Add at the end of workshop/script.js"
+// Enter in the name box starts the round.
+nameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    startGame();
+  }
+});
+```
+
+### Keys for the whole page
+
+Then add one listener on `document` for everything else:
+
+```js title="Add at the end of workshop/script.js"
+document.addEventListener("keydown", (event) => {
+  // Keys typed into the form belong to the form, not the game.
+  if (event.target === nameInput || event.target === speedSelect) {
+    return;
+  }
+  // Holding a key repeats keydown. One press should mean one bop.
+  if (event.repeat) {
+    return;
+  }
+
+  if (event.code === "Space") {
+    event.preventDefault();
+    startGame();
+  } else if (event.key === "Escape") {
+    endGame();
+  } else {
+    const hole = findHole(event.key.toLowerCase());
+    if (hole !== null) {
+      bop(hole);
+    }
+  }
+});
+```
+
+Read it from the top. Keys typed into the form are skipped, and so are repeats. Space starts a round (and `preventDefault()` stops the page from scrolling), Escape ends it, and any other key is looked up on the board. `bop()` already ignores keys pressed between rounds.
+
+There's one more detail working for you. When a round starts, `startGame` disables the controls fieldset. A disabled text box can't keep focus, so focus returns to the page. Without that, after pressing Enter in the name box, every Q, W, or E you pressed would be typed into the box, and the first check would skip it.
+
+## Run and check
+
+| Try this | What should happen |
+| --- | --- |
+| Press Space with nothing selected | A round starts, and the page doesn't scroll |
+| Press the key in MISAbot's hole, in either case | The score goes up |
+| Hold a key down over MISAbot | Only one bop counts |
+| Press Escape mid-round | The round ends with your result |
+| Type `Mary Ann` in the name box | The space types normally, and no round starts |
+| Press Enter in the name box | A round starts, and your keys reach the game |
+
+<Checkpoint id="07-keyboard" />

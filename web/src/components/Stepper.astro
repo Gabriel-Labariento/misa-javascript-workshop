@@ -1,0 +1,74 @@
+---
+import { LOOP_LINES, EVENT_LINES, CLASS_LINES } from '../lib/steppers.mjs';
+const { kind = 'loop' } = Astro.props;
+const lines = kind === 'event' ? EVENT_LINES : kind === 'class' ? CLASS_LINES : LOOP_LINES;
+const heading = kind === 'event' ? 'Watch a listener wait' : kind === 'class' ? 'Watch new build an object' : 'Watch a loop run';
+const ready = kind === 'event' ? 'Ready. Press Step to run the script from the top.' : kind === 'class' ? 'Ready. Press Step to run the code.' : 'Ready. Press Step to start the loop.';
+const empty = kind === 'class' ? 'Objects: (none yet)' : 'Console: (empty)';
+---
+
+<misa-stepper data-kind={kind} class="stepper" style="display:block">
+  <p><strong>{heading}</strong></p>
+  <pre aria-label="JavaScript demonstration"><code>{lines.map((line, index) => <span data-line={index}>{line}</span>)}</code></pre>
+  <p data-state role="status" aria-live="polite">{ready}</p>
+  <pre data-output aria-label={kind === 'class' ? 'Objects so far' : 'Console output'}>{empty}</pre>
+  <button type="button" data-step>Step</button>{kind === 'event' && <button type="button" data-click disabled>Click the button</button>}<button type="button" data-reset>Reset</button>
+  <noscript>This example needs JavaScript for stepping. Read the code from top to bottom instead.</noscript>
+</misa-stepper>
+
+<script>
+  import { loopState, loopStatus, eventState, classState, describeObject } from '../lib/steppers.mjs';
+
+  class MisaStepper extends HTMLElement {
+    connectedCallback() {
+      let step = 0;
+      let clicks = 0;
+      const kind = this.dataset.kind;
+      const advance = this.querySelector<HTMLButtonElement>('[data-step]')!;
+      const reset = this.querySelector<HTMLButtonElement>('[data-reset]')!;
+      const click = this.querySelector<HTMLButtonElement>('[data-click]');
+      const status = this.querySelector('[data-state]')!;
+      const output = this.querySelector('[data-output]')!;
+      const highlight = (lines: number[]) => {
+        this.querySelectorAll<HTMLElement>('[data-line]').forEach((line) => line.classList.toggle('current', lines.includes(Number(line.dataset.line))));
+      };
+      const render = () => {
+        if (kind === 'event') {
+          const state = eventState(step, clicks);
+          highlight(state.lines);
+          status.textContent = state.status;
+          output.textContent = `Console:\n${state.output.join('\n') || '(empty)'}`;
+          advance.disabled = !state.canStep;
+          if (click) click.disabled = !state.canClick;
+        } else if (kind === 'class') {
+          const state = classState(step);
+          highlight(state.lines);
+          status.textContent = state.status;
+          output.textContent = describeObject(state);
+          advance.disabled = Boolean(state.done);
+        } else {
+          const state = loopState(step);
+          highlight(state.lines);
+          status.textContent = loopStatus(step);
+          output.textContent = `Console:\n${state.output.join('\n') || '(empty)'}`;
+          advance.disabled = state.done;
+        }
+      };
+      advance.addEventListener('click', () => {
+        step++;
+        render();
+      });
+      click?.addEventListener('click', () => {
+        clicks++;
+        render();
+      });
+      reset.addEventListener('click', () => {
+        step = 0;
+        clicks = 0;
+        render();
+      });
+      render();
+    }
+  }
+  if (!customElements.get('misa-stepper')) customElements.define('misa-stepper', MisaStepper);
+</script>

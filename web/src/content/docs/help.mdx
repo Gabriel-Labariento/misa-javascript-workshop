@@ -1,0 +1,84 @@
+---
+title: When something doesn't run
+description: Find the next step for common JavaScript, browser, Live Preview, and Git problems.
+---
+
+Open the browser console first. Red lines are errors. Read the first one: it names the kind of problem, the file, and the line number. Show a helper the full message and the lines around that number.
+
+If the console is empty and nothing happens, check that you're looking at the right tab and that the page was reloaded after your last save.
+
+## The page doesn't change after I save
+
+Check that VS Code saved the file: an unsaved file has a dot on its tab. Reload the browser tab. If you opened `index.html` by double-clicking it, the address starts with `file://`; open it through Live Preview instead, so it starts with `http://127.0.0.1`.
+
+If the browser keeps showing an old version, do a hard reload: **Ctrl+Shift+R**, or **Cmd+Shift+R** on a Mac.
+
+## Git or VS Code isn't found
+
+Close and reopen the terminal after installation. Check `git --version` and `code --version`. If `code` isn't found on a Mac, open VS Code, press **Cmd+Shift+P**, and run **Shell Command: Install 'code' command in PATH**. Use the [browser playground](../playground/) if troubleshooting is taking you away from the lesson.
+
+## Uncaught SyntaxError
+
+The browser couldn't read the file, so none of it ran. Look for a missing or extra bracket, brace, quote, or comma on the named line or the line before it. An unclosed `{` or a missing backtick at the end of a template literal can make the error appear far below the real mistake. VS Code highlights matching brackets when your cursor is next to one.
+
+Copy code using the copy button on each block, not by retyping from a screenshot.
+
+## Uncaught ReferenceError: something is not defined
+
+The name doesn't exist where you used it. Check the spelling and capital letters: `nameInput` and `nameinput` are different names. Also check that the variable or function was created before that line runs, and, from lesson 08 on, that it was imported into this module.
+
+## Uncaught TypeError: Cannot read properties of null
+
+Usually this means `document.querySelector` found nothing, so the variable holds `null`. Check that:
+
+- the selector matches the HTML exactly: `#` for an `id`, `.` for a `class`;
+- the element is really in `index.html`, with the same spelling; and
+- the `<script>` tag is at the end of the body (or is a module), so the elements exist before the script runs.
+
+## Uncaught TypeError: something is not a function
+
+You called something with parentheses that isn't a function. Check the spelling of method names like `addEventListener` and `querySelector`. It also happens when a name holds a value instead of a function, such as calling `score()` when `score` is a number.
+
+## Assignment to constant variable
+
+The variable was made with `const`. Use `let` for values that change, such as a score or the time left.
+
+## A listener runs once when the page loads, then never again
+
+You called the function instead of passing it: `addEventListener("click", startGame())`. Remove the parentheses after the function name, or wrap the call in an arrow function: `addEventListener("click", () => startGame())`.
+
+## Keys don't do anything
+
+Click the game page first, so it has focus. If the name box or speed menu is focused, the game deliberately ignores keys there. Check the console for errors, then log `event.key` inside your `keydown` listener to see what actually arrives.
+
+## The page scrolls when I press Space or the arrow keys
+
+Call `event.preventDefault()` in the `keydown` listener for the keys your game handles.
+
+## Modules won't load
+
+- **`Access to script at 'file:///…' has been blocked by CORS policy`**: the page was opened from a file. Open it through Live Preview.
+- **`Cannot use import statement outside a module`**: the `<script>` tag needs `type="module"`.
+- **`Failed to resolve module specifier`**: import paths must start with `./`, like `"./board.js"`.
+- **`Failed to load module script` or a 404 error**: the file name in the import doesn't match the real file, or the file isn't saved in `workshop`. Check spelling and capital letters.
+- **`does not provide an export named …`**: the name in the import braces doesn't match an `export` in that file, or you used braces for a default export.
+
+## this is undefined, or a method shows NaN
+
+A class method was passed to `addEventListener` or `setInterval` directly, so `this` isn't the object. Wrap it in an arrow function: `() => game.start()` or `setInterval(() => this.popUp(), 850)`.
+
+## The page freezes
+
+A loop is probably running forever. Close the tab, then check every `while` loop: something inside it must eventually make its condition false. The examples on this site stop runaway loops for you, but a normal page can't.
+
+## Git refuses a commit or branch switch
+
+If Git asks who you are, follow the name and email setup on the [setup page](../setup/#if-git-needs-your-name).
+
+If it warns that local changes would be overwritten, follow [safe recovery](../checkpoints/). Preserve your files before trying again. If a checkpoint isn't found, run `git fetch origin` and check its exact spelling.
+
+If the branch name already exists, choose a new local recovery name. Don't delete the earlier branch; it may hold work you want back.
+
+## The playground lost my work
+
+The playground saves edits in this browser only. Private windows, a different browser, or clearing site data all start fresh. Use **Download file** to keep copies, or move to the local setup with Git when you can.

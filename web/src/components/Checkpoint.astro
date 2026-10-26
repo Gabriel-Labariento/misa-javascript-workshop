@@ -1,0 +1,23 @@
+---
+import mapping from '../data/checkpoints.json';
+import site from '../data/site.json';
+import { Code } from '@astrojs/starlight/components';
+const { id } = Astro.props;
+const checkpoint = mapping.find((item) => item.id === id);
+if (!checkpoint) throw new Error(`Unknown checkpoint: ${id}`);
+const examples = import.meta.glob('../examples/**/*.txt', { query: '?raw', import: 'default', eager: true });
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const lang = (name: string) => (name.endsWith('.html') ? 'html' : name.endsWith('.css') ? 'css' : 'js');
+// style.css never changes, so it's shown once (on 00-start) instead of on every checkpoint.
+const shown = checkpoint.files.filter((file) => file !== 'style.css' || id === '00-start');
+---
+
+<aside aria-label="Checkpoint information">
+  <p><strong>Recovery checkpoint:</strong> <a href={`${site.repo}/tree/${id}/workshop`}>{id}</a>. <a href={`${base}/checkpoints/`}>Save your work before switching.</a></p>
+  <p>Open <code>workshop/index.html</code> with Live Preview, or <a href={`${base}/playground/?checkpoint=${id}`}>open {id} in the browser playground</a>. You should see: {checkpoint.expected}.</p>
+</aside>
+<details>
+  <summary>Full working files for {id}</summary>
+  <p>Replace the entire named file with its block. Keep every file in the same <code>workshop</code> folder.{id !== '00-start' && <> <code>style.css</code> is the same as in <a href={`${base}/build/hello/#say-hello-to-the-world`}>00-start</a>.</>}</p>
+  {shown.map((file) => <Code code={String(examples[`../examples/${id}/${file}.txt`])} lang={lang(file)} title={`workshop/${file}`} />)}
+</details>

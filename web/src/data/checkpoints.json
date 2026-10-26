@@ -1,0 +1,117 @@
+[
+  {
+    "id": "00-start",
+    "title": "Hello, world",
+    "lesson": "build/hello",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "Hello, world! in the console"
+  },
+  {
+    "id": "01-hello",
+    "title": "Greet the player",
+    "lesson": "build/hello",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "A prompt for your name, then a greeting on the page"
+  },
+  {
+    "id": "02-decisions",
+    "title": "Make decisions",
+    "lesson": "build/decisions",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "A name and a speed, with sensible fallbacks"
+  },
+  {
+    "id": "03-board",
+    "title": "Build the board",
+    "lesson": "build/board",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "Nine holes, with MISAbot peeking from the middle"
+  },
+  {
+    "id": "04-functions",
+    "title": "Functions and timers",
+    "lesson": "build/functions",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "MISAbot pops around the board for 10 seconds"
+  },
+  {
+    "id": "05-clicks",
+    "title": "Listen for clicks",
+    "lesson": "build/clicks",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "Start a 30-second round and click bots to score"
+  },
+  {
+    "id": "06-mouse",
+    "title": "Follow the mouse",
+    "lesson": "build/mouse",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "A hammer follows your mouse and bops on mousedown"
+  },
+  {
+    "id": "07-keyboard",
+    "title": "Use the keyboard",
+    "lesson": "build/keyboard",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css"
+    ],
+    "expected": "Q W E / A S D / Z X C bop, Space starts, Escape stops"
+  },
+  {
+    "id": "08-modules",
+    "title": "Split into modules",
+    "lesson": "build/modules",
+    "files": [
+      "index.html",
+      "main.js",
+      "board.js",
+      "rank.js",
+      "style.css"
+    ],
+    "expected": "The same game, split into three modules"
+  },
+  {
+    "id": "09-classes",
+    "title": "Build a class",
+    "lesson": "build/classes",
+    "files": [
+      "index.html",
+      "main.js",
+      "game.js",
+      "board.js",
+      "rank.js",
+      "style.css"
+    ],
+    "expected": "A Game class runs each round and reports accuracy"
+  }
+]

@@ -1,0 +1,141 @@
+---
+title: More with arrays
+description: Search, filter, transform, sort, and copy arrays with the methods JavaScript programmers use every day.
+---
+import Playground from '../../../components/Playground.astro';
+
+The game used arrays to hold the keys and the holes, and a `for...of` loop to visit them. Arrays also come with methods that do common jobs in one line. You'll see them in almost every JavaScript program, so they're worth learning to read.
+
+Most of these methods take a function as their argument, usually an arrow function. The array calls it once for each item.
+
+## Find one item
+
+`find()` returns the first item for which your function returns `true`, or `undefined` if none match. `findIndex()` returns its position instead, or `-1`.
+
+<Playground>
+```js
+const holes = [
+  { key: "q", up: false },
+  { key: "w", up: true },
+  { key: "e", up: false },
+];
+
+const hole = holes.find((candidate) => candidate.key === "w");
+console.log(hole);
+console.log(holes.findIndex((candidate) => candidate.up));
+console.log(holes.find((candidate) => candidate.key === "p"));
+```
+</Playground>
+
+`find()` could replace the game's `findHole` loop: `holes.find((hole) => hole.dataset.key === key)`. It gives `undefined` instead of `null` when nothing matches.
+
+## Keep some items
+
+`filter()` builds a new array with only the items that pass your test:
+
+<Playground>
+```js
+const scores = [12, 0, 25, 7, 18];
+
+const passing = scores.filter((score) => score >= 10);
+console.log(passing);
+console.log(scores);
+```
+</Playground>
+
+The original array doesn't change. `filter()` always returns a new one, even if it's empty.
+
+## Change every item
+
+`map()` builds a new array by applying your function to every item:
+
+<Playground>
+```js
+const keys = ["q", "w", "e"];
+const labels = keys.map((key) => key.toUpperCase());
+console.log(labels);
+
+const prices = [25, 20, 30];
+const withTax = prices.map((price) => Math.round(price * 1.12));
+console.log(withTax);
+```
+</Playground>
+
+`filter()` and `map()` chain well, because each returns an array: `scores.filter((s) => s > 0).map((s) => s * 2)`.
+
+## Ask yes-or-no questions
+
+`some()` checks whether at least one item passes. `every()` checks whether all of them do. `includes()` checks for one exact value.
+
+<Playground>
+```js
+const scores = [12, 0, 25];
+
+console.log(scores.some((score) => score === 0));
+console.log(scores.every((score) => score >= 0));
+console.log(scores.includes(25));
+```
+</Playground>
+
+## Combine everything into one value
+
+`reduce()` walks through the array carrying a running result. It's the method behind totals:
+
+<Playground>
+```js
+const order = [
+  { name: "Taho", price: 25, quantity: 2 },
+  { name: "Turon", price: 20, quantity: 3 },
+];
+
+const total = order.reduce((sum, item) => sum + item.price * item.quantity, 0);
+console.log(total);
+```
+</Playground>
+
+The `0` at the end is the starting value of `sum`. Each call returns the new running total. If `reduce()` feels hard to read, a `for...of` loop with `total +=` does the same job, and that's perfectly fine.
+
+## Sort numbers correctly
+
+`sort()` rearranges an array in place. By default it compares items as *text*, which surprises everyone the first time:
+
+<Playground>
+```js
+const scores = [5, 25, 100, 12];
+
+console.log([...scores].sort());
+console.log([...scores].sort((a, b) => a - b));
+console.log([...scores].sort((a, b) => b - a));
+```
+</Playground>
+
+As text, `"100"` comes before `"25"`, just as "a" comes before "b". Pass a compare function to sort numbers: `(a, b) => a - b` for smallest first, `(a, b) => b - a` for largest first.
+
+## Copy before you change
+
+Assigning an array to another variable doesn't copy it. Both names point to the same array.
+
+<Playground>
+```js
+const original = ["turon", "taho"];
+const sameArray = original;
+const copy = [...original];
+
+original.push("kwek-kwek");
+console.log(sameArray);
+console.log(copy);
+```
+</Playground>
+
+`[...original]` uses the **spread** syntax to make a new array with the same items. That's why the sort example above spreads the array first: `sort()` changes the array it's called on, and the copy protects the original order. The copy is **shallow**: if the items are objects, both arrays share those objects.
+
+## Practice: a leaderboard
+
+Start with an array of round results, each an object with a `playerName` and a `score`. Write code that:
+
+1. keeps only the rounds with a score above zero;
+2. sorts them from highest to lowest score, without changing the original array;
+3. makes a new array of strings like `"1. Bea: 25"`; and
+4. logs whether anyone scored 25 or more.
+
+Write it with loops first if that's easier, then try rewriting a step with an array method. Keep whichever version you can explain. The [MDN Array reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) lists every array method with examples.

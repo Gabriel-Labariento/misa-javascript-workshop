@@ -1,0 +1,20 @@
+---
+// A quick "what happens?" question. Put the code block first inside the tags,
+// then the explanation, which stays hidden until the learner answers.
+interface Props {
+  question?: string;
+  options: string[];
+  answer: number;
+}
+const { question = 'What will this print?', options, answer } = Astro.props;
+---
+
+<js-predict class="pg-predict" data-options={JSON.stringify(options)} data-answer={answer}>
+  <p class="pg-predict-q"><span class="pg-predict-kicker">Predict</span> {question}</p>
+  <div class="pg-predict-body"><slot /></div>
+  <noscript><p><strong>Answer:</strong> {options[answer]}</p></noscript>
+</js-predict>
+
+<script>
+  import '../lib/playground/client.js';
+</script>

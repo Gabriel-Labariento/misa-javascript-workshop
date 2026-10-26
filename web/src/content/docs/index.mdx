@@ -1,0 +1,55 @@
+---
+title: Build Bop the Bot in JavaScript
+description: Learn JavaScript, mouse and keyboard events, modules, and classes by making a small browser game.
+---
+
+<div class="workshop-intro">
+  <p class="workshop-intro__audience">A JavaScript workshop for<br /><strong>beginner programmers.</strong></p>
+  <img src={`${import.meta.env.BASE_URL}assets/misabot.png`} alt="MISA's smiling robot mascot" width="180" height="180" />
+  <p class="workshop-intro__team">From <strong>MISA,</strong><br />with help from <strong>MISAbot.</strong></p>
+</div>
+
+## What we're building toward
+
+You'll build **Bop the Bot**, a game that runs in your browser. MISAbot pops out of a 3 × 3 board, and you bop it before it ducks away. Click it with the mouse or press the key printed in its hole. Each round lasts 30 seconds and ends with your score and accuracy.
+
+<img class="workshop-shot" src={`${import.meta.env.BASE_URL}assets/bop-the-bot.png`} alt="The finished Bop the Bot game: a name box, a speed menu, a Start button, the score and timer, and a 3 by 3 board where MISAbot pops out of the middle hole while a hammer cursor hovers over it." width="1100" height="910" />
+
+You don't need to know JavaScript yet. Bring a laptop with a browser, and keep this guide open beside your editor. If installing tools gets in the way, the [browser playground](./playground/) runs every step of the game without any setup.
+
+```text title="The end of a round"
+Dana, you bopped 22 bots with 88% accuracy. Quick hands!
+```
+
+## How we'll build it
+
+The workshop has three parts. Each lesson adds one working piece to the game.
+
+| Part | Lesson | What you'll have working |
+| --- | --- | --- |
+| Intro to JavaScript | [Say hello](./build/hello/) | A greeting that uses the player's name |
+| | [Make decisions](./build/decisions/) | A name and a speed, with fallbacks for odd answers |
+| | [Build the board](./build/board/) | Nine holes made with a loop |
+| | [Give your code a job](./build/functions/) | Functions and timers that move MISAbot around |
+| Mouse and keyboard | [Listen for clicks](./build/clicks/) | A 30-second round you play by clicking |
+| | [Follow the mouse](./build/mouse/) | A hammer cursor that bops the moment you press |
+| | [Use the keyboard](./build/keyboard/) | Key controls, plus Space to start and Escape to stop |
+| Modules and classes | [Split code into modules](./build/modules/) | The game spread across files with `import` and `export` |
+| | [Build a class](./build/classes/) | A `Game` class that runs each round |
+| | [Test and personalize](./build/test/) | Your own version, saved in Git |
+
+## How each lesson works
+
+Every lesson explains one idea with a small example you can run right on the page:
+
+- **▶ Run** runs the example. Change anything, run it again, and see what happens. **Reset** brings the original back.
+- **Predict** boxes show some code and ask what it will do before you find out.
+- **Practice** boxes give you a short task with automatic checks. If you get stuck, open a hint or peek at one possible solution.
+
+Once an idea makes sense on its own, we add it to the game in the `workshop` folder.
+
+## Before we edit the game
+
+First, meet [JavaScript](./javascript/) and see where it runs. Then meet [Git and GitHub](./git-github/) before using them for the workshop. If you haven't installed anything yet, start with [setup](./setup/).
+
+[Start with JavaScript →](./javascript/)

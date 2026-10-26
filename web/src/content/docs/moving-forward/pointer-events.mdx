@@ -1,0 +1,113 @@
+---
+title: Mouse, touch, and pen
+description: Use pointer events so one listener handles a mouse, a finger, or a stylus, and make the game playable on phones.
+---
+import Playground from '../../../components/Playground.astro';
+
+Your game listens for mouse events. Phones and tablets don't have a mouse, so browsers on touch screens send mouse events only as a stand-in, and they can arrive late. **Pointer events** fix this: one set of events covers a mouse, a finger, and a pen.
+
+## Pointer events mirror mouse events
+
+| Mouse event | Pointer event |
+| --- | --- |
+| `mousedown` | `pointerdown` |
+| `mousemove` | `pointermove` |
+| `mouseup` | `pointerup` |
+| `mouseenter` / `mouseleave` | `pointerenter` / `pointerleave` |
+
+They carry the same `clientX`, `clientY`, and `button` properties you already know, plus a few new ones. `event.pointerType` says what's pointing: `"mouse"`, `"touch"`, or `"pen"`.
+
+<Playground>
+```html
+<div id="pad">Press here with a mouse, a finger, or a pen</div>
+```
+```css
+#pad { padding: 40px 12px; text-align: center; background: #eef7f7; border: 2px dashed #19aab1; border-radius: 10px; touch-action: none; user-select: none; }
+```
+```js
+const pad = document.querySelector("#pad");
+
+pad.addEventListener("pointerdown", (event) => {
+  console.log(`pointerdown from a ${event.pointerType} at ${event.clientX}, ${event.clientY}`);
+});
+```
+</Playground>
+
+If you're reading this on a phone, tap the pad: it reports `touch`.
+
+## Stop the browser from scrolling the board
+
+On touch screens, a finger dragging across the page normally scrolls or zooms it. The CSS property `touch-action: none` tells the browser to leave gestures on an element to your code. Add it to the board, not the whole page, so people can still scroll everywhere else:
+
+```css title="Add to workshop/style.css"
+.board {
+  touch-action: none;
+}
+```
+
+## Switch the game to pointer events
+
+In `main.js`, change the board's `mousedown` listener to `pointerdown`, and the document's `mouseup` to `pointerup`:
+
+```js title="In workshop/main.js"
+board.addEventListener("pointerdown", (event) => {
+  if (event.button !== 0) {
+    return;
+  }
+  hammer.classList.add("swing");
+  const hole = event.target.closest(".hole");
+  if (hole !== null) {
+    game.bop(hole);
+  }
+});
+
+document.addEventListener("pointerup", () => {
+  hammer.classList.remove("swing");
+});
+```
+
+A finger press reports `button` as `0`, so the main-button check still works. The hammer is less useful on a touch screen, since there's no pointer to follow between taps. You could show it only when `event.pointerType === "mouse"`.
+
+Test on a phone by putting the game online with [GitHub Pages](../publishing/), then opening its link.
+
+## Drag with pointer capture
+
+Dragging means listening for movement after a press until the release, even if the pointer slips off the element. `setPointerCapture` sends all of that pointer's events to your element until it's released:
+
+<Playground>
+```html
+<div id="stage"><div id="sticker">🤖</div></div>
+```
+```css
+#stage { position: relative; height: 150px; background: #eef7f7; border-radius: 10px; }
+#sticker { position: absolute; left: 20px; top: 20px; font-size: 40px; cursor: grab; touch-action: none; user-select: none; }
+```
+```js
+const sticker = document.querySelector("#sticker");
+let offsetX = 0;
+let offsetY = 0;
+
+sticker.addEventListener("pointerdown", (event) => {
+  sticker.setPointerCapture(event.pointerId);
+  offsetX = event.offsetX;
+  offsetY = event.offsetY;
+});
+
+sticker.addEventListener("pointermove", (event) => {
+  if (!sticker.hasPointerCapture(event.pointerId)) {
+    return;
+  }
+  const stage = sticker.parentElement.getBoundingClientRect();
+  sticker.style.left = `${event.clientX - stage.left - offsetX}px`;
+  sticker.style.top = `${event.clientY - stage.top - offsetY}px`;
+});
+```
+</Playground>
+
+`getBoundingClientRect()` gives an element's position on screen, so subtracting the stage's `left` and `top` turns window coordinates into coordinates inside the stage. Remembering `offsetX` and `offsetY` keeps the sticker from jumping so its corner sits under the pointer.
+
+## Practice: make the game phone-friendly
+
+Switch your game to pointer events and add `touch-action: none` to the board. Then make the layout fit a narrow screen: the board already scales with the page, but check that the controls wrap neatly. Finally, decide what keyboard-free players need instead of the Space and Escape keys. A visible Stop button is one answer.
+
+[MDN's pointer events guide](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events) has the full list of pointer properties.

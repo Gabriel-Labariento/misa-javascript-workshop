@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bop the Bot</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="game">
+      <h1>Bop the Bot</h1>
+      <p id="greeting">Open the console to see your first message.</p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

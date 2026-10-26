@@ -1,0 +1,16 @@
+---
+interface Props {
+  kind: 'mouse' | 'keyboard';
+}
+const { kind } = Astro.props;
+---
+
+<js-event-lab class="lab-block" data-kind={kind}>
+  <div class="lab-fallback">
+    <p>This {kind} lab needs JavaScript. Open your browser’s developer tools and add a {kind === 'mouse' ? 'click or mousemove' : 'keydown'} listener in the console to see the same events.</p>
+  </div>
+</js-event-lab>
+
+<script>
+  import '../lib/playground/client.js';
+</script>

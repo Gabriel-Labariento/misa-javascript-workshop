@@ -1,0 +1,387 @@
+---
+title: 09 · Build a class
+description: Learn classes, constructors, this, methods, and getters, then move the game's state into a Game class.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+import Stepper from '../../../components/Stepper.astro';
+
+`main.js` still keeps eight separate variables for a round, plus functions that reach out and change them. This step gathers them into a **class**: one `Game` object that knows its own score and can start, bop, and stop itself.
+
+## Think in objects
+
+You've been using objects the whole time. A page element has **state**, stored in properties like `textContent` and `classList`. It also has **behavior**, in methods like `append()` and `addEventListener()`. Every button is a separate object of the same kind, with its own text.
+
+A class lets you define your own kind of object. You describe the state and behavior once, then make as many objects of that kind as you need.
+
+## Define a class and make objects
+
+<Playground>
+```js
+class Member {
+  constructor(memberName, cluster) {
+    this.memberName = memberName;
+    this.cluster = cluster;
+    this.events = 0;
+  }
+
+  attend() {
+    this.events += 1;
+  }
+
+  introduce() {
+    return `${this.memberName} from ${this.cluster}, ${this.events} events so far`;
+  }
+}
+
+const bea = new Member("Bea", "Events");
+const cy = new Member("Cy", "eServices");
+
+bea.attend();
+bea.attend();
+
+console.log(bea.introduce());
+console.log(cy.introduce());
+console.log(bea);
+```
+</Playground>
+
+- `class Member { ... }` describes a kind of object. Class names start with a capital letter.
+- `new Member("Bea", "Events")` makes a new object, called an **instance**, and runs `constructor` with those arguments.
+- Inside the class, `this` means "the object this code is running for". `this.events = 0` stores a property on the new object.
+- `attend()` and `introduce()` are **methods**: functions every member has. Calling `bea.attend()` runs `attend` with `this` set to `bea`.
+
+Each instance keeps its own state. Bea attended twice; Cy's count is still 0.
+
+<Stepper kind="class" />
+
+## Getters compute a value
+
+A **getter** looks like a property from the outside, but runs a method to work out its value. Write `get` in front of the method, and read it without parentheses:
+
+<Playground>
+```js
+class Round {
+  constructor() {
+    this.hits = 0;
+    this.misses = 0;
+  }
+
+  get accuracy() {
+    const attempts = this.hits + this.misses;
+    if (attempts === 0) {
+      return 0;
+    }
+    return Math.round((this.hits / attempts) * 100);
+  }
+}
+
+const round = new Round();
+round.hits = 7;
+round.misses = 3;
+console.log(`${round.accuracy}% accuracy`);
+```
+</Playground>
+
+`round.accuracy` always reflects the current hits and misses, so there's no separate number to keep in sync. `Math.round` rounds to the nearest whole number.
+
+## Practice: write a Scoreboard class
+
+<Exercise id="scoreboard-class">
+Finish `Scoreboard`. The constructor stores `playerName` and starts `points` at 0. `add(amount)` adds to the points, `reset()` sets them back to 0, and the getter `summary` returns text like `Alex: 5 points`, or `Alex: 1 point` when there's exactly one.
+</Exercise>
+
+## Keep this pointing at your object
+
+Methods and event listeners have one famous trap. Run this, then click **Start** in the preview a few times:
+
+<Playground>
+```html
+<button id="start">Start</button>
+```
+```js
+class Game {
+  constructor() {
+    this.round = 0;
+  }
+
+  start() {
+    this.round += 1;
+    console.log(`Round ${this.round}`);
+  }
+}
+
+const game = new Game();
+const button = document.querySelector("#start");
+
+button.addEventListener("click", game.start);
+```
+</Playground>
+
+It prints `Round NaN`. `this` is decided by *how a function is called*, not where it was written. `game.start()` calls `start` on `game`, so `this` is `game`. But `addEventListener("click", game.start)` only hands the browser the function. On a click, the browser calls it with `this` set to the button. The button has no `round` property, so `this.round += 1` turns `undefined` into `NaN`.
+
+The fix is to wrap the call in an arrow function, so `start` is called on `game` again:
+
+```js
+button.addEventListener("click", () => game.start());
+```
+
+Change the last line of the example to this and run it again. Arrow functions don't have a `this` of their own; they use the `this` of the code around them. That's also how a class can use timers on itself, as you'll see in the game: `setInterval(() => this.popUp(), 850)`.
+
+<Predict question="When the browser calls game.start as a click listener, what is this inside start()?" options={['game', 'the button that was clicked', 'undefined']} answer={1}>
+For a listener added with `addEventListener`, the browser sets `this` to the element the listener belongs to. Wrapping the call in an arrow function, `() => game.start()`, makes `this` the game again.
+</Predict>
+
+## Practice: give each button its own counter
+
+<Exercise id="click-counter-class">
+Finish `ClickCounter` so each counter listens to its own button. In the constructor, add a click listener to `this.button` that calls `this.increment()`; use an arrow function so `this` stays the counter. `increment()` adds 1 to `this.count` and shows it on the button, like `Left: 1`.
+</Exercise>
+
+## Export a class
+
+A class can be exported like a function. A file built around one class usually makes it the default export:
+
+```js title="game.js"
+export default class Game {
+  // ...
+}
+```
+
+```js title="main.js"
+import Game from "./game.js";
+
+const game = new Game(/* ... */);
+```
+
+## Apply it to the game
+
+The new `game.js` takes over everything that describes one round: its state, starting, popping, ticking, bopping, and stopping. `main.js` keeps the page wiring: it builds the board, makes one `Game`, and connects events to it.
+
+| Before (in main.js) | After (in the Game class) |
+| --- | --- |
+| `let score = 0;` and the other round variables | `this.score`, `this.misses`, `this.timeLeft`, … in the constructor |
+| `startGame()` | `game.start(playerName, speed)` |
+| `bop(hole)` | `game.bop(hole)` |
+| `endGame()` | `game.stop()` |
+| Score and misses in the end message | Plus `game.accuracy`, a getter |
+
+### Create game.js
+
+Create `workshop/game.js`:
+
+```js title="workshop/game.js"
+import { randomHole, showBot, hideBot } from "./board.js";
+import rankFor from "./rank.js";
+
+const POP_DELAYS = { slow: 1100, normal: 850, fast: 600 };
+const ROUND_SECONDS = 30;
+
+export default class Game {
+  constructor(holes, ui) {
+    this.holes = holes;
+    this.ui = ui;
+    this.playerName = "Player";
+    this.score = 0;
+    this.misses = 0;
+    this.timeLeft = ROUND_SECONDS;
+    this.currentHole = null;
+    this.isPlaying = false;
+    this.popTimer = null;
+    this.clockTimer = null;
+  }
+
+  start(playerName, speed) {
+    if (this.isPlaying) {
+      return;
+    }
+    this.playerName = playerName;
+    this.score = 0;
+    this.misses = 0;
+    this.timeLeft = ROUND_SECONDS;
+    this.isPlaying = true;
+    this.ui.controls.disabled = true;
+    this.ui.message.textContent = `Go, ${playerName}!`;
+    this.updateStats();
+
+    this.popUp();
+    this.popTimer = setInterval(() => this.popUp(), POP_DELAYS[speed]);
+    this.clockTimer = setInterval(() => this.tick(), 1000);
+  }
+
+  popUp() {
+    if (this.currentHole !== null) {
+      hideBot(this.currentHole);
+    }
+    this.currentHole = randomHole(this.holes, this.currentHole);
+    showBot(this.currentHole);
+  }
+
+  tick() {
+    this.timeLeft -= 1;
+    this.updateStats();
+    if (this.timeLeft <= 0) {
+      this.stop();
+    }
+  }
+
+  bop(hole) {
+    if (!this.isPlaying) {
+      return;
+    }
+    if (hole === this.currentHole) {
+      this.score += 1;
+      hideBot(hole);
+      this.currentHole = null;
+      hole.classList.add("bopped");
+      setTimeout(() => hole.classList.remove("bopped"), 250);
+    } else {
+      this.misses += 1;
+    }
+    this.updateStats();
+  }
+
+  stop() {
+    if (!this.isPlaying) {
+      return;
+    }
+    this.isPlaying = false;
+    clearInterval(this.popTimer);
+    clearInterval(this.clockTimer);
+    if (this.currentHole !== null) {
+      hideBot(this.currentHole);
+      this.currentHole = null;
+    }
+    this.ui.controls.disabled = false;
+    this.ui.message.textContent = `${this.playerName}, you bopped ${this.score} bots with ${this.accuracy}% accuracy. ${rankFor(this.score)}!`;
+  }
+
+  get accuracy() {
+    const attempts = this.score + this.misses;
+    if (attempts === 0) {
+      return 0;
+    }
+    return Math.round((this.score / attempts) * 100);
+  }
+
+  updateStats() {
+    this.ui.score.textContent = this.score;
+    this.ui.time.textContent = this.timeLeft;
+  }
+}
+```
+
+Compare it with your `main.js` from the last lesson. The logic is the same; each round variable became a property on `this`, and each function became a method. Two details matter:
+
+- The timers use arrow functions, `() => this.popUp()`, so `this` is still the game when the browser calls them.
+- `ui` is an object holding the four page elements the game updates. Passing them in keeps `game.js` from depending on particular ids in the HTML.
+
+### Replace main.js
+
+Now `main.js` only connects the page to the game. Replace all of `workshop/main.js` with:
+
+```js title="workshop/main.js"
+import { createBoard, findHole } from "./board.js";
+import Game from "./game.js";
+
+const board = document.querySelector("#board");
+const hammer = document.querySelector("#hammer");
+const nameInput = document.querySelector("#player-name");
+const speedSelect = document.querySelector("#speed");
+const startButton = document.querySelector("#start-button");
+
+const holes = createBoard(board);
+const game = new Game(holes, {
+  controls: document.querySelector("#controls"),
+  score: document.querySelector("#score"),
+  time: document.querySelector("#time"),
+  message: document.querySelector("#message"),
+});
+
+function startGame() {
+  const playerName = nameInput.value.trim() || "Player";
+  game.start(playerName, speedSelect.value);
+}
+
+startButton.addEventListener("click", startGame);
+
+// One listener on the board handles all nine holes.
+board.addEventListener("mousedown", (event) => {
+  if (event.button !== 0) {
+    return;
+  }
+  hammer.classList.add("swing");
+  const hole = event.target.closest(".hole");
+  if (hole !== null) {
+    game.bop(hole);
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  hammer.classList.remove("swing");
+});
+
+board.addEventListener("mouseenter", () => {
+  hammer.classList.add("visible");
+});
+
+board.addEventListener("mouseleave", () => {
+  hammer.classList.remove("visible");
+});
+
+board.addEventListener("mousemove", (event) => {
+  hammer.style.left = `${event.clientX}px`;
+  hammer.style.top = `${event.clientY}px`;
+});
+
+// A right-click mid-game shouldn't open the browser's menu.
+board.addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
+
+// Enter in the name box starts the round.
+nameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    startGame();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  // Keys typed into the form belong to the form, not the game.
+  if (event.target === nameInput || event.target === speedSelect) {
+    return;
+  }
+  // Holding a key repeats keydown. One press should mean one bop.
+  if (event.repeat) {
+    return;
+  }
+
+  if (event.code === "Space") {
+    event.preventDefault();
+    startGame();
+  } else if (event.key === "Escape") {
+    game.stop();
+  } else {
+    const hole = findHole(holes, event.key.toLowerCase());
+    if (hole !== null) {
+      game.bop(hole);
+    }
+  }
+});
+```
+
+The listeners are the same ones you wrote in Part 2. They now call methods on `game` instead of loose functions, and every call is written as `game.something(...)`, so `this` is always the game. `main.js` no longer imports `rankFor` or the bot helpers; `game.js` handles those.
+
+## Run and check
+
+Play a round. It should work exactly as before, and the final message now includes your accuracy:
+
+```text title="The end of a round"
+Dana, you bopped 22 bots with 88% accuracy. Quick hands!
+```
+
+That's the whole game: variables, decisions, arrays, functions, timers, mouse and keyboard events, modules, and a class, all working together.
+
+<Checkpoint id="09-classes" />

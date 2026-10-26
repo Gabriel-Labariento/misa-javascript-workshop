@@ -1,0 +1,237 @@
+---
+title: 01 · Say hello
+description: Make the browser talk in the console and on the page, then learn values, variables, types, and template literals.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+
+This step makes the browser talk: first in the console, then on the page itself. Keep editing on `my-game`; use a checkpoint branch only when you need a working reference.
+
+## Say hello to the world
+
+Programmers have a small tradition when learning a new language: make the computer say `Hello, world!`.
+
+Open `workshop/script.js`. Your first JavaScript program is already waiting there:
+
+```js title="workshop/script.js"
+console.log("Hello, world!");
+```
+
+`console.log()` writes the value inside its parentheses to the browser's **console**, a panel for messages that only developers see. Here, that value is the text `"Hello, world!"`.
+
+The browser runs `script.js` because `index.html` asks for it, just before the page ends:
+
+```html title="workshop/index.html (near the bottom)"
+    <script src="script.js"></script>
+  </body>
+</html>
+```
+
+Open `index.html` with Live Preview, open the page in your browser, and open the console (**F12** or **Ctrl+Shift+J** in Chrome and Edge, **Cmd+Option+J** on a Mac). You should see:
+
+```text title="Console"
+Hello, world!
+```
+
+You can run JavaScript right here, too. Press **▶ Run**. Then change the message and run it again:
+
+<Playground>
+```js
+console.log("Hello, world!");
+```
+</Playground>
+
+That was one line of code, and it made the computer speak. Welcome to JavaScript!
+
+<Checkpoint id="00-start" />
+
+## Values and variables
+
+A **value** is a piece of information in a program. Text in quotes is a **string**. A **variable** gives a value a name so you can use it again.
+
+JavaScript has two everyday ways to make a variable:
+
+- `const` makes a variable that keeps the same value.
+- `let` makes a variable you plan to give a new value later.
+
+<Playground>
+```js
+const favoriteSnack = "turon";
+let servings = 2;
+console.log(favoriteSnack);
+console.log(servings);
+
+servings = 3; // let allows a new value
+console.log(servings);
+```
+</Playground>
+
+The `=` sign assigns the value on its right to the variable on its left. Each statement ends with a semicolon, and the browser runs them from top to bottom, so this prints `turon`, `2`, then `3`.
+
+Text after `//` is a **comment**. JavaScript ignores it, so comments are a place for short notes to people.
+
+Variable names usually use **camelCase**: the first word is lowercase and each new word starts with a capital letter, like `favoriteSnack`. Names are case-sensitive, so `servings` and `Servings` are different variables.
+
+Start with `const`. Switch to `let` only when the program needs to give the variable a new value.
+
+<Predict question="What happens when this runs?" options={['It prints 6', 'It prints 5', 'An error']} answer={2}>
+```js
+const points = 5;
+points = 6;
+console.log(points);
+```
+
+`points` was made with `const`, so giving it a new value throws `TypeError: Assignment to constant variable.` The `console.log` line never runs. Change `const` to `let` and the code prints `6`.
+</Predict>
+
+## The types we will use
+
+Every value has a **type**. The `typeof` operator tells you which one:
+
+<Playground>
+```js
+const playerName = "Alex"; // string: text
+const points = 2;          // number
+const share = 12.5;        // also a number
+const ready = true;        // boolean: true or false
+let prize;                 // undefined: no value yet
+
+console.log(typeof playerName);
+console.log(typeof points);
+console.log(typeof share);
+console.log(typeof ready);
+console.log(typeof prize);
+```
+</Playground>
+
+JavaScript uses one `number` type for whole numbers and decimals. A **boolean** is either `true` or `false`. A variable made with `let` and no value holds `undefined`, which means "nothing assigned yet". You'll also meet `null`, which a program uses on purpose to say "no value here".
+
+Text and numbers behave differently, even when they look alike:
+
+<Playground>
+```js
+console.log("2" + "3");
+console.log("2" + 3);
+console.log(Number("2") + 3);
+console.log(String(2) + " points");
+console.log(Number("hello"));
+```
+</Playground>
+
+When either side of `+` is a string, JavaScript joins text instead of adding, so the first two lines print `23`. `Number()` turns text into a number, and `String()` turns a number into text. If the text isn't a number, `Number()` gives `NaN`, which stands for "not a number". It doesn't stop the program, so keep an eye out for it.
+
+<Predict question="What does this print?" options={['5', '23', 'An error']} answer={1}>
+```js
+const score = "2";
+console.log(score + 3);
+```
+
+`score` holds the string `"2"`, so `+` joins it with `3` and prints `23`. `Number(score) + 3` would give `5`.
+</Predict>
+
+## Put values inside text
+
+You can build a sentence with `+`, but it gets messy fast. A **template literal** is a string written with backticks instead of quotes. Anything inside `${ }` is worked out and placed into the text:
+
+<Playground>
+```js
+const playerName = "Alex";
+const score = 12;
+
+console.log("Hi, " + playerName + "! Score: " + score);
+console.log(`Hi, ${playerName}! Score: ${score}`);
+console.log(`Beat it next time with ${score + 1} points.`);
+```
+</Playground>
+
+The first two lines print the same sentence. The backtick key is usually at the top-left of the keyboard, under Esc.
+
+## Practice: introduce yourself
+
+<Exercise id="hello-variables">
+Make three variables: `myName` and `course` with `const`, and `year` with `let`, holding your year level as a number. Log one sentence that uses all three, like `Hi, I'm Alex, year 1 of BS MIS.` Then add 1 to `year` and log the new year.
+</Exercise>
+
+## Talk to the page
+
+The console is for you, the developer. Players see the page. JavaScript can find an element on the page and change what it says:
+
+<Playground>
+```html
+<p id="greeting">Waiting for JavaScript…</p>
+```
+```js
+const greeting = document.querySelector("#greeting");
+greeting.textContent = "Hi from JavaScript!";
+```
+</Playground>
+
+- `document` is the whole page.
+- `document.querySelector("#greeting")` finds the first element that matches a CSS selector. The `#` means "the element whose `id` is". It returns that element, and we keep it in a variable.
+- `textContent` is the text inside an element. Assigning to it replaces what the page shows.
+
+If nothing matches, `querySelector` returns `null`, and the next line fails with `Cannot read properties of null`. Try it: change `#greeting` to `#greting` in the example and run it again.
+
+## Ask the player a question
+
+`prompt()` shows a small box, pauses the page until the player answers, and returns what they typed as a string. If they press **Cancel**, it returns `null`.
+
+<Playground>
+```js
+const playerName = prompt("What should we call you?");
+console.log(`Hi, ${playerName}!`);
+```
+</Playground>
+
+Run it twice: once with your name, and once pressing **Cancel**. The second time prints `Hi, null!`. We'll fix that in the next lesson.
+
+`prompt()` is a quick way to get input while learning, but it freezes the whole page until it's answered. Real pages use text boxes and buttons instead, and we'll switch to those in Part 2.
+
+## Apply it to the game
+
+Now replace all of `workshop/script.js` with:
+
+```js title="workshop/script.js"
+console.log("Hello, world!");
+
+const playerName = prompt("What should we call you?");
+const greeting = document.querySelector("#greeting");
+greeting.textContent = `Hi, ${playerName}! Get ready to bop the bot.`;
+console.log("Greeting shown for", playerName);
+```
+
+`index.html` already has an element with `id="greeting"`, so `querySelector` finds it. Notice the last line: `console.log` can take several values separated by commas, and it prints them with spaces between.
+
+Save the file. Live Preview reloads the page, and the prompt appears.
+
+```text title="What you should see"
+On the page:  Hi, Alex! Get ready to bop the bot.
+In the console:
+Hello, world!
+Greeting shown for Alex
+```
+
+## Save a working version
+
+Git commits are similar to named points in Google Docs version history. Git records only what you stage and commit. It does not automatically record every edit or upload it.
+
+From the `workshop` folder:
+
+```bash
+git status
+git add script.js
+git commit -m "Greet the player by name"
+```
+
+`status` shows changes. `add` stages the saved contents of a file for the next commit. `commit` records that staged snapshot locally. If you edit again after staging, stage again to include the newer edit.
+
+```text title="What the commands do"
+Working files  →  Staging area  →  Local commit  →  GitHub repository
+     save            git add        git commit        git push
+```
+
+GitHub is a place to share repositories, a little like a shared Drive location. Your local commits stay on your computer until you explicitly push them. We'll leave publishing for [after the build](../../moving-forward/publishing/).
+
+<Checkpoint id="01-hello" />

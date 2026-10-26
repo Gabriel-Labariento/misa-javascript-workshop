@@ -1,0 +1,40 @@
+---
+// A runnable example. Write it in MDX as fenced code blocks inside <Playground>.
+// The remark-playground plugin passes their text in through `files`; the code
+// blocks themselves stay visible as the fallback when JavaScript is off.
+interface Props {
+  files?: string;
+  title?: string;
+  module?: boolean;
+  height?: number;
+  preview?: boolean;
+  autorun?: boolean;
+  note?: string;
+}
+const { files = '[]', title, module = false, height, preview, autorun = false, note } = Astro.props;
+const parsed: Array<{ lang: string; title: string | null; code: string }> = JSON.parse(files);
+let scripts = 0;
+const named = parsed.map((file) => {
+  const lang = file.lang === 'javascript' || file.lang === 'mjs' ? 'js' : file.lang;
+  let name = file.title;
+  if (!name) {
+    if (lang === 'html') name = 'page.html';
+    else if (lang === 'css') name = 'style.css';
+    else {
+      scripts += 1;
+      name = module ? (scripts === 1 ? 'main.js' : `module${scripts}.js`) : scripts === 1 ? 'script.js' : `script${scripts}.js`;
+    }
+  }
+  return { name, lang, code: file.code.replace(/\n$/, '') };
+});
+const hasPage = named.some((file) => file.lang === 'html');
+const config = { files: named, title, module, height, preview: preview ?? hasPage, autorun, note };
+---
+
+<js-playground class="pg-block" data-config={JSON.stringify(config)}>
+  <div class="pg-fallback"><slot /></div>
+</js-playground>
+
+<script>
+  import '../lib/playground/client.js';
+</script>

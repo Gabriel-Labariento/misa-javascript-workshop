@@ -1,0 +1,308 @@
+---
+title: 04 · Give your code a job
+description: Learn functions, parameters, return values, randomness, and timers, then make MISAbot pop around the board.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+
+The board works, but `script.js` is one long list of steps. This lesson groups related steps into named functions, then uses timers so MISAbot hops from hole to hole on its own.
+
+## Define and call a function
+
+A **function** is a named group of instructions. `function` defines one. Writing its name with parentheses **calls** it, which runs its body.
+
+<Playground>
+```js
+function sayHello() {
+  console.log("Hello!");
+}
+
+sayHello();
+sayHello();
+```
+</Playground>
+
+Defining the function doesn't run it. The two calls make `Hello!` appear twice.
+
+## Give a function an input
+
+A **parameter** is a variable that receives a value when the function is called. An **argument** is the value the caller passes in.
+
+<Playground>
+```js
+function greet(playerName) {
+  console.log(`Hi, ${playerName}!`);
+}
+
+greet("Alex");
+greet("Sam");
+```
+</Playground>
+
+`playerName` is the parameter. `"Alex"` and `"Sam"` are arguments from two separate calls. A function can take several parameters, separated by commas.
+
+## Return a result
+
+`return` sends a value back to the caller and ends the function call.
+
+<Playground>
+```js
+function double(number) {
+  return number * 2;
+}
+
+const doubled = double(3);
+console.log(doubled);
+console.log(double(10) + 1);
+```
+</Playground>
+
+Returning and logging are different. `return` gives a value to the code that called the function, which can store it, compare it, or pass it on. `console.log` only shows something in the console. A function that never reaches `return` gives back `undefined`.
+
+<Predict question="What does this print?" options={['5', 'undefined', 'An error']} answer={1}>
+```js
+function add(a, b) {
+  a + b;
+}
+
+console.log(add(2, 3));
+```
+
+The function works out `a + b` and then throws the result away, because nothing returns it. Calls to `add` give back `undefined`. Writing `return a + b;` fixes it.
+</Predict>
+
+### Return early
+
+A function can have several `return` statements. The first one that runs ends the call, which is handy for dealing with special cases first:
+
+<Playground>
+```js
+function describeScore(score) {
+  if (score < 0) {
+    return "That can't be right";
+  }
+  if (score >= 20) {
+    return "Amazing";
+  }
+  return "Keep going";
+}
+
+console.log(describeScore(-1));
+console.log(describeScore(25));
+console.log(describeScore(8));
+```
+</Playground>
+
+## Arrow functions
+
+An **arrow function** is a shorter way to write a function, often right where it's needed:
+
+<Playground>
+```js
+const double = (number) => number * 2;
+
+const cheer = (playerName) => {
+  console.log(`Go, ${playerName}!`);
+};
+
+console.log(double(4));
+cheer("Bea");
+```
+</Playground>
+
+When the body is a single expression, you can skip the braces and `return`: `(number) => number * 2` returns the doubled number. With braces, it works like a normal function body. We'll use arrow functions a lot with timers and events.
+
+## Pick something random
+
+`Math.random()` gives a random decimal from 0 up to, but not including, 1. Multiplying and rounding down turns it into a whole number in the range you want:
+
+<Playground>
+```js
+console.log(Math.random());
+
+const roll = Math.floor(Math.random() * 6) + 1;
+console.log(`You rolled ${roll}`);
+
+const snacks = ["turon", "taho", "banana cue"];
+const index = Math.floor(Math.random() * snacks.length);
+console.log(`Random index ${index}: ${snacks[index]}`);
+```
+</Playground>
+
+Read the dice roll from the inside out: `Math.random() * 6` is somewhere from 0 to just under 6. `Math.floor()` drops the decimal, which leaves 0, 1, 2, 3, 4, or 5. Adding 1 gives a dice roll. Run it a few times.
+
+The same trick with `snacks.length` always lands on a valid index.
+
+## Practice: pick a random snack
+
+<Exercise id="random-item">
+Finish `randomItem(items)` so it returns one random item from any array it's given. Return the item; don't just log it.
+</Exercise>
+
+## Run code later with timers
+
+Timers ask the browser to call a function later:
+
+- `setTimeout(fn, ms)` calls `fn` once, after `ms` milliseconds.
+- `setInterval(fn, ms)` calls `fn` again and again, every `ms` milliseconds.
+- Both return an id. `clearTimeout(id)` or `clearInterval(id)` cancels the timer.
+
+<Playground>
+```js
+console.log("Start");
+
+setTimeout(() => {
+  console.log("One second later");
+}, 1000);
+
+let ticks = 0;
+const timer = setInterval(() => {
+  ticks += 1;
+  console.log(`Tick ${ticks}`);
+  if (ticks === 3) {
+    clearInterval(timer);
+  }
+}, 400);
+
+console.log("End of the script");
+```
+</Playground>
+
+Look at the order: `End of the script` appears before any tick. The script doesn't wait for timers. It finishes, and the browser calls each function when its time comes. Keep this "call me later" idea in mind, because events in Part 2 work the same way.
+
+Pass the function itself, without parentheses. `setInterval(popUp, 850)` hands the browser the `popUp` function. `setInterval(popUp(), 850)` would call `popUp` once, right away, and pass along whatever it returned.
+
+<Predict question="What does this print?" options={['A, then B', 'B, then A', 'Only B']} answer={1}>
+```js
+setTimeout(() => console.log("A"), 0);
+console.log("B");
+```
+
+Even with a delay of 0, a timer waits until the current script has finished. The browser runs `console.log("B")` first, then the timer's function.
+</Predict>
+
+## Practice: count down to Go!
+
+<Exercise id="countdown">
+Use `setInterval` to log `3`, `2`, and `1`, one second apart, then log `Go!` and stop the interval with `clearInterval`. The checks speed up time, so they don't take four seconds.
+</Exercise>
+
+## Apply it to the game
+
+This step reorganizes the code you already have into functions, then adds a timer. The game should behave the same until the very end.
+
+Wrap the two questions in functions. Each returns the cleaned answer. Notice how `return` ends a function early when an answer needs a fallback:
+
+```js title="Replace the two prompts in workshop/script.js"
+function askName() {
+  let answer = prompt("What should we call you?") || "";
+  answer = answer.trim();
+  if (answer === "") {
+    return "Player";
+  }
+  return answer;
+}
+
+function askSpeed() {
+  let answer = prompt("Choose a speed: slow, normal, or fast") || "";
+  answer = answer.trim().toLowerCase();
+  if (POP_DELAYS[answer] === undefined) {
+    return "normal";
+  }
+  return answer;
+}
+```
+
+Move the hole-building loop into two functions. `createHole(key)` makes one hole, and `createBoard(boardElement)` makes all nine and returns them in an array:
+
+```js title="Add after askSpeed"
+function createHole(key) {
+  const hole = document.createElement("div");
+  hole.className = "hole";
+  hole.dataset.key = key;
+
+  const bot = document.createElement("img");
+  bot.className = "bot";
+  bot.src = "assets/misabot.png";
+  bot.alt = "";
+
+  const label = document.createElement("span");
+  label.className = "key";
+  label.textContent = key.toUpperCase();
+
+  hole.append(bot, label);
+  return hole;
+}
+
+function createBoard(boardElement) {
+  const holes = [];
+  for (const key of KEYS) {
+    const hole = createHole(key);
+    boardElement.append(hole);
+    holes.push(hole);
+  }
+  return holes;
+}
+```
+
+Add three small helpers. `randomHole` uses the `while` loop from lesson 02: if it picks the hole MISAbot was just in, it picks again.
+
+```js title="Add after createBoard"
+function randomHole(holes, previousHole) {
+  let index = Math.floor(Math.random() * holes.length);
+  while (holes[index] === previousHole) {
+    index = Math.floor(Math.random() * holes.length);
+  }
+  return holes[index];
+}
+
+function showBot(hole) {
+  hole.classList.add("up");
+}
+
+function hideBot(hole) {
+  hole.classList.remove("up");
+}
+```
+
+Now the main program reads like an outline. Replace everything after the functions with:
+
+```js title="The rest of workshop/script.js"
+const playerName = askName();
+const speed = askSpeed();
+const popDelay = POP_DELAYS[speed];
+
+const greeting = document.querySelector("#greeting");
+greeting.textContent = `Hi, ${playerName}! Speed: ${speed}. Watch MISAbot pop up for 10 seconds.`;
+
+const holes = createBoard(document.querySelector("#board"));
+let currentHole = null;
+
+function popUp() {
+  if (currentHole !== null) {
+    hideBot(currentHole);
+  }
+  currentHole = randomHole(holes, currentHole);
+  showBot(currentHole);
+}
+
+const popTimer = setInterval(popUp, popDelay);
+
+setTimeout(() => {
+  clearInterval(popTimer);
+  hideBot(currentHole);
+  greeting.textContent = `Demo over, ${playerName}. Next, you'll get to bop it.`;
+}, 10000);
+```
+
+`currentHole` remembers where MISAbot is. It starts as `null`, meaning "nowhere yet". Each time `popUp` runs, it hides the bot, picks a new hole, and shows the bot there. `setInterval` calls `popUp` every `popDelay` milliseconds, and `setTimeout` stops the show after 10 seconds.
+
+## Run and check
+
+Reload and answer the prompts. MISAbot should hop around the board, never landing in the same hole twice in a row. After 10 seconds it stops, and the greeting changes to `Demo over`. Try the fast and slow speeds too.
+
+Refactoring means changing how code is organized without changing what it does. The first half of this step was a refactor; the timer was the new feature.
+
+<Checkpoint id="04-functions" />

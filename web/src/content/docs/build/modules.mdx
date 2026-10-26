@@ -1,0 +1,286 @@
+---
+title: 08 · Split code into modules
+description: Learn export and import, named and default exports, and module scope, then split the game into three files.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+
+`script.js` has grown past 200 lines. Board code, scoring, and event handling all share one file, and finding anything means scrolling. This step splits the game into **modules**: files that share code on purpose, using `export` and `import`.
+
+## Why split code into files
+
+- **Easier to find.** Everything about the board lives in `board.js`.
+- **Fewer accidents.** Each module has its own variables, so names in one file can't clash with names in another.
+- **Reusable.** Another game could import `board.js` without copying it.
+
+## Export from one file, import in another
+
+`export` marks what a file shares. `import` brings it into another file. This example has two files; press **▶ Run**, then look at both tabs.
+
+<Playground module>
+```js title="main.js"
+import { add } from "./math.js";
+
+console.log(add(2, 3));
+```
+```js title="math.js"
+export function add(a, b) {
+  return a + b;
+}
+```
+</Playground>
+
+The import names what it wants inside braces, then says where it comes from. The path starts with `./`, which means "in the same folder", and includes the `.js` at the end.
+
+The HTML page loads only the first file, with `type="module"`:
+
+```html title="index.html"
+<script type="module" src="main.js"></script>
+```
+
+The browser reads the imports in `main.js` and loads `math.js` by itself.
+
+## Named and default exports
+
+A module can share many things by name. It can also have one **default export**, its main thing:
+
+<Playground module>
+```js title="main.js"
+import double, { add, TAX_RATE } from "./math.js";
+
+console.log(add(2, 3));
+console.log(double(4));
+console.log(TAX_RATE);
+```
+```js title="math.js"
+export const TAX_RATE = 0.12;
+
+export function add(a, b) {
+  return a + b;
+}
+
+export default function double(number) {
+  return number * 2;
+}
+```
+</Playground>
+
+| In the module | In the importing file |
+| --- | --- |
+| `export function add() {}` | `import { add } from "./math.js";` |
+| `export const TAX_RATE = 0.12;` | `import { TAX_RATE } from "./math.js";` |
+| `export default function double() {}` | `import double from "./math.js";` |
+| All of the above | `import double, { add, TAX_RATE } from "./math.js";` |
+
+Named imports use braces, and the names must match the exports exactly. A default import has no braces, and you can call it whatever you like. A module can have many named exports but only one default.
+
+### Rename or group imports
+
+<Playground module>
+```js title="main.js"
+import { add as plus } from "./math.js";
+import * as math from "./math.js";
+
+console.log(plus(1, 2));
+console.log(math.add(10, 20));
+console.log(math.double(5));
+```
+```js title="math.js"
+export function add(a, b) {
+  return a + b;
+}
+
+export function double(number) {
+  return number * 2;
+}
+```
+</Playground>
+
+`as` gives an import a different name in this file. `import * as math` collects every named export into one object, so `math.add` reads like "the `add` from `math`".
+
+<Predict question="rank.js contains export default function rankFor(score) { … }. Which line imports it?" options={['import { rankFor } from "./rank.js";', 'import rankFor from "./rank.js";', 'import rankFor from "rank.js";']} answer={1}>
+`rankFor` is a default export, so it's imported without braces. The braces version looks for a *named* export called `rankFor` and fails. The last option forgets the `./`, and the browser only accepts paths that start with `./`, `../`, or `/`.
+</Predict>
+
+## Modules have their own scope
+
+Variables created at the top of a module stay inside that module unless it exports them:
+
+<Playground module>
+```js title="main.js"
+import { addPoint, getScore } from "./score.js";
+
+addPoint();
+addPoint();
+console.log(getScore());
+console.log(typeof score);
+```
+```js title="score.js"
+let score = 0;
+
+export function addPoint() {
+  score += 1;
+}
+
+export function getScore() {
+  return score;
+}
+```
+</Playground>
+
+`main.js` can change the score only through the functions `score.js` chose to share. `typeof score` in `main.js` is `"undefined"`, because `score` isn't visible there.
+
+A few more things change when a file becomes a module:
+
+- **Top-level variables aren't globals.** In earlier lessons you could type `holes` into the browser console. After this lesson, the console answers `ReferenceError: holes is not defined`.
+- **Modules wait for the page.** A module script runs after the browser has read all the HTML, even if its `<script>` tag is near the top.
+- **Modules run once.** If two files import `board.js`, it still loads and runs a single time, and both get the same exports.
+- **Modules use strict mode.** Some sloppy code that older JavaScript allowed, like assigning to a variable you never declared, becomes an error that's easier to spot.
+
+## Practice: export from one file, import in another
+
+<Exercise id="price-module">
+In `prices.js`, write `formatPeso(amount)` as a **named** export. It returns text like `₱25.00`; `amount.toFixed(2)` gives the two decimal places. Write `addTax(amount)` as the **default** export; it returns the amount times 1.12. Then import both at the top of `main.js`.
+</Exercise>
+
+## Why modules need a server
+
+If you double-click `index.html`, the browser opens it from a `file://` address. Browsers refuse to load modules that way, and the console shows an error like this:
+
+```text title="Console"
+Access to script at 'file:///…/workshop/main.js' from origin 'null' has been blocked by CORS policy
+```
+
+Live Preview serves the folder from an `http://127.0.0.1` address, so modules load normally. That's why the setup used it from the start. When you publish the game online later, the web host serves the files the same way.
+
+## Apply it to the game
+
+The game becomes three modules:
+
+| File | Holds | Exports |
+| --- | --- | --- |
+| `board.js` | Building and changing the board | `KEYS`, `createBoard`, `randomHole`, `findHole`, `showBot`, `hideBot` |
+| `rank.js` | Turning a score into a title | `rankFor` (default) |
+| `main.js` | Game state, rounds, and event listeners | Nothing; it's the starting point |
+
+### Create board.js
+
+Create `workshop/board.js` and move the board functions into it, adding `export` in front of each one other files need:
+
+```js title="workshop/board.js"
+// Everything about building and changing the board lives here.
+export const KEYS = ["q", "w", "e", "a", "s", "d", "z", "x", "c"];
+
+// Not exported: only createBoard needs it.
+function createHole(key) {
+  const hole = document.createElement("div");
+  hole.className = "hole";
+  hole.dataset.key = key;
+
+  const bot = document.createElement("img");
+  bot.className = "bot";
+  bot.src = "assets/misabot.png";
+  bot.alt = "";
+
+  const label = document.createElement("span");
+  label.className = "key";
+  label.textContent = key.toUpperCase();
+
+  hole.append(bot, label);
+  return hole;
+}
+
+export function createBoard(boardElement) {
+  const holes = [];
+  for (const key of KEYS) {
+    const hole = createHole(key);
+    boardElement.append(hole);
+    holes.push(hole);
+  }
+  return holes;
+}
+
+export function randomHole(holes, previousHole) {
+  let index = Math.floor(Math.random() * holes.length);
+  while (holes[index] === previousHole) {
+    index = Math.floor(Math.random() * holes.length);
+  }
+  return holes[index];
+}
+
+export function findHole(holes, key) {
+  for (const hole of holes) {
+    if (hole.dataset.key === key) {
+      return hole;
+    }
+  }
+  return null;
+}
+
+export function showBot(hole) {
+  hole.classList.add("up");
+}
+
+export function hideBot(hole) {
+  hole.classList.remove("up");
+}
+```
+
+`createHole` stays private: nothing outside this file needs it. `findHole` gained a `holes` parameter. Before, it reached for the `holes` variable in the same file, but `board.js` can't see variables in `main.js`, so the caller now passes them in.
+
+### Create rank.js
+
+Create `workshop/rank.js` with `rankFor` as its default export:
+
+```js title="workshop/rank.js"
+export default function rankFor(score) {
+  if (score >= 25) {
+    return "Legendary bopper";
+  }
+  if (score >= 15) {
+    return "Quick hands";
+  }
+  if (score >= 5) {
+    return "Nice warm-up";
+  }
+  return "MISAbot got away this time";
+}
+```
+
+### Turn script.js into main.js
+
+In VS Code, right-click `script.js` and rename it to `main.js`. Then:
+
+1. Delete the `KEYS` line, and every function you moved: `createHole`, `createBoard`, `randomHole`, `showBot`, `hideBot`, `findHole`, and `rankFor`.
+2. Add the imports as the first lines of the file:
+
+```js title="Top of workshop/main.js"
+import { createBoard, randomHole, findHole, showBot, hideBot } from "./board.js";
+import rankFor from "./rank.js";
+```
+
+3. Pass `holes` to `findHole` in the keyboard listener:
+
+```js title="In the document keydown listener"
+const hole = findHole(holes, event.key.toLowerCase());
+```
+
+`main.js` doesn't import `KEYS`, because `createBoard` uses it inside `board.js`.
+
+### Load main.js as a module
+
+In `workshop/index.html`, replace the old script tag:
+
+```html title="In workshop/index.html, replace the script tag"
+    <script type="module" src="main.js"></script>
+```
+
+## Run and check
+
+Reload through Live Preview. The game should play exactly as before, with no errors in the console. Then type `score` into the console: you'll get `ReferenceError: score is not defined`, proof that the game's state is now private to `main.js`.
+
+If the page loads but nothing happens, read the first red line in the console. [Troubleshooting](../../help/#modules-wont-load) lists the common module errors.
+
+<Checkpoint id="08-modules" />

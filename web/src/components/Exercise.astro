@@ -1,0 +1,56 @@
+---
+// A practice task with automatic checks. The task text goes between the tags;
+// starter code, checks, hints, and a solution live in src/data/exercises.mjs.
+import { Code } from '@astrojs/starlight/components';
+import exercises from '../data/exercises.mjs';
+
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const exercise = (exercises as Record<string, any>)[id];
+if (!exercise) throw new Error(`Unknown exercise: ${id}`);
+
+type Check = [string, (t: unknown) => unknown];
+type Scenario = { label?: string; setup?: string; prompts?: Array<string | null>; checks?: Check[] };
+const langFor = (name: string) => (name.endsWith('.html') ? 'html' : name.endsWith('.css') ? 'css' : 'js');
+const toChecks = (checks: Check[]) => checks.map(([label, fn]) => ({ label, source: fn.toString() }));
+const scenarioList: Scenario[] = exercise.scenarios ?? [{}];
+const scenarios = scenarioList.map((scenario) => ({
+  label: scenario.label ?? '',
+  setup: scenario.setup ?? exercise.given ?? '',
+  prompts: scenario.prompts ?? [],
+  checks: toChecks(scenario.checks ?? exercise.checks ?? []),
+}));
+const files = exercise.files.map((file: { name: string; code: string }) => ({ name: file.name, lang: langFor(file.name), code: file.code.replace(/\n$/, '') }));
+const config = {
+  id,
+  title: exercise.title,
+  files,
+  html: exercise.html ?? '',
+  css: exercise.css ?? '',
+  given: exercise.given ?? '',
+  module: exercise.module ?? false,
+  height: exercise.height,
+  scenarios,
+  hints: exercise.hints ?? [],
+  solution: exercise.solution ?? [],
+};
+---
+
+<js-exercise class="pg-exercise" data-config={JSON.stringify(config)}>
+  <div class="pg-ex-head">
+    <span class="pg-ex-kicker">Practice</span>
+    <span class="pg-ex-title">{exercise.title}</span>
+    <span class="pg-ex-status" hidden>✓ Solved</span>
+  </div>
+  <div class="pg-ex-instructions"><slot /></div>
+  <div class="pg-fallback">
+    {files.map((file: { name: string; lang: string; code: string }) => <Code code={file.code} lang={file.lang} title={file.name} />)}
+  </div>
+</js-exercise>
+
+<script>
+  import '../lib/playground/client.js';
+</script>

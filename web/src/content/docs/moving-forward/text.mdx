@@ -1,0 +1,125 @@
+---
+title: Work with text
+description: Slice, search, split, replace, pad, and format JavaScript strings, including prices in pesos.
+---
+import Playground from '../../../components/Playground.astro';
+
+A string is a sequence of characters. That's why `length`, indexes, and `includes()` work on strings much like they work on arrays.
+
+## Read part of a string
+
+<Playground>
+```js
+const title = "Bop the Bot";
+
+console.log(title[0]);
+console.log(title.at(-1));
+console.log(title.slice(0, 3));
+console.log(title.slice(-3));
+console.log(title.includes("the"));
+console.log(title.startsWith("Bop"));
+console.log(title.indexOf("Bot"));
+```
+</Playground>
+
+- `slice(start, end)` returns the characters from `start` up to, but not including, `end`. Negative numbers count from the end.
+- `at(-1)` reads from the end too. Plain `title[-1]` gives `undefined`.
+- `indexOf()` returns the position where some text first appears, or `-1` if it doesn't.
+
+Strings are **immutable**: no method changes the original string. Each returns a new one, which you can store back in the variable if you want to keep it.
+
+## Clean input before comparing it
+
+People add spaces and capital letters without thinking about it. Normalize input before you compare it:
+
+<Playground>
+```js
+const answer = "  Yes ";
+
+if (answer.trim().toLowerCase() === "yes") {
+  console.log("Continuing");
+}
+```
+</Playground>
+
+| Method | Result |
+| --- | --- |
+| `trim()` | The text without spaces at either end |
+| `toLowerCase()`, `toUpperCase()` | The text in one case |
+| `split(",")` | An array of the pieces between commas |
+| `join(", ")` | (An array method) one string with `", "` between items |
+| `replace("a", "b")` | A new string with the first match replaced |
+| `replaceAll("a", "b")` | A new string with every match replaced |
+| `padStart(2, "0")` | The text padded on the left to a minimum length |
+
+## Split text into pieces, then join them back
+
+<Playground>
+```js
+const typed = "turon, taho,banana cue,  kwek-kwek";
+
+const snacks = typed.split(",").map((snack) => snack.trim());
+console.log(snacks);
+console.log(snacks.join(" · "));
+```
+</Playground>
+
+`split(",")` breaks the text at every comma. The pieces still have stray spaces, so `map()` trims each one. `join()` goes the other way, from an array back to one string.
+
+## Format numbers for people
+
+`padStart` is handy for clocks, and `toFixed` for decimals:
+
+<Playground>
+```js
+const secondsLeft = 65;
+const minutes = Math.floor(secondsLeft / 60);
+const seconds = secondsLeft % 60;
+console.log(`${minutes}:${String(seconds).padStart(2, "0")}`);
+
+const average = 17 / 3;
+console.log(average);
+console.log(average.toFixed(1));
+```
+</Playground>
+
+`%` gives the remainder after dividing, so `65 % 60` is `5`. `padStart(2, "0")` turns `"5"` into `"05"`. `toFixed(1)` rounds to one decimal place and returns a string.
+
+For money and big numbers, `Intl.NumberFormat` follows local conventions, including the peso sign and comma separators:
+
+<Playground>
+```js
+const peso = new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" });
+
+console.log(peso.format(25));
+console.log(peso.format(1234567.5));
+console.log((1234567).toLocaleString("en-PH"));
+```
+</Playground>
+
+Formatting changes how a number looks, not the number stored in your variable. Keep calculating with numbers, and format only when you display them.
+
+## Put line breaks and quotes inside text
+
+<Playground>
+```js
+const message = "Tasks for today:\n1. Practice\n2. Play";
+console.log(message);
+
+const reply = `She said "nice bop!"
+on two lines.`;
+console.log(reply);
+
+console.log('It\'s easier to use "double" quotes when the text has an apostrophe');
+```
+</Playground>
+
+`\n` inside a string starts a new line, and `\'` puts a quote mark inside a string that uses the same quote. Template literals can span several lines and contain either quote mark freely.
+
+## Practice: clean a list of names
+
+Add a text box and a button to a page. When the button is clicked, split the typed names at commas, trim each one, and drop empty pieces, such as the one between two commas in `"Ana,,Ben"`. Then capitalize each name's first letter (`name[0].toUpperCase() + name.slice(1)`) and show them as a numbered list on the page.
+
+Decide what to do with names typed in all capitals. That decision is part of designing the program.
+
+[MDN's String reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) lists every string method.

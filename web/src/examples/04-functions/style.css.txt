@@ -1,0 +1,196 @@
+/* Bop the Bot styles. You can finish the workshop without editing this file. */
+:root {
+  --teal: #19aab1;
+  --teal-dark: #087a80;
+  --ink: #102a2c;
+  --muted: #4a6668;
+  --paper: #f3fbfb;
+  --hole: #0b3c40;
+  --hole-deep: #052326;
+  --flash: #ffd166;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--paper);
+}
+
+.game {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+  text-align: center;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  color: var(--teal-dark);
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
+#greeting {
+  margin: 0 0 1.25rem;
+  font-size: 1.1rem;
+}
+
+/* Name, speed, and Start */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+  justify-content: center;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+}
+
+.controls label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.controls input,
+.controls select {
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  font-weight: 400;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 0.5rem;
+}
+
+button {
+  padding: 0.55rem 1.4rem;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--teal-dark);
+  border: 0;
+  border-radius: 0.5rem;
+}
+
+button:hover {
+  background: var(--teal);
+}
+
+button:disabled,
+.controls:disabled input,
+.controls:disabled select {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.stats {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.stats p {
+  margin: 0 0 1rem;
+}
+
+/* The 3 × 3 board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.9rem;
+  max-width: 24rem;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hole {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  background: radial-gradient(ellipse 70% 28% at 50% 86%, var(--hole-deep) 0 70%, transparent 72%), var(--hole);
+  border-radius: 1rem;
+}
+
+.bot {
+  position: absolute;
+  bottom: 0;
+  left: 8%;
+  width: 84%;
+  pointer-events: none;
+  transform: translateY(110%);
+  transition: transform 110ms ease-out;
+}
+
+.hole.up .bot {
+  transform: translateY(6%);
+}
+
+.key {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.6rem;
+  color: #9ce9e9;
+  font: 700 0.8rem/1 ui-monospace, "SFMono-Regular", Consolas, monospace;
+  opacity: 0.85;
+}
+
+.hole.bopped {
+  animation: bop 250ms ease-out;
+}
+
+@keyframes bop {
+  50% {
+    box-shadow: inset 0 0 0 6px var(--flash);
+  }
+}
+
+.message {
+  min-height: 1.5em;
+  margin: 1rem 0 0.5rem;
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* The hammer that follows your mouse over the board */
+.hammer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: none;
+  font-size: 2.6rem;
+  pointer-events: none;
+  transform: translate(-25%, -75%) rotate(15deg);
+  transform-origin: 75% 85%;
+  transition: transform 60ms ease-out;
+}
+
+.hammer.visible {
+  display: block;
+}
+
+.hammer.swing {
+  transform: translate(-25%, -75%) rotate(-40deg);
+}
+
+body:has(.hammer.visible) .board,
+body:has(.hammer.visible) .hole {
+  cursor: none;
+}

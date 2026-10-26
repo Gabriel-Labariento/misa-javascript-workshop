@@ -1,0 +1,114 @@
+---
+title: Events in depth
+description: Understand bubbling, stop listening with removeEventListener, listen once, and send your own custom events.
+---
+import Playground from '../../../components/Playground.astro';
+
+The game used events in the most common way: add a listener, react when it fires. This lesson covers the rest of what you'll meet in real projects: how events travel, how to stop listening, and how to create events of your own.
+
+## Watch an event bubble
+
+When you click an element, the event doesn't stay there. It **bubbles** up through every element that contains it, all the way to `document`. Each listener along the way gets a turn.
+
+<Playground>
+```html
+<div id="outer">
+  outer
+  <div id="inner">
+    inner
+    <button id="button">button</button>
+  </div>
+</div>
+```
+```css
+div { padding: 12px; margin: 4px; border: 2px solid #19aab1; border-radius: 8px; }
+```
+```js
+for (const id of ["outer", "inner", "button"]) {
+  document.querySelector(`#${id}`).addEventListener("click", (event) => {
+    console.log(`${id} heard a click on ${event.target.id}`);
+  });
+}
+```
+</Playground>
+
+Click the button: three lines appear, from the inside out. Click the inner box's border area: only two. Event delegation, from [lesson 06](../../build/mouse/#one-listener-for-many-elements), relies on bubbling.
+
+`event.stopPropagation()` stops an event from continuing up. Reach for it rarely, because other code higher up might be listening on purpose.
+
+(Before bubbling, events also pass *down* from `document` to the target, called the **capture** phase. Passing `{ capture: true }` to `addEventListener` lets a listener run during that trip. You'll seldom need it.)
+
+## Stop listening
+
+`removeEventListener` takes the same event name and the same function you added. That means you need a name for the function, because two arrow functions with identical code are still two different functions.
+
+<Playground>
+```html
+<button id="claim">Claim your free taho</button>
+```
+```js
+const button = document.querySelector("#claim");
+
+function claim() {
+  console.log("Taho claimed!");
+  button.textContent = "Claimed";
+  button.removeEventListener("click", claim);
+}
+
+button.addEventListener("click", claim);
+```
+</Playground>
+
+The first click claims the taho. Later clicks do nothing, because the listener removed itself.
+
+## Listen just once
+
+For that exact job there's a shortcut. The `once` option removes the listener automatically after its first run:
+
+<Playground>
+```html
+<button id="start">Start the tutorial</button>
+```
+```js
+const start = document.querySelector("#start");
+
+start.addEventListener("click", () => {
+  console.log("Tutorial started. This only happens once.");
+}, { once: true });
+```
+</Playground>
+
+## Send your own events
+
+You can create and send events yourself. A **custom event** has any name you choose, and its `detail` property carries extra information. This lets one part of a program announce something without knowing who's listening.
+
+<Playground>
+```html
+<p id="log">Waiting for the round to end…</p>
+<button id="finish">Finish the round</button>
+```
+```js
+const log = document.querySelector("#log");
+
+// One part of the program listens for "roundend"...
+document.addEventListener("roundend", (event) => {
+  log.textContent = `${event.detail.playerName} scored ${event.detail.score}`;
+});
+
+// ...and another part announces it, without knowing who's listening.
+document.querySelector("#finish").addEventListener("click", () => {
+  const event = new CustomEvent("roundend", { detail: { playerName: "Bea", score: 21 } });
+  document.dispatchEvent(event);
+});
+```
+</Playground>
+
+In your game, `Game.stop()` could dispatch a `roundend` event. Then `main.js` could listen for it to save a high score or play a sound, and `game.js` wouldn't need to know about either.
+
+## Practice: a one-time bonus
+
+Add a bonus to your game: the first time a player bops MISAbot within half a second of it appearing, show "Lightning reflexes!" once per round. Use a listener with `{ once: true }`, or remove the listener yourself, so the message can't repeat during the round. Then make the bonus available again when a new round starts.
+
+Afterward, try having `Game.stop()` dispatch a `roundend` custom event, and move the final message code into a listener in `main.js`.
+
+[MDN's guide to events](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events) covers bubbling and listeners in more depth.

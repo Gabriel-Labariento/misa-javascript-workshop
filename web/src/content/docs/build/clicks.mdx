@@ -1,0 +1,350 @@
+---
+title: 05 · Listen for clicks
+description: Learn events, listeners, and the event object, then turn the demo into a 30-second round you play by clicking.
+---
+import Checkpoint from '../../../components/Checkpoint.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+import Exercise from '../../../components/Exercise.astro';
+import Stepper from '../../../components/Stepper.astro';
+
+Until now, `script.js` ran from top to bottom and stopped, with two prompts freezing the page along the way. In this lesson the page starts responding to the player instead: a Start button begins a round, and clicking MISAbot scores a point.
+
+## What an event is
+
+An **event** is something that happens on the page: a click, a key press, the mouse moving, a text box changing. You can ask the browser to run a function every time a particular event happens to a particular element. That function is called a **listener**, or an event handler.
+
+<Playground>
+```html
+<button id="hello">Say hello</button>
+```
+```js
+const button = document.querySelector("#hello");
+
+button.addEventListener("click", () => {
+  console.log("Hello from a click!");
+});
+
+console.log("Listening…");
+```
+</Playground>
+
+`addEventListener` takes two arguments: the name of the event, and the function to run. Press **▶ Run**: `Listening…` appears right away, because the script finishes immediately. Then click the button in the preview a few times. The listener runs once per click, long after the script ended.
+
+<Stepper kind="event" />
+
+That's the mental model from [What is JavaScript?](../../javascript/#your-first-mental-model): the script sets things up, then the page waits and answers events.
+
+## Pass the function, don't call it
+
+You can give `addEventListener` an arrow function, as above, or the name of a function you defined earlier. Either way, you're handing the browser a function to call later.
+
+```js
+function sayHello() {
+  console.log("Hello!");
+}
+
+button.addEventListener("click", sayHello);   // Correct: the browser calls it on each click
+button.addEventListener("click", sayHello()); // Wrong: calls it once, right now
+```
+
+<Predict question="The page loads, then you click the button twice. What appears in the console?" options={['"Hi!" twice, once per click', '"Hi!" once, before any click', 'Nothing at all']} answer={1}>
+```js
+function sayHi() {
+  console.log("Hi!");
+}
+
+button.addEventListener("click", sayHi());
+```
+
+The parentheses call `sayHi` immediately, while the listener is being added, so `Hi!` appears once. `sayHi()` returns `undefined`, and that's what gets handed to `addEventListener`, so the clicks do nothing. Removing the parentheses fixes it.
+</Predict>
+
+## The event object
+
+When the browser calls your listener, it passes one argument: an **event object** describing what happened. Name the parameter `event` (some code shortens it to `e`).
+
+<Playground>
+```html
+<button id="like"><img src="assets/misabot.png" alt="" width="48" /> Like</button>
+```
+```js
+const button = document.querySelector("#like");
+
+button.addEventListener("click", (event) => {
+  console.log(event.type);
+  console.log(event.target);
+  console.log(event.currentTarget);
+});
+```
+</Playground>
+
+Click the picture, then click the word **Like**, and compare the output:
+
+- `event.type` is the name of the event: `"click"`.
+- `event.target` is the exact element you clicked. Clicking the picture gives the `<img>`.
+- `event.currentTarget` is the element whose listener is running. It's always the button here.
+
+Each hole on our board holds a picture and a label, so a click on MISAbot's face has the `<img>` as its target. We'll use `currentTarget` to get the hole itself.
+
+## Practice: build a like button
+
+<Exercise id="like-button">
+When the button is clicked, add 1 to `likes`, show the new number in `countDisplay`, and add the class `liked` to the button so the CSS turns it pink.
+</Exercise>
+
+## Read what the player typed
+
+Text boxes and menus have a `value` property holding the current text or choice:
+
+<Playground>
+```html
+<input id="nickname" placeholder="Nickname" />
+<select id="speed">
+  <option value="slow">Slow</option>
+  <option value="normal" selected>Normal</option>
+  <option value="fast">Fast</option>
+</select>
+<button id="show">Show</button>
+```
+```js
+const nickname = document.querySelector("#nickname");
+const speed = document.querySelector("#speed");
+const showButton = document.querySelector("#show");
+
+showButton.addEventListener("click", () => {
+  const playerName = nickname.value.trim() || "Player";
+  console.log(`${playerName} picked ${speed.value}`);
+});
+```
+</Playground>
+
+Read `value` inside the listener, at the moment of the click. Reading it at the top of the script would only capture the empty box from when the page loaded.
+
+`<select>` gives the `value` attribute of the chosen `<option>`, which is why the options say `value="slow"` and so on.
+
+## Practice: greet whoever types their name
+
+<Exercise id="greeter">
+When **Greet me** is clicked, show `Hi, NAME!` in `output`, without extra spaces around the name. If the box is empty, show `Hi, stranger!`.
+</Exercise>
+
+## Apply it to the game
+
+The prompts go away in this step. A text box, a speed menu, and a Start button replace them, and a score and timer show above the board.
+
+### Update the page
+
+Replace all of `workshop/index.html` with:
+
+```html title="workshop/index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bop the Bot</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="game">
+      <h1>Bop the Bot</h1>
+      <p id="greeting">Type your name, choose a speed, and press Start.</p>
+
+      <fieldset id="controls" class="controls">
+        <label>
+          Name
+          <input id="player-name" type="text" placeholder="Player" maxlength="20" />
+        </label>
+        <label>
+          Speed
+          <select id="speed">
+            <option value="slow">Slow</option>
+            <option value="normal" selected>Normal</option>
+            <option value="fast">Fast</option>
+          </select>
+        </label>
+        <button id="start-button" type="button">Start</button>
+      </fieldset>
+
+      <div class="stats">
+        <p>Score: <strong id="score">0</strong></p>
+        <p>Time: <strong id="time">30</strong>s</p>
+      </div>
+
+      <div id="board" class="board"></div>
+      <p id="message" class="message" role="status"></p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+```
+
+The `<fieldset>` groups the three controls. Disabling a fieldset disables everything inside it, which we'll use to lock the controls during a round. `role="status"` lets screen readers announce the end-of-round message.
+
+### Settings and elements
+
+In `workshop/script.js`, delete `askName`, `askSpeed`, and everything after `hideBot` (the greeting, the demo, and its timers). Keep the board functions.
+
+At the top, after `POP_DELAYS`, add the round length and find the elements the game will update:
+
+```js title="Top of workshop/script.js"
+const KEYS = ["q", "w", "e", "a", "s", "d", "z", "x", "c"];
+const POP_DELAYS = { slow: 1100, normal: 850, fast: 600 };
+const ROUND_SECONDS = 30;
+
+const controls = document.querySelector("#controls");
+const nameInput = document.querySelector("#player-name");
+const speedSelect = document.querySelector("#speed");
+const startButton = document.querySelector("#start-button");
+const scoreDisplay = document.querySelector("#score");
+const timeDisplay = document.querySelector("#time");
+const message = document.querySelector("#message");
+```
+
+### A rank for the final score
+
+After `hideBot`, add a function that turns a score into a short title. Each `return` ends the function, so the first matching line wins:
+
+```js title="Add after hideBot"
+function rankFor(score) {
+  if (score >= 25) {
+    return "Legendary bopper";
+  }
+  if (score >= 15) {
+    return "Quick hands";
+  }
+  if (score >= 5) {
+    return "Nice warm-up";
+  }
+  return "MISAbot got away this time";
+}
+```
+
+### The state of a round
+
+A game needs to remember things between events: the score, the time left, where MISAbot is, and whether a round is running. Build the board, then make a variable for each piece of **state**:
+
+```js title="Add after rankFor"
+const holes = createBoard(document.querySelector("#board"));
+
+let playerName = "Player";
+let score = 0;
+let misses = 0;
+let timeLeft = ROUND_SECONDS;
+let currentHole = null;
+let isPlaying = false;
+let popTimer = null;
+let clockTimer = null;
+
+function updateStats() {
+  scoreDisplay.textContent = score;
+  timeDisplay.textContent = timeLeft;
+}
+
+function popUp() {
+  if (currentHole !== null) {
+    hideBot(currentHole);
+  }
+  currentHole = randomHole(holes, currentHole);
+  showBot(currentHole);
+}
+```
+
+`popTimer` and `clockTimer` will hold timer ids so we can stop the timers later. `popUp` is the same as before.
+
+### Start, tick, and end a round
+
+```js title="Add after popUp"
+function startGame() {
+  if (isPlaying) {
+    return;
+  }
+  playerName = nameInput.value.trim() || "Player";
+  score = 0;
+  misses = 0;
+  timeLeft = ROUND_SECONDS;
+  isPlaying = true;
+  controls.disabled = true;
+  message.textContent = `Go, ${playerName}!`;
+  updateStats();
+
+  popUp();
+  popTimer = setInterval(popUp, POP_DELAYS[speedSelect.value]);
+  clockTimer = setInterval(tick, 1000);
+}
+
+function tick() {
+  timeLeft -= 1;
+  updateStats();
+  if (timeLeft <= 0) {
+    endGame();
+  }
+}
+
+function endGame() {
+  if (!isPlaying) {
+    return;
+  }
+  isPlaying = false;
+  clearInterval(popTimer);
+  clearInterval(clockTimer);
+  if (currentHole !== null) {
+    hideBot(currentHole);
+    currentHole = null;
+  }
+  controls.disabled = false;
+  message.textContent = `${playerName}, you bopped ${score} bots and missed ${misses}. ${rankFor(score)}!`;
+}
+```
+
+`startGame` resets everything, reads the name and speed at the moment Start is pressed, and starts two timers: one moves MISAbot, the other counts down once a second. `tick` stops the round at zero. The early `return` lines make both functions safe to call at the wrong time; starting twice won't create extra timers.
+
+### Bop a hole
+
+```js title="Add after endGame"
+function bop(hole) {
+  if (!isPlaying) {
+    return;
+  }
+  if (hole === currentHole) {
+    score += 1;
+    hideBot(hole);
+    currentHole = null;
+    hole.classList.add("bopped");
+    setTimeout(() => hole.classList.remove("bopped"), 250);
+  } else {
+    misses += 1;
+  }
+  updateStats();
+}
+```
+
+A bop scores only if MISAbot is in that hole. The `bopped` class flashes the hole for a quarter of a second, then a timer removes it.
+
+### Listen for clicks
+
+Finally, connect the events. Every hole gets a click listener, and so does the Start button:
+
+```js title="Add at the end of workshop/script.js"
+function handleHoleClick(event) {
+  bop(event.currentTarget);
+}
+
+for (const hole of holes) {
+  hole.addEventListener("click", handleHoleClick);
+}
+
+startButton.addEventListener("click", startGame);
+```
+
+`event.currentTarget` is the hole, even when the click landed on MISAbot's picture or the key label inside it.
+
+## Run and check
+
+Type a name, choose a speed, and press **Start**. The timer should count down from 30, and the controls should look faded. Click MISAbot to score; click an empty hole to see a miss counted. When time runs out, MISAbot disappears, the message shows your result, and **Start** works again.
+
+The script now spends almost all its time waiting. Every change on the page comes from a listener or a timer.
+
+<Checkpoint id="05-clicks" />
