@@ -2,6 +2,8 @@ const KEYS = ["q", "w", "e", "a", "s", "d", "z", "x", "c"];
 const POP_DELAYS = { slow: 1100, normal: 850, fast: 600 };
 const ROUND_SECONDS = 30;
 
+const board = document.querySelector("#board");
+const hammer = document.querySelector("#hammer");
 const controls = document.querySelector("#controls");
 const nameInput = document.querySelector("#player-name");
 const speedSelect = document.querySelector("#speed");
@@ -67,7 +69,7 @@ function rankFor(score) {
   return "MISAbot got away this time";
 }
 
-const holes = createBoard(document.querySelector("#board"));
+const holes = createBoard(board);
 
 let playerName = "Player";
 let score = 0;
@@ -148,12 +150,38 @@ function bop(hole) {
   updateStats();
 }
 
-function handleHoleClick(event) {
-  bop(event.currentTarget);
-}
-
-for (const hole of holes) {
-  hole.addEventListener("click", handleHoleClick);
-}
-
 startButton.addEventListener("click", startGame);
+
+// One listener on the board handles all nine holes.
+board.addEventListener("mousedown", (event) => {
+  if (event.button !== 0) {
+    return;
+  }
+  hammer.classList.add("swing");
+  const hole = event.target.closest(".hole");
+  if (hole !== null) {
+    bop(hole);
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  hammer.classList.remove("swing");
+});
+
+board.addEventListener("mouseenter", () => {
+  hammer.classList.add("visible");
+});
+
+board.addEventListener("mouseleave", () => {
+  hammer.classList.remove("visible");
+});
+
+board.addEventListener("mousemove", (event) => {
+  hammer.style.left = `${event.clientX}px`;
+  hammer.style.top = `${event.clientY}px`;
+});
+
+// A right-click mid-game shouldn't open the browser's menu.
+board.addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
