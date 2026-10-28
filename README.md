@@ -7,7 +7,7 @@ Build **Bop the Bot**, a small browser game, while learning JavaScript basics, m
 ## Get started
 
 ```bash
-git clone https://github.com/youth-of-may/misa-javascript-workshop.git
+git clone https://github.com/Gabriel-Labariento/misa-javascript-workshop.git
 cd misa-javascript-workshop
 git checkout 00-start
 git checkout -b my-game
@@ -22,16 +22,16 @@ Install the **Live Preview** extension (`code --install-extension ms-vscode.live
 <!-- CHECKPOINTS:START -->
 | Checkpoint | Lesson |
 | --- | --- |
-| [00-start](https://github.com/youth-of-may/misa-javascript-workshop/tree/00-start/workshop) | [01 · Say hello](web/src/content/docs/build/hello.mdx) |
-| [01-hello](https://github.com/youth-of-may/misa-javascript-workshop/tree/01-hello/workshop) | [01 · Say hello](web/src/content/docs/build/hello.mdx) |
-| [02-decisions](https://github.com/youth-of-may/misa-javascript-workshop/tree/02-decisions/workshop) | [02 · Make decisions](web/src/content/docs/build/decisions.mdx) |
-| [03-board](https://github.com/youth-of-may/misa-javascript-workshop/tree/03-board/workshop) | [03 · Build the board](web/src/content/docs/build/board.mdx) |
-| [04-functions](https://github.com/youth-of-may/misa-javascript-workshop/tree/04-functions/workshop) | [04 · Give your code a job](web/src/content/docs/build/functions.mdx) |
-| [05-clicks](https://github.com/youth-of-may/misa-javascript-workshop/tree/05-clicks/workshop) | [05 · Listen for clicks](web/src/content/docs/build/clicks.mdx) |
-| [06-mouse](https://github.com/youth-of-may/misa-javascript-workshop/tree/06-mouse/workshop) | [06 · Follow the mouse](web/src/content/docs/build/mouse.mdx) |
-| [07-keyboard](https://github.com/youth-of-may/misa-javascript-workshop/tree/07-keyboard/workshop) | [07 · Use the keyboard](web/src/content/docs/build/keyboard.mdx) |
-| [08-modules](https://github.com/youth-of-may/misa-javascript-workshop/tree/08-modules/workshop) | [08 · Split code into modules](web/src/content/docs/build/modules.mdx) |
-| [09-classes](https://github.com/youth-of-may/misa-javascript-workshop/tree/09-classes/workshop) | [09 · Build a class](web/src/content/docs/build/classes.mdx) |
+| [00-start](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/00-start/workshop) | [01 · Say hello](web/src/content/docs/build/hello.mdx) |
+| [01-hello](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/01-hello/workshop) | [01 · Say hello](web/src/content/docs/build/hello.mdx) |
+| [02-decisions](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/02-decisions/workshop) | [02 · Make decisions](web/src/content/docs/build/decisions.mdx) |
+| [03-board](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/03-board/workshop) | [03 · Build the board](web/src/content/docs/build/board.mdx) |
+| [04-functions](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/04-functions/workshop) | [04 · Give your code a job](web/src/content/docs/build/functions.mdx) |
+| [05-clicks](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/05-clicks/workshop) | [05 · Listen for clicks](web/src/content/docs/build/clicks.mdx) |
+| [06-mouse](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/06-mouse/workshop) | [06 · Follow the mouse](web/src/content/docs/build/mouse.mdx) |
+| [07-keyboard](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/07-keyboard/workshop) | [07 · Use the keyboard](web/src/content/docs/build/keyboard.mdx) |
+| [08-modules](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/08-modules/workshop) | [08 · Split code into modules](web/src/content/docs/build/modules.mdx) |
+| [09-classes](https://github.com/Gabriel-Labariento/misa-javascript-workshop/tree/09-classes/workshop) | [09 · Build a class](web/src/content/docs/build/classes.mdx) |
 <!-- CHECKPOINTS:END -->
 
 The website's [browser playground](web/src/content/docs/playground.mdx) runs every checkpoint without local setup. It is the fallback when installing tools gets in the way.
@@ -72,6 +72,6 @@ git checkout 05-clicks
 node scripts/sync_checkpoint.mjs 05-clicks
 ```
 
-The repository URL appears in the guides, `web/src/data/site.json`, and `web/astro.config.mjs`. If you publish under a different account or organization, replace `youth-of-may/misa-javascript-workshop` everywhere it appears.
+The repository URL appears in the guides, `web/src/data/site.json`, and `web/astro.config.mjs`. If you publish under a different account or organization, replace `Gabriel-Labariento/misa-javascript-workshop` everywhere it appears.
 
 The site deploys as a static Astro build. On Vercel, use `web` as the project root.
