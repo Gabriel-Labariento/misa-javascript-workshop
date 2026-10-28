@@ -8,7 +8,7 @@ export default defineConfig({
     logo: { src: './public/assets/misa-mark.svg', replacesTitle: false },
     favicon: '/assets/misa-mark.svg',
     social: [{ icon: 'github', label: 'Workshop repository', href: 'https://github.com/Gabriel-Labariento/misa-javascript-workshop' }],
-    customCss: ['./src/styles/custom.css', './src/styles/playground.css'],
+    customCss: ['./src/styles/custom.css', './src/styles/playground.css', './src/styles/companion.css'],
     components: { Footer: './src/components/Footer.astro' },
     sidebar: [
       { label: 'Before you begin', collapsed: false, items: [

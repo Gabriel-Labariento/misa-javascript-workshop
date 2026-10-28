@@ -1,0 +1,40 @@
+---
+// MISAbot drawn in SVG so the companion can change its face. Expressions are
+// classes on the root: is-happy, is-curious, is-cheering (see companion.css).
+interface Props {
+  class?: string;
+  body?: boolean;
+}
+const { class: className = '', body = true } = Astro.props;
+---
+
+<svg class:list={['misabot', className]} viewBox={body ? '0 0 120 112' : '0 0 120 90'} aria-hidden="true" focusable="false">
+  <g class="misabot-antennae">
+    <path d="M24 12v16M96 12v16" />
+    <circle cx="24" cy="10" r="6" />
+    <circle cx="96" cy="10" r="6" />
+  </g>
+  <rect class="misabot-shell" x="3" y="38" width="16" height="28" rx="6" />
+  <rect class="misabot-shell" x="101" y="38" width="16" height="28" rx="6" />
+  <path class="misabot-shell" d="M60 6 104 22q6 2 6 9v33q0 22-22 22H32Q10 86 10 64V31q0-7 6-9Z" />
+  <rect class="misabot-face" x="22" y="27" width="76" height="52" rx="14" />
+  <g class="misabot-eyes">
+    <rect x="40" y="40" width="8" height="14" rx="4" />
+    <rect x="72" y="40" width="8" height="14" rx="4" />
+  </g>
+  <g class="misabot-happy-eyes">
+    <path d="M38 50q6-9 12 0M70 50q6-9 12 0" />
+  </g>
+  <path class="misabot-mouth" d="M52 62q8 7 16 0" />
+  <ellipse class="misabot-o" cx="60" cy="64" rx="4" ry="5" />
+  <g class="misabot-cheeks">
+    <ellipse cx="34" cy="60" rx="5" ry="3" />
+    <ellipse cx="86" cy="60" rx="5" ry="3" />
+  </g>
+  {body && (
+    <g class="misabot-body">
+      <rect class="misabot-shell" x="52" y="84" width="16" height="10" />
+      <path class="misabot-shell" d="M22 112q4-22 38-22t38 22Z" />
+    </g>
+  )}
+</svg>

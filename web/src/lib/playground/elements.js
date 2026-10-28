@@ -7,6 +7,11 @@ import { el, button, codeBlock, createConsole, langFor, PREVIEW_STYLE, storage }
 //   <js-exercise>    a practice task with automatic checks, hints, and a solution
 //   <js-predict>     a "what will this print?" question
 
+// Lets the page companion (src/lib/companion.js) react to what the learner does.
+function announce(target, action, detail = {}) {
+  target.dispatchEvent(new CustomEvent(`misa:${action}`, { bubbles: true, detail }));
+}
+
 function assetBase() {
   const base = import.meta.env.BASE_URL || '/';
   return new URL(`${base.replace(/\/?$/, '/')}workshop/`, window.location.href).href;
@@ -150,7 +155,7 @@ class PlaygroundElement extends HTMLElement {
     const workspace = createWorkspace({
       files,
       title: config.title || (files.length === 1 ? 'Try it' : ''),
-      onRun: () => run(),
+      onRun: () => userRun(),
       actions: [resetButton, runButton],
     });
     const output = createOutput({ preview, height: config.height || 180 });
@@ -172,7 +177,11 @@ class PlaygroundElement extends HTMLElement {
         baseStyle: PREVIEW_STYLE,
       });
     };
-    runButton.addEventListener('click', run);
+    const userRun = () => {
+      run();
+      announce(this, 'run');
+    };
+    runButton.addEventListener('click', userRun);
     resetButton.addEventListener('click', () => {
       workspace.reset();
       output.console.clear();
@@ -327,6 +336,7 @@ class ExerciseElement extends HTMLElement {
         }
       }
       markSolved(passed || Boolean(store && store.getItem(solvedKey)));
+      announce(this, 'check', { passed });
       checkButton.disabled = false;
       checkButton.textContent = 'Check my answer';
     };
@@ -405,6 +415,7 @@ class PredictElement extends HTMLElement {
         feedback.textContent = index === answer ? 'Correct!' : `Not quite. The answer is ${options[answer]}.`;
         feedback.className = `pg-feedback ${index === answer ? 'is-right' : 'is-wrong'}`;
         explanation.hidden = false;
+        announce(this, 'predict', { correct: index === answer });
       });
       choices.append(choice);
     });

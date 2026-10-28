@@ -1,0 +1,48 @@
+---
+// MISAbot keeps readers company: a reading-progress bar he rides along, a
+// corner peek that reacts to predictions, runs, and exercises, and a short
+// celebration at the end of the page. Progress stays in the reader's browser.
+import MisaBot from './MisaBot.astro';
+
+const { id, entry, pagination, sidebar } = Astro.locals.starlightRoute;
+
+type Entry = { type: string; href?: string; entries?: Entry[] };
+const links = (entries: Entry[]): Entry[] => entries.flatMap((item) => (item.type === 'group' ? links(item.entries ?? []) : [item]));
+const lessons = links(sidebar as Entry[])
+  .map((item) => item.href?.replace(/^\/|\/$/g, '') ?? '')
+  .filter((slug) => slug.startsWith('build/'));
+const lessonNumber = lessons.indexOf(id) + 1;
+const next = pagination.next;
+const config = { id, lessons, lessonNumber };
+---
+
+<misa-companion data-config={JSON.stringify(config)}>
+  <div class="misa-progress" aria-hidden="true">
+    <div class="misa-progress-fill"></div>
+    <div class="misa-progress-rider"><MisaBot body={false} /></div>
+  </div>
+
+  <div class="misa-dock">
+    <p class="misa-bubble" role="status" aria-live="polite"></p>
+    <button class="misa-dock-bot" type="button" aria-label="Say hi to MISAbot">
+      <MisaBot />
+    </button>
+  </div>
+
+  <div class="misa-finish-sentinel" aria-hidden="true"></div>
+  <section class="misa-finish" hidden aria-labelledby="misa-finish-title">
+    <div class="misa-finish-bot"><MisaBot /></div>
+    <div class="misa-finish-text">
+      <p class="misa-finish-kicker">{lessonNumber ? `Lesson ${String(lessonNumber).padStart(2, '0')} complete` : 'End of the page'}</p>
+      <h2 id="misa-finish-title" class="misa-finish-title">{lessonNumber ? `You finished “${entry.data.title.replace(/^\d+\s*·\s*/, '')}”!` : 'You made it to the end!'}</h2>
+      <p class="misa-finish-count" hidden></p>
+      {next && (
+        <a class="misa-finish-next" href={next.href}>Up next: {next.label} →</a>
+      )}
+    </div>
+  </section>
+</misa-companion>
+
+<script>
+  import '../lib/companion.js';
+</script>
