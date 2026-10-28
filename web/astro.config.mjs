@@ -1,10 +1,24 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import { remarkPlayground } from './src/plugins/remark-playground.mjs';
+const SITE = 'https://js.gmpl.dev';
+// The link-preview image; redraw it with scripts/make_share_image.mjs.
+const SHARE_IMAGE = `${SITE}/og.png`;
+const SHARE_ALT = 'MISAbot cheering next to the words JavaScript Workshop. Build Bop the Bot, a little browser game, and learn JS one step at a time.';
+
 export default defineConfig({
+  site: SITE,
   markdown: { remarkPlugins: [remarkPlayground] },
   integrations: [starlight({
     title: 'JavaScript Workshop',
+    head: [
+      { tag: 'meta', attrs: { property: 'og:image', content: SHARE_IMAGE } },
+      { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+      { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+      { tag: 'meta', attrs: { property: 'og:image:alt', content: SHARE_ALT } },
+      { tag: 'meta', attrs: { name: 'twitter:image', content: SHARE_IMAGE } },
+      { tag: 'meta', attrs: { name: 'twitter:image:alt', content: SHARE_ALT } },
+    ],
     logo: { src: './public/assets/misa-mark.svg', replacesTitle: false },
     favicon: '/assets/misa-mark.svg',
     social: [{ icon: 'github', label: 'Workshop repository', href: 'https://github.com/Gabriel-Labariento/misa-javascript-workshop' }],
