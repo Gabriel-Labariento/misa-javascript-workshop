@@ -91,7 +91,7 @@ export function buildDocument({ files, mode, setup = '', prompts = [], checks = 
     moduleFiles[url] = name;
   }
 
-  const config = { token, mode, prompts, timeScale: 20 };
+  const config = { token, mode, prompts };
   const head = [
     assetBase ? `<base href="${assetBase}">` : '',
     `<script>${inlineScript(runtimeSource)}\n__pgRuntime(${inlineScript(JSON.stringify(config))});</script>`,

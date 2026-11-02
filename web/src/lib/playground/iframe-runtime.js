@@ -1,12 +1,11 @@
 // This file runs INSIDE the sandboxed preview frame, before the learner's code.
 // runner.js reads it as text, so it must stay plain browser JavaScript with no imports.
 // It captures console output and errors, guards loops, and (in check mode)
-// replaces prompt/alert, speeds up timers, and records event listeners.
+// replaces prompt/alert, runs timers on a pretend clock, and records event listeners.
 function __pgRuntime(CONFIG) {
   'use strict';
   var parentWindow = window.parent;
   var realSetTimeout = window.setTimeout.bind(window);
-  var realSetInterval = window.setInterval.bind(window);
   var state = {
     logs: [],
     errors: [],
@@ -14,7 +13,6 @@ function __pgRuntime(CONFIG) {
     alerts: [],
     listeners: [],
     realSetTimeout: realSetTimeout,
-    timeScale: CONFIG.mode === 'check' ? CONFIG.timeScale || 20 : 1,
   };
   Object.defineProperty(window, '__pgState', { value: state });
 
@@ -201,14 +199,77 @@ function __pgRuntime(CONFIG) {
       state.alerts.push(String(message));
       return true;
     };
-    var scale = state.timeScale;
+    // Timers run on a pretend clock that only wait() moves forward, so checks
+    // see the same order of events however busy or throttled the browser is.
+    var clock = { now: 0, nextId: 1, timers: [] };
+    var taskQueue = [];
+    var taskChannel = new MessageChannel();
+    taskChannel.port1.onmessage = function () {
+      var task = taskQueue.shift();
+      if (task) task();
+    };
+    // A fresh task, so promises settle between timers. Unlike setTimeout, it isn't throttled.
+    var nextTask = function (task) {
+      taskQueue.push(task);
+      taskChannel.port2.postMessage(0);
+    };
+    var nextDue = function (until) {
+      var due = null;
+      for (var i = 0; i < clock.timers.length; i++) {
+        if (clock.timers[i].at <= until && (!due || clock.timers[i].at < due.at)) due = clock.timers[i];
+      }
+      return due;
+    };
+    var fire = function (timer) {
+      if (timer.every) timer.at += timer.every;
+      else clock.timers.splice(clock.timers.indexOf(timer), 1);
+      try {
+        timer.callback.apply(window, timer.args);
+      } catch (error) {
+        if (typeof window.reportError === 'function') window.reportError(error);
+        else realSetTimeout(function () { throw error; });
+      }
+    };
+    // Timers already due (like setTimeout(fn, 0)) still run right away.
+    var fireDueNow = function () {
+      var due = nextDue(clock.now);
+      if (!due) return;
+      fire(due);
+      nextTask(fireDueNow);
+    };
+    var addTimer = function (callback, delay, args, repeat) {
+      var id = clock.nextId++;
+      if (typeof callback !== 'function') return id;
+      var wait = Math.max(repeat ? 1 : 0, Number(delay) || 0);
+      clock.timers.push({ id: id, at: clock.now + wait, every: repeat ? wait : 0, callback: callback, args: args });
+      if (wait === 0) nextTask(fireDueNow);
+      return id;
+    };
+    var clearTimer = function (id) {
+      clock.timers = clock.timers.filter(function (timer) { return timer.id !== id; });
+    };
     window.setTimeout = function (callback, delay) {
-      var rest = Array.prototype.slice.call(arguments, 2);
-      return realSetTimeout.apply(window, [callback, Math.max(0, (Number(delay) || 0) / scale)].concat(rest));
+      return addTimer(callback, delay, Array.prototype.slice.call(arguments, 2), false);
     };
     window.setInterval = function (callback, delay) {
-      var rest = Array.prototype.slice.call(arguments, 2);
-      return realSetInterval.apply(window, [callback, Math.max(1, (Number(delay) || 0) / scale)].concat(rest));
+      return addTimer(callback, delay, Array.prototype.slice.call(arguments, 2), true);
+    };
+    window.clearTimeout = clearTimer;
+    window.clearInterval = clearTimer;
+    state.advanceClock = function (ms, done) {
+      var until = clock.now + Math.max(0, Number(ms) || 0);
+      var step = function () {
+        var due = nextDue(until);
+        if (!due) {
+          clock.now = until;
+          nextTask(done);
+          return;
+        }
+        clock.now = due.at;
+        fire(due);
+        nextTask(step);
+      };
+      step();
     };
     var realAddEventListener = EventTarget.prototype.addEventListener;
     EventTarget.prototype.addEventListener = function (type, listener, options) {
@@ -339,7 +400,8 @@ function __pgRuntime(CONFIG) {
     },
     wait: function (ms) {
       return new Promise(function (resolve) {
-        realSetTimeout(resolve, (ms || 0) / state.timeScale);
+        if (state.advanceClock) state.advanceClock(ms, resolve);
+        else realSetTimeout(resolve, ms || 0);
       });
     },
     importFile: function (name) {

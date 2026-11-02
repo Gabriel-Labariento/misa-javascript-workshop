@@ -7,7 +7,7 @@
 // Helpers on t: logs, errors, prompts, alerts, listeners, MISSING,
 // value(name), has(name), logged(text), $(selector), $$(selector), text(selector),
 // click(element), mouse(type, element, init), key(type, key, init), press(key, init),
-// wait(ms) (timers run 20× faster during checks), importFile(name).
+// wait(ms) (moves a pretend clock forward and runs the timers that come due, instantly), importFile(name).
 //
 // Checks are turned into text with fn.toString(), so they may only use `t`,
 // their own local variables, and browser globals.
