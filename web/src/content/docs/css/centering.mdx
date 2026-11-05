@@ -1,0 +1,101 @@
+---
+title: Centering
+description: Center text, boxes, and anything else, across and down.
+---
+import Playground from '../../../components/Playground.astro';
+
+Centering used to be a famous CSS headache. Today, the right tool depends on what you're centering and which direction.
+
+## Center text
+
+For text inside a box, `text-align` is enough:
+
+<Playground>
+```html
+<p class="title">Game over</p>
+```
+```css
+.title {
+  text-align: center;
+}
+```
+</Playground>
+
+`text-align` centers the lines of text, along with inline things like links and images. It doesn't move the box itself.
+
+## Center a box across the page
+
+To center a box horizontally, give it a `width` and set its left and right margins to `auto`:
+
+<Playground>
+```html
+<div class="panel">I'm in the middle.</div>
+```
+```css
+.panel {
+  width: 200px;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: #e6f4f1;
+}
+```
+</Playground>
+
+`margin: 0 auto` means no margin on the top and bottom, and automatic margins on the sides. The two automatic margins split the leftover space evenly, which puts the box in the middle. This only works for block boxes with a width set.
+
+## Center anything, across and down
+
+To center something in both directions, use flexbox or grid on the parent. Both of these work:
+
+<Playground>
+```html
+<div class="stage flex">
+  <div class="dot">Flex</div>
+</div>
+<div class="stage grid">
+  <div class="dot">Grid</div>
+</div>
+```
+```css
+.stage {
+  height: 140px;
+  margin-bottom: 12px;
+  border: 2px dashed gray;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  place-items: center;
+}
+
+.dot {
+  padding: 16px;
+  background-color: teal;
+  color: white;
+}
+```
+</Playground>
+
+With flexbox, `justify-content` centers along the row and `align-items` centers across it. Grid does both at once with `place-items: center`.
+
+Remember that the parent needs a height. Without one, it's only as tall as its child, so there's no room to center into.
+
+## Which one to use
+
+| To center | Use |
+| --- | --- |
+| Text inside a box | `text-align: center` |
+| A box, left to right | `margin: 0 auto` with a `width` |
+| Anything, in both directions | Flexbox or grid on the parent |
+
+## Up next
+
+You've seen the main layout tools: the box model, flexbox, grid, and centering. The best way to make them stick is to use them, so next is a game you'll play as a team.
+
+[Next: Practice as a team →](../practice/)

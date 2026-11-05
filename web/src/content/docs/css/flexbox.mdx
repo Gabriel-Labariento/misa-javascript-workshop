@@ -1,0 +1,185 @@
+---
+title: Flexbox
+description: Line boxes up in a row or a column, and control the space between them.
+---
+import FlexAxes from '../../../components/diagrams/FlexAxes.astro';
+import Playground from '../../../components/Playground.astro';
+
+Block boxes stack down the page, one under the other. That's fine for paragraphs, but a menu, a row of cards, or a header with a logo on one side and links on the other needs boxes side by side. Flexbox does that.
+
+## Turn it on
+
+Flexbox works on a **parent** and its **children**. Put `display: flex` on the parent, the box that holds the others, and its children line up in a row.
+
+<Playground>
+```html
+<div class="row">
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">3</div>
+</div>
+```
+```css
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.item {
+  padding: 20px;
+  background-color: teal;
+  color: white;
+}
+```
+</Playground>
+
+`gap` adds space between the children. Try deleting `display: flex` to see them stack again.
+
+## Two directions
+
+Flexbox thinks in two directions. The **main axis** is the way the items flow, which is a row by default. The **cross axis** runs across it.
+
+<FlexAxes caption="justify-content works along the main axis. align-items works across it." />
+
+Each direction has its own property. Try different values in both:
+
+<Playground>
+```html
+<div class="row">
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">3</div>
+</div>
+```
+```css
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 160px;
+  border: 2px dashed gray;
+}
+
+.item {
+  padding: 20px;
+  background-color: teal;
+  color: white;
+}
+```
+</Playground>
+
+| Property | Direction | Values to try |
+| --- | --- | --- |
+| `justify-content` | Along the main axis | `flex-start`, `center`, `flex-end`, `space-between`, `space-around` |
+| `align-items` | Across it | `flex-start`, `center`, `flex-end`, `stretch` |
+
+The parent needs some height for `align-items` to have room to work, which is why the example sets `height: 160px`.
+
+## Rows or columns
+
+`flex-direction` turns the row into a column:
+
+```css
+.row {
+  display: flex;
+  flex-direction: column;
+}
+```
+
+This swaps the axes too. In a column, `justify-content` works up and down, and `align-items` works left and right. Add `flex-direction: column` to the example above and watch the two properties trade jobs.
+
+## Wrap onto new lines
+
+By default, flexbox squeezes every item onto one line. `flex-wrap: wrap` lets items move to a new line when they run out of room.
+
+<Playground>
+```html
+<div class="tags">
+  <span>HTML</span><span>CSS</span><span>Git</span><span>Tailwind</span>
+  <span>JavaScript</span><span>React</span><span>Next.js</span>
+</div>
+```
+```css
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 260px;
+}
+
+.tags span {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #e6f4f1;
+}
+```
+</Playground>
+
+## Let items grow
+
+`flex: 1` on a child tells it to take up the leftover space:
+
+<Playground>
+```html
+<div class="search">
+  <input type="text" placeholder="Search snacks">
+  <button>Go</button>
+</div>
+```
+```css
+.search {
+  display: flex;
+  gap: 8px;
+}
+
+.search input {
+  flex: 1;
+}
+```
+</Playground>
+
+The button keeps its normal size, and the input stretches to fill the rest. Give two children `flex: 1` and they share the space equally.
+
+## Put it together: a header
+
+Here's a common layout using what you've learned. A logo sits on the left, and links sit on the right.
+
+<Playground>
+```html
+<header class="top">
+  <strong>MISA</strong>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Workshops</a>
+    <a href="#">Join</a>
+  </nav>
+</header>
+```
+```css
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #0f2b2d;
+  color: white;
+}
+
+.top nav {
+  display: flex;
+  gap: 16px;
+}
+
+.top a {
+  color: #9ce9e9;
+}
+```
+</Playground>
+
+Notice that there are two flex parents. The header spreads the logo and the menu apart, and the `<nav>` lines up its own links inside.
+
+## Up next
+
+Flexbox handles one row or one column at a time. When you need rows *and* columns together, like a gallery, use grid.
+
+[Next: Grid →](../grid/)

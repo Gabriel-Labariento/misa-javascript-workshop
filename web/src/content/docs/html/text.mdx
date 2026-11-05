@@ -1,0 +1,112 @@
+---
+title: Text and links
+description: Fill a page with headings, paragraphs, lists, and links to other pages.
+---
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+
+With the skeleton in place, most of what goes on a page is text. HTML gives each kind of text its own tag, so the browser knows a heading from a paragraph from a list.
+
+From here on, examples only show what goes inside `<body>`. The playground fills in the rest. Press **▶ Run**, change something, and run it again.
+
+## Headings and paragraphs
+
+<Playground>
+```html
+<h1>My favorite snacks</h1>
+<p>These are the snacks I buy after class.</p>
+
+<h2>Sweet</h2>
+<p>Taho is the best way to start the morning.</p>
+
+<h2>Savory</h2>
+<p>Fishballs, as long as the sauce is spicy.</p>
+```
+</Playground>
+
+There are six heading levels, from `<h1>` to `<h6>`. Pick them by importance, not by size: `<h1>` is the page's main title, `<h2>` starts a section, and `<h3>` starts a part of that section. Use one `<h1>` per page. CSS can change how big any of them look later.
+
+Each `<p>` is a paragraph. The browser adds space between paragraphs for you.
+
+<Predict question="How many lines does this paragraph show?" options={['Three', 'One']} answer={1}>
+```html
+<p>Taho
+Banana cue
+Fishballs</p>
+```
+
+It shows one line: "Taho Banana cue Fishballs". HTML treats line breaks and extra spaces in your code as a single space. To split text into lines, use separate elements, like a list.
+</Predict>
+
+## Make words stand out
+
+Inside a paragraph, two tags mark words that matter:
+
+<Playground>
+```html
+<p>Save your file <strong>before</strong> you refresh.</p>
+<p>The game is <em>really</em> fast on hard mode.</p>
+```
+</Playground>
+
+`<strong>` marks something important, and browsers show it in bold. `<em>` adds emphasis, the kind you'd stress when reading aloud, and browsers show it in italics.
+
+## Lists
+
+When you have several items, use a list. Lists come in two kinds, and both use `<li>` for each item.
+
+<Playground>
+```html
+<h2>Top three snacks</h2>
+<ol>
+  <li>Taho</li>
+  <li>Banana cue</li>
+  <li>Fishballs</li>
+</ol>
+
+<h2>Where to find them</h2>
+<ul>
+  <li>The stall near the gate</li>
+  <li>The cart by the field
+    <ul>
+      <li>Only open after 3 PM</li>
+    </ul>
+  </li>
+</ul>
+```
+</Playground>
+
+`<ol>` is an ordered list, so its items are numbered. `<ul>` is an unordered list, so its items get bullets. Use `<ol>` when the order matters, like steps in a recipe.
+
+A list can also go inside an `<li>`, like the note under the cart above. Try swapping the first `<ol>` for `<ul>` and running it again.
+
+## Links
+
+Links are what make the web a web. You make one with `<a>`, short for anchor:
+
+<Playground>
+```html
+<p>Learn more on <a href="https://developer.mozilla.org">MDN</a>.</p>
+<p><a href="https://github.com" target="_blank">Open GitHub in a new tab</a></p>
+```
+</Playground>
+
+The text between the tags is what people click. `href` says where the link goes. Extra details like this, written inside the opening tag, are called **attributes**, and the next page covers them properly.
+
+`target="_blank"` opens the link in a new tab. Use it sparingly, since people usually expect links to open in the same tab.
+
+## Link your own pages
+
+A site is usually more than one page. To link between your own files, put the file name in `href`:
+
+```html title="index.html"
+<a href="about.html">About me</a>
+```
+
+This works when `about.html` sits in the same folder as `index.html`. The next page explains how to point to files in other folders.
+
+## Up next
+
+Your page has text and links now. Next come images, and a closer look at the attributes that make them work.
+
+[Next: Images and attributes →](../images/)

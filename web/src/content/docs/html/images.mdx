@@ -1,0 +1,87 @@
+---
+title: Images and attributes
+description: Add images to a page, describe them with alt text, and point to files in other folders.
+---
+import Anatomy from '../../../components/diagrams/Anatomy.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+
+On the last page, a link used `href` to say where it goes. That `href` is an **attribute**, and images depend on attributes even more than links do.
+
+## What an attribute is
+
+An attribute adds a detail to an element. It always goes inside the opening tag, written as a name, an equals sign, and a value in quotes.
+
+<Anatomy
+  label="An attribute inside an opening tag: the name href and its value"
+  parts={[
+    { text: '<a ' },
+    { text: 'href', label: 'attribute name' },
+    { text: '="' },
+    { text: 'about.html', label: 'value' },
+    { text: '">About me</a>' },
+  ]}
+  caption="An element can have several attributes. Separate them with spaces."
+/>
+
+## Add an image
+
+An image has no text inside it, so `<img>` has no closing tag. Everything it needs goes into its attributes instead.
+
+<Playground>
+```html
+<img src="assets/misabot.png" alt="MISAbot, a smiling robot" width="120">
+<p>This is MISAbot.</p>
+```
+</Playground>
+
+- `src` is the image file to show.
+- `alt` describes the image in words.
+- `width` sets the size in pixels. The height follows along, so the image keeps its shape.
+
+Try changing the `width` to `60` or `240` and running it again.
+
+## Why alt text matters
+
+Some people use screen readers, which read the page aloud. When a screen reader reaches an image, it reads the `alt` text. Without it, they only hear that an image is there.
+
+`alt` also helps everyone else when an image doesn't load:
+
+<Predict question="What does the browser show for this image?" options={['Nothing at all', 'The words "A smiling robot"', 'An error message']} answer={1}>
+```html
+<img src="missing.png" alt="A smiling robot">
+```
+
+The file `missing.png` doesn't exist, so the browser shows the `alt` text in its place. Most browsers add a small broken-image icon next to it.
+</Predict>
+
+Write `alt` the way you'd describe the picture to a friend over the phone. If an image is only decoration, use an empty `alt=""` so screen readers skip it.
+
+## Point to the right file
+
+The value of `src` is a **path**: directions from your HTML file to the image. The same rules work for links in `href`.
+
+Say your project looks like this:
+
+| File | Where it is |
+| --- | --- |
+| `index.html` | The project folder |
+| `cat.png` | The project folder |
+| `images/dog.png` | A folder named `images`, inside the project folder |
+
+From `index.html`, the paths look like this:
+
+```html title="index.html"
+<img src="cat.png" alt="A cat">
+<img src="images/dog.png" alt="A dog">
+```
+
+A plain file name means "in the same folder as me." A folder name followed by a slash means "go into this folder." If a file is in the folder *above* yours, start the path with `../`.
+
+You can also use a full web address, like `src="https://example.com/photo.jpg"`. That works, but the image disappears if the other site removes it. Keeping images in your own project is safer.
+
+## Up next
+
+You can put text, links, and images on a page. Next, you'll group them into the bigger parts every page has: a header, the main content, and a footer.
+
+[Next: Page structure →](../structure/)

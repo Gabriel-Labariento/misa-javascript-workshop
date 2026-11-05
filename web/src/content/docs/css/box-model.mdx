@@ -1,0 +1,145 @@
+---
+title: The box model
+description: Size elements and space them out with padding, borders, and margins.
+---
+import BoxModel from '../../../components/diagrams/BoxModel.astro';
+import Playground from '../../../components/Playground.astro';
+
+To CSS, every element is a rectangle, even a circle or a single word. Once you see the boxes, spacing and layout start to make sense.
+
+## Four layers
+
+Each box has four layers, from the inside out:
+
+<BoxModel caption="Padding is inside the border. Margin is outside it." />
+
+- The **content** is the text or image itself.
+- The **padding** is space inside the box, between the content and the border. It takes the box's background color.
+- The **border** is a line around the padding.
+- The **margin** is space outside the box. It pushes other boxes away and is always see-through.
+
+Change the numbers below and watch each layer grow or shrink.
+
+<Playground>
+```html
+<div class="box">I'm a box</div>
+<div class="box">So am I</div>
+```
+```css
+.box {
+  width: 200px;
+  padding: 20px;
+  border: 4px solid teal;
+  margin: 16px;
+  background-color: #e6f4f1;
+}
+```
+</Playground>
+
+## See the boxes in your browser
+
+You don't have to guess where the layers are. Right-click any element and choose **Inspect**. When you hover over an element in the panel, the browser shades its content, padding, border, and margin in different colors on the page.
+
+Look for the box model drawing in the **Computed** tab, too. It shows the exact size of every layer.
+
+## Padding and margin, side by side
+
+You can set each side separately, or all four at once:
+
+```css
+.box {
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  /* The same idea, written short: */
+  margin: 10px;              /* all four sides */
+  margin: 10px 20px;         /* top and bottom, then left and right */
+  margin: 5px 10px 15px 20px; /* top, right, bottom, left */
+}
+```
+
+For four values, the order goes clockwise from the top. Padding works the same way.
+
+## Borders and corners
+
+`border` takes three values at once: a width, a style, and a color.
+
+<Playground>
+```html
+<div class="card">Solid</div>
+<div class="card dashed">Dashed</div>
+<div class="card round">Rounded</div>
+<div class="card pill">Pill</div>
+```
+```css
+.card {
+  margin: 8px 0;
+  padding: 12px 16px;
+  border: 3px solid teal;
+}
+
+.dashed {
+  border-style: dashed;
+}
+
+.round {
+  border-radius: 12px;
+}
+
+.pill {
+  border-radius: 999px;
+}
+```
+</Playground>
+
+`border-radius` rounds the corners. A very large value, like `999px`, turns the ends into full half-circles.
+
+## Width, height, and box-sizing
+
+`width` and `height` set the size of a box. `max-width` sets a limit instead, so the box can shrink on small screens but never grows past it.
+
+There's a catch, though. By default, `width` sets only the content. Padding and border are added on top, so the `200px` box from earlier actually ends up `248px` wide. Most developers change that with one rule at the top of their CSS:
+
+```css
+* {
+  box-sizing: border-box;
+}
+```
+
+`*` means "every element." With `border-box`, `width` includes the padding and border, so a `200px` box is `200px`, which makes sizes much easier to predict.
+
+## Blocks, inline, and display
+
+Remember block and inline elements from HTML? The box model is where the difference shows.
+
+<Playground>
+```html
+<p>Some <span class="tag">inline</span> text, and an <span class="tag chip">inline-block</span> one.</p>
+```
+```css
+.tag {
+  padding: 8px;
+  margin: 20px;
+  background-color: #e6f4f1;
+}
+
+.chip {
+  display: inline-block;
+}
+```
+</Playground>
+
+On an inline element, top and bottom margins are ignored, and padding can overlap the lines nearby. `display` changes how an element behaves:
+
+| Value | Behaves like |
+| --- | --- |
+| `block` | Starts on a new line and fills the width |
+| `inline` | Sits in a line of text. Width and height don't apply. |
+| `inline-block` | Sits in a line, but takes width, height, and spacing like a block |
+| `none` | Hidden, and takes up no space |
+
+## Up next
+
+You can size and space a single box. Next, you'll line several boxes up in a row or a column, and that's what flexbox is for.
+
+[Next: Flexbox →](../flexbox/)
