@@ -18,6 +18,6 @@ const shown = checkpoint.files.filter((file) => file !== 'style.css' || id === '
 </aside>
 <details>
   <summary>Full working files for {id}</summary>
-  <p>Replace the entire named file with its block. Keep every file in the same <code>workshop</code> folder.{id !== '00-start' && <> <code>style.css</code> is the same as in <a href={`${base}/build/hello/#say-hello-to-the-world`}>00-start</a>.</>}</p>
+  <p>Replace the entire named file with its block. Keep every file in the same <code>workshop</code> folder.{id !== '00-start' && <> <code>style.css</code> is the same as in <a href={`${base}/javascript/hello/#say-hello-to-the-world`}>00-start</a>.</>}</p>
   {shown.map((file) => <Code code={String(examples[`../examples/${id}/${file}.txt`])} lang={lang(file)} title={`workshop/${file}`} />)}
 </details>

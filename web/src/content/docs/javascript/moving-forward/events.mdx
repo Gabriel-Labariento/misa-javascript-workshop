@@ -2,7 +2,7 @@
 title: Events in depth
 description: Understand bubbling, stop listening with removeEventListener, listen once, and send your own custom events.
 ---
-import Playground from '../../../components/Playground.astro';
+import Playground from '../../../../components/Playground.astro';
 
 The game used events in the most common way: add a listener, react when it fires. This lesson covers the rest of what you'll meet in real projects: how events travel, how to stop listening, and how to create events of your own.
 
@@ -32,7 +32,7 @@ for (const id of ["outer", "inner", "button"]) {
 ```
 </Playground>
 
-Click the button: three lines appear, from the inside out. Click the inner box's border area: only two. Event delegation, from [lesson 06](../../build/mouse/#one-listener-for-many-elements), relies on bubbling.
+Click the button: three lines appear, from the inside out. Click the inner box's border area: only two. Event delegation, from [lesson 06](../../mouse/#one-listener-for-many-elements), relies on bubbling.
 
 `event.stopPropagation()` stops an event from continuing up. Reach for it rarely, because other code higher up might be listening on purpose.
 
