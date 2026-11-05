@@ -1,37 +1,42 @@
 ---
 title: Git and GitHub
-description: Understand versions, repositories, branches, and the GitHub website before using commands.
+description: Learn what Git and GitHub are, and how they help you save versions of your work and share it.
 ---
+import Flow from '../../components/diagrams/Flow.astro';
 
-Git and GitHub work together, but they are different tools.
+You've written an HTML file and styled it. Two questions come up quickly. How do you keep the version that works before you try something that might break it? And how do you share the file, or work on it with a team?
 
-**Git** runs on your computer and records versions of a project. A Git project is called a **repository**, or repo. Each saved version is a **commit**. A **branch** gives you a named line of work, so you can change your game without changing the workshop's reference version.
+Git and GitHub answer both. They work together, but they are different tools.
 
-**GitHub** is a website that stores and shares Git repositories. You can browse files, read a README, inspect earlier commits, open issues, and share your project through its GitHub page.
+## Two tools, two jobs
+
+**Git** runs on your computer and records versions of a project. A Git project is called a **repository**, or repo. Each saved version is a **commit**. A **branch** gives you a named line of work, so you can try changes without touching the main version.
+
+**GitHub** is a website that stores and shares Git repositories. You can browse files, read a README, look at earlier commits, and work on the same project with other people.
+
+Your work moves through three places on its way to GitHub:
+
+<Flow
+  label="Your files become a commit on your computer, then the commit is pushed to GitHub"
+  steps={['Your files', 'A commit on your computer', 'GitHub']}
+  actions={['commit', 'push']}
+  caption="Commits stay on your computer until you push them."
+/>
 
 ## The Google Docs and Drive analogy
 
 A Git commit is similar to a named point in Google Docs version history. GitHub is similar to a shared Google Drive folder where other people can find the project.
 
-The analogy has a limit: Git does not record every keystroke, and GitHub does not receive every saved file automatically. You choose when to stage files, create a commit, and push that commit online.
+The analogy has a limit. Git doesn't record every keystroke, and GitHub doesn't receive your files automatically. You choose when to save a commit, and when to send it online.
 
-```text title="Three separate places"
-Working files  →  Staging area  →  Local commit  →  GitHub repository
-     save            git add        git commit        git push
-```
+## How this module goes
 
-## How we will use them
+The rest of this module builds on that picture, one step at a time:
 
-The workshop repository contains this guide and a working checkpoint for every lesson. On GitHub, a branch link lets you inspect the files at a particular checkpoint. On your laptop, you will:
+1. [Set up GitHub](../git/setup/): make an account and sign in to GitHub Desktop.
+2. [Everyday actions](../git/actions/): the handful of actions you'll use all the time.
+3. [One change, start to finish](../git/workflow/): how those actions fit together on a team.
+4. [Git in the terminal](../git/terminal/): the same actions as commands.
+5. [Class Wall](../git/class-wall/): try it all with your team.
 
-1. clone the repository once;
-2. start from the `00-start` checkpoint;
-3. create your own `my-game` branch;
-4. edit your HTML and JavaScript files and check them in the browser; and
-5. commit versions that you want to keep.
-
-You will stay on your own branch during the lesson. The checkpoint branches are references for recovery, not steps you need to switch through one by one.
-
-Publishing your version can wait until the game works. The [publishing guide](../moving-forward/publishing/) shows how to upload your branch and turn on GitHub Pages, which gives your game a link anyone can open and play.
-
-[Next: say hello →](../build/hello/)
+[Next: Set up GitHub →](../git/setup/)

@@ -1,0 +1,65 @@
+---
+title: Git in the terminal
+description: The terminal commands behind each GitHub Desktop button, plus three commands for checking your work.
+---
+import Flow from '../../../components/diagrams/Flow.astro';
+
+GitHub Desktop is a friendly window over Git. Every button runs a Git command for you, and you can type those commands yourself in a terminal. You'll see them in tutorials, and the JavaScript module uses them too.
+
+## The same actions, as commands
+
+| Action | In GitHub Desktop | In the terminal |
+| --- | --- | --- |
+| Clone | **File → Clone repository** | `git clone <url>` |
+| Branch | **Current branch → New branch** | `git switch -c <name>` |
+| Checkout | **Current branch**, then pick one | `git switch <name>` |
+| Commit | Check files, write a summary, **Commit** | `git add .` then `git commit -m "message"` |
+| Push | **Push origin** | `git push` |
+| Pull | **Fetch origin**, then **Pull origin** | `git pull` |
+| Pull request | **Create Pull Request** | On github.com |
+| Merge | **Merge pull request** on github.com | `git merge <name>` |
+
+Older guides use `git checkout <name>` to switch branches, and `git checkout -b <name>` to create one. They do the same thing as `git switch`.
+
+## Committing takes two steps
+
+In the terminal, a commit has an extra step in the middle:
+
+<Flow
+  label="Save files, git add them to the staging area, git commit them, then git push to GitHub"
+  steps={['Working files', 'Staging area', 'Local commit', 'GitHub']}
+  actions={['git add', 'git commit', 'git push']}
+  caption="GitHub Desktop's checkboxes do the git add step for you."
+/>
+
+`git add` picks which changes go into the next commit. Those changes wait in the **staging area**. Then `git commit` saves everything staged as one commit. `git add .` stages every change in the folder at once.
+
+## Check your work
+
+Three commands tell you what's going on. GitHub Desktop shows the same information on screen.
+
+- `git status` lists the files you've changed, and which ones are staged.
+- `git log` lists earlier commits, newest first. Press **q** to leave it.
+- `git diff` shows exactly which lines changed since your last commit.
+
+When you're unsure what Git is doing, run `git status` first. It usually tells you the next command to try, too.
+
+## Git in the JavaScript module
+
+The JavaScript module uses Git from the terminal. Its repository contains this guide and a working checkpoint for every lesson. On GitHub, a branch link lets you inspect the files at a particular checkpoint. On your laptop, you will:
+
+1. clone the repository once;
+2. start from the `00-start` checkpoint;
+3. create your own `my-game` branch;
+4. edit your HTML and JavaScript files and check them in the browser; and
+5. commit versions that you want to keep.
+
+You will stay on your own branch during the lessons. The checkpoint branches are references for recovery, not steps you need to switch through one by one.
+
+Publishing your version can wait until the game works. The [publishing guide](../../javascript/moving-forward/publishing/) shows how to upload your branch and turn on GitHub Pages, which gives your game a link anyone can open and play.
+
+## Up next
+
+You've seen every step, in GitHub Desktop and in the terminal. Now it's time to use them with your team. If anything goes wrong along the way, ask a mentor or check [troubleshooting](../../help/).
+
+[Next: Class Wall →](../class-wall/)

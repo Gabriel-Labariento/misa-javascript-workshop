@@ -1,0 +1,45 @@
+---
+title: One change, start to finish
+description: Follow one change through a shared project, from branch to pull request to merge.
+---
+import BranchDiagram from '../../../components/diagrams/BranchDiagram.astro';
+
+Each action from the last page does one small thing. On a team, you'll string them together in the same order almost every time. Here's that order for one change, like adding your profile card to a shared site.
+
+<BranchDiagram caption="Steps 2 to 7 below, drawn out: branch, commit, then merge." />
+
+## Before you start
+
+1. **Pull** so you start from the latest version of `main`. Someone may have merged new work since you last looked.
+
+## Make your change on a branch
+
+2. Create a **branch** for your change, such as `add-my-card`.
+3. Edit your files, and check them in the browser.
+4. **Commit** with a message that says what changed, like `Add my profile card`. For a bigger change, commit after each piece that works.
+
+## Share it and get it reviewed
+
+5. **Push** the branch to GitHub. In GitHub Desktop, this is **Publish branch** the first time.
+6. Open a **pull request**. A teammate looks over your change, and leaves comments if something needs fixing. To fix something, commit and push again on the same branch, and the pull request updates on its own.
+
+## Bring it into main
+
+7. **Merge** the pull request. Your change is now part of `main`.
+8. Switch back to `main` and **pull** again, so your computer has the merged version too.
+
+Then you're ready for the next change, starting again from step 1.
+
+## When two changes collide
+
+Sometimes two people change the same lines of the same file. Git can't guess which version to keep, so it stops and asks you to choose. This is called a **merge conflict**.
+
+Conflicts are normal, and they don't break anything. GitHub Desktop lists the files involved, and you can open each one in VS Code, which highlights both versions side by side. Keep the lines you want, delete the rest, then commit.
+
+Small branches and frequent pulls make conflicts much rarer.
+
+## Up next
+
+Everything on this page also works from the terminal. Next is a quick look at the commands behind each button.
+
+[Next: Git in the terminal →](../terminal/)
