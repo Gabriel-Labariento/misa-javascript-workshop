@@ -10,8 +10,10 @@ interface Props {
   preview?: boolean;
   autorun?: boolean;
   note?: string;
+  /** Load Tailwind's browser build in the preview, so class names like p-4 work. */
+  tailwind?: boolean;
 }
-const { files = '[]', title, module = false, height, preview, autorun = false, note } = Astro.props;
+const { files = '[]', title, module = false, height, preview, autorun = false, note, tailwind = false } = Astro.props;
 const parsed: Array<{ lang: string; title: string | null; code: string }> = JSON.parse(files);
 let scripts = 0;
 const named = parsed.map((file) => {
@@ -28,7 +30,7 @@ const named = parsed.map((file) => {
   return { name, lang, code: file.code.replace(/\n$/, '') };
 });
 const hasPage = named.some((file) => file.lang === 'html');
-const config = { files: named, title, module, height, preview: preview ?? hasPage, autorun, note };
+const config = { files: named, title, module, height, preview: preview ?? hasPage, autorun, note, tailwind };
 ---
 
 <js-playground class="pg-block" data-config={JSON.stringify(config)}>
