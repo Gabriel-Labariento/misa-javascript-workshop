@@ -1,0 +1,52 @@
+---
+// The four layers of a CSS box, drawn as nested rectangles.
+import Figure from './Figure.astro';
+const { caption } = Astro.props;
+---
+
+<Figure caption={caption} label="The box model: content inside padding, inside border, inside margin">
+  <div class="layer margin"><span>margin</span>
+    <div class="layer border"><span>border</span>
+      <div class="layer padding"><span>padding</span>
+        <div class="content">content</div>
+      </div>
+    </div>
+  </div>
+</Figure>
+
+<style>
+  .layer {
+    position: relative;
+    padding: 2rem 1.5rem 1.25rem;
+    border-radius: 0.5rem;
+  }
+  .layer > span {
+    position: absolute;
+    top: 0.45rem;
+    left: 0.75rem;
+    font-size: var(--sl-text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .margin {
+    border: 2px dashed var(--sl-color-gray-3);
+    color: var(--sl-color-gray-2);
+  }
+  .border {
+    border: 6px solid var(--sl-color-accent);
+    color: var(--sl-color-accent-high);
+  }
+  .padding {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+  }
+  .content {
+    padding: 1rem;
+    border-radius: 0.35rem;
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+    font-weight: 600;
+    text-align: center;
+  }
+</style>

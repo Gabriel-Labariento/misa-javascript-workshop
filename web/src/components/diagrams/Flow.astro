@@ -1,0 +1,105 @@
+---
+// Steps joined by labeled arrows, such as files → commit → GitHub.
+// `actions[i]` labels the arrow between `steps[i]` and `steps[i + 1]`.
+import Figure from './Figure.astro';
+
+interface Props {
+  steps: string[];
+  actions: string[];
+  caption?: string;
+  label: string;
+}
+const { steps, actions, caption, label } = Astro.props;
+---
+
+<Figure caption={caption} label={label}>
+  <ol class="flow">
+    {steps.map((step, index) => (
+      <>
+        <li class="step">{step}</li>
+        {index < steps.length - 1 && (
+          <li class="link" aria-label={`then ${actions[index]}`}>
+            <code>{actions[index]}</code>
+            <span class="arrow" aria-hidden="true" />
+          </li>
+        )}
+      </>
+    ))}
+  </ol>
+</Figure>
+
+<style>
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .step {
+    flex: 1;
+    padding: 0.85rem 0.75rem;
+    border: 1px solid var(--sl-color-accent);
+    border-radius: 0.6rem;
+    background: var(--sl-color-accent-low);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 4.5rem;
+  }
+  .link code {
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-2);
+    background: none;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+  }
+  .arrow {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background: var(--sl-color-gray-3);
+  }
+  .arrow::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    border: 5px solid transparent;
+    border-left: 7px solid var(--sl-color-gray-3);
+    border-right: 0;
+  }
+  @media (max-width: 40rem) {
+    .flow {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .link {
+      flex-direction: row;
+      justify-content: center;
+      min-height: 2.5rem;
+    }
+    .arrow {
+      order: -1;
+      width: 2px;
+      height: 1.75rem;
+    }
+    .arrow::after {
+      right: auto;
+      left: -4px;
+      top: auto;
+      bottom: -1px;
+      border: 5px solid transparent;
+      border-top: 7px solid var(--sl-color-gray-3);
+      border-bottom: 0;
+    }
+  }
+</style>

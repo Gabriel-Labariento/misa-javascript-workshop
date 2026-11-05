@@ -1,0 +1,31 @@
+---
+// Shared frame for the lesson diagrams: a bordered panel with an optional caption.
+// `not-content` keeps Starlight's prose spacing out of the drawing.
+interface Props {
+  caption?: string;
+  label: string;
+}
+const { caption, label } = Astro.props;
+---
+
+<figure class="dg not-content" aria-label={label}>
+  <div class="dg-body"><slot /></div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .dg {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+  }
+  figcaption {
+    margin-top: 0.9rem;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+    text-align: center;
+  }
+</style>

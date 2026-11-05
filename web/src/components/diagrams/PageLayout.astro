@@ -1,0 +1,55 @@
+---
+// How semantic tags usually divide a page, drawn as labeled regions.
+import Figure from './Figure.astro';
+const { caption } = Astro.props;
+---
+
+<Figure caption={caption} label="A page split into header, nav, main with two sections, aside, and footer">
+  <div class="page">
+    <div class="region header"><code>&lt;header&gt;</code></div>
+    <div class="region nav"><code>&lt;nav&gt;</code></div>
+    <div class="region main">
+      <code>&lt;main&gt;</code>
+      <div class="region section"><code>&lt;section&gt;</code></div>
+      <div class="region section"><code>&lt;section&gt;</code></div>
+    </div>
+    <div class="region aside"><code>&lt;aside&gt;</code></div>
+    <div class="region footer"><code>&lt;footer&gt;</code></div>
+  </div>
+</Figure>
+
+<style>
+  .page {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 0.5rem;
+  }
+  .region {
+    padding: 0.7rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0.45rem;
+    background: var(--sl-color-gray-5);
+  }
+  .region code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-weight: 700;
+    color: var(--sl-color-white);
+  }
+  .header,
+  .nav,
+  .footer {
+    grid-column: 1 / -1;
+  }
+  .main {
+    display: grid;
+    gap: 0.5rem;
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-accent-low);
+  }
+  .section {
+    min-height: 3rem;
+    background: var(--sl-color-gray-6);
+  }
+</style>

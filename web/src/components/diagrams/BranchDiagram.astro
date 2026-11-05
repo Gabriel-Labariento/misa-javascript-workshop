@@ -1,0 +1,64 @@
+---
+// A branch splitting off main, collecting commits, and merging back in.
+import Figure from './Figure.astro';
+interface Props {
+  branch?: string;
+  caption?: string;
+}
+const { branch = 'add-my-card', caption } = Astro.props;
+---
+
+<Figure caption={caption} label={`The ${branch} branch splits off main, gets three commits, then merges back into main`}>
+  <svg viewBox="0 0 640 190" role="img" aria-hidden="true">
+    <line class="main" x1="90" y1="50" x2="610" y2="50" />
+    <path class="branch" d="M190 50 C 230 50, 230 140, 270 140 L 470 140 C 510 140, 510 50, 550 50" />
+    <text class="name" x="10" y="55">main</text>
+    <text class="name accent" x="10" y="145">{branch}</text>
+    <circle class="dot" cx="110" cy="50" r="9" />
+    <circle class="dot" cx="190" cy="50" r="9" />
+    <circle class="dot b" cx="290" cy="140" r="9" />
+    <circle class="dot b" cx="370" cy="140" r="9" />
+    <circle class="dot b" cx="450" cy="140" r="9" />
+    <circle class="dot big" cx="550" cy="50" r="12" />
+    <text class="note" x="190" y="25" text-anchor="middle">branch</text>
+    <text class="note" x="370" y="178" text-anchor="middle">your commits</text>
+    <text class="note" x="550" y="25" text-anchor="middle">merge</text>
+  </svg>
+</Figure>
+
+<style>
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    font-family: var(--sl-font);
+  }
+  .main {
+    stroke: var(--sl-color-gray-3);
+    stroke-width: 4;
+  }
+  .branch {
+    fill: none;
+    stroke: var(--sl-color-accent);
+    stroke-width: 4;
+  }
+  .dot {
+    fill: var(--sl-color-gray-3);
+  }
+  .dot.b,
+  .dot.big {
+    fill: var(--sl-color-accent);
+  }
+  .name {
+    fill: var(--sl-color-white);
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .name.accent {
+    fill: var(--sl-color-accent-high);
+  }
+  .note {
+    fill: var(--sl-color-gray-2);
+    font-size: 14px;
+  }
+</style>
