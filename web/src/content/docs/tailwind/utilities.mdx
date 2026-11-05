@@ -1,0 +1,156 @@
+---
+title: Core utilities
+description: Use Tailwind's classes for colors, spacing, sizes, text, and borders, and see how each one maps to CSS.
+---
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+
+Tailwind has a class for almost every CSS property, so nobody memorizes them all. You only need the common ones and the pattern behind their names. Once you know the pattern, you can usually guess a class before you look it up.
+
+## Colors
+
+Color classes start with what they color, then name a color and a shade:
+
+<Playground tailwind>
+```html
+<p class="bg-teal-100 text-teal-900">Light background, dark text</p>
+<p class="bg-teal-600 text-white">Darker background, white text</p>
+<p class="bg-amber-300 text-slate-900">A different color</p>
+```
+</Playground>
+
+| Start | What it colors | CSS property |
+| --- | --- | --- |
+| `text-` | The text | `color` |
+| `bg-` | The background | `background-color` |
+| `border-` | The border | `border-color` |
+
+Each color comes in shades from `50`, the lightest, to `950`, the darkest. The steps in between are `100`, `200`, and so on up to `900`. A light background with a dark shade of the same color for text, like the first line above, is an easy way to make something readable.
+
+Tailwind's color names include `slate`, `gray`, `red`, `orange`, `amber`, `yellow`, `green`, `teal`, `sky`, `blue`, `indigo`, `purple`, and `rose`, among others. `white` and `black` have no shades.
+
+Add a slash and a number to make a color see-through. `bg-teal-600/50` is the same teal at 50% opacity.
+
+## The spacing scale
+
+Padding, margin, and gap all use one shared scale. Each step is `4px`, so the number after the dash is how many steps you get:
+
+| Class | Size |
+| --- | --- |
+| `p-1` | `4px` |
+| `p-2` | `8px` |
+| `p-4` | `16px` |
+| `p-6` | `24px` |
+| `p-8` | `32px` |
+
+More exactly, one step is `0.25rem`, which is `4px` at the browser's default text size. You'll see the `rem` values when you inspect a page.
+
+<Predict question="How much padding does p-3 give?" options={['3px', '12px', '30px']} answer={1}>
+```html
+<div class="p-3">Snack list</div>
+```
+
+It's `12px`: three steps of `4px` each.
+</Predict>
+
+## Padding and margin
+
+`p` is padding and `m` is margin. A letter after it picks the sides:
+
+<Playground tailwind>
+```html
+<div class="bg-teal-100 p-6">p-6: all four sides</div>
+<div class="bg-teal-100 px-6 py-2 mt-4">px-6 py-2: sides, then top and bottom</div>
+<div class="bg-teal-100 pl-10 mt-4">pl-10: left only</div>
+```
+</Playground>
+
+| Letter | Sides |
+| --- | --- |
+| (none) | All four |
+| `x` | Left and right |
+| `y` | Top and bottom |
+| `t`, `r`, `b`, `l` | Top, right, bottom, left |
+
+So `mt-4` is a top margin of `16px`, and `px-6` is `24px` of padding on the left and right. Remember `margin: 0 auto` from the centering page? In Tailwind, that's `mx-auto`.
+
+## Width and height
+
+`w-` sets the width and `h-` sets the height. The numbers use the same spacing scale, and a few words cover the common cases:
+
+<Playground tailwind>
+```html
+<div class="w-32 h-12 bg-teal-600 text-white mb-2">w-32</div>
+<div class="w-1/2 bg-teal-600 text-white mb-2">w-1/2</div>
+<div class="w-full bg-teal-600 text-white mb-2">w-full</div>
+<div class="max-w-sm bg-teal-600 text-white">max-w-sm</div>
+```
+</Playground>
+
+| Class | What it does |
+| --- | --- |
+| `w-32` | `128px` wide, because 32 steps of `4px` is `128px` |
+| `w-1/2` | Half the width of the parent |
+| `w-full` | The full width of the parent |
+| `max-w-sm` | Never wider than `384px`, but can shrink |
+| `h-12` | `48px` tall |
+
+`max-w-` classes are handy for cards and text, which you usually want to stop growing on wide screens. Besides `sm`, there are sizes like `md`, `lg`, and `xl`.
+
+## Text
+
+Text classes cover size, weight, alignment, and more:
+
+<Playground tailwind>
+```html
+<h1 class="text-3xl font-bold">Snack list</h1>
+<p class="text-lg text-slate-600">Sold at the canteen every weekday.</p>
+<p class="text-sm italic text-center mt-4">Prices may change.</p>
+```
+</Playground>
+
+| Class | CSS |
+| --- | --- |
+| `text-xs`, `text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl` | `font-size`, from small to large. `text-base` is `16px`. |
+| `font-normal`, `font-semibold`, `font-bold` | `font-weight` |
+| `text-left`, `text-center`, `text-right` | `text-align` |
+| `italic`, `underline`, `uppercase` | `font-style`, `text-decoration`, `text-transform` |
+
+Notice that `text-` does three jobs: size (`text-lg`), color (`text-slate-600`), and alignment (`text-center`). Tailwind tells them apart by what comes after the dash.
+
+## Borders and corners
+
+`border` adds a `1px` border. A number makes it thicker, and a color class sets its color:
+
+<Playground tailwind>
+```html
+<div class="border p-3 mb-3">border</div>
+<div class="border-2 border-teal-600 p-3 mb-3">border-2 border-teal-600</div>
+<div class="border-2 border-dashed border-teal-600 rounded-lg p-3 mb-3">dashed and rounded-lg</div>
+<div class="bg-teal-600 text-white rounded-full px-4 py-2 w-fit">rounded-full</div>
+```
+</Playground>
+
+`rounded-` sets `border-radius`. The sizes go `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, and up, and `rounded-full` makes the pill shape you made with `999px` in CSS. `w-fit` makes a box only as wide as its content.
+
+## When the scale doesn't have your value
+
+Sometimes you need an exact value that isn't on the scale, like a brand color. Put it in square brackets:
+
+<Playground tailwind>
+```html
+<p class="bg-[#0f2b2d] text-[#9ce9e9] p-[13px]">MISAbot's colors</p>
+```
+</Playground>
+
+These are called **arbitrary values**. They're useful now and then, but reach for the scale first. Sticking to it is what keeps a page's spacing and colors consistent.
+
+## Look it up
+
+When you're not sure of a class name, search the [Tailwind docs](https://tailwindcss.com/docs). Type the CSS property you have in mind, such as `letter-spacing`, and the page for it lists every class with the CSS it makes.
+
+## Up next
+
+You can now style a single box from the outside in. Next, you'll arrange several boxes with flexbox and grid, the Tailwind way.
+
+[Next: Layout →](../layout/)
