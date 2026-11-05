@@ -80,7 +80,13 @@ export default defineConfig({
         {label:'Git in the terminal',slug:'git/terminal'},
         {label:'Class Wall',slug:'git/class-wall'}
       ] },
-      { label: '4 · Tailwind', collapsed: true, items: [{label:'Coming soon',slug:'tailwind'}] },
+      { label: '4 · Tailwind', collapsed: true, items: [
+        {label:'What is Tailwind?',slug:'tailwind'},
+        {label:'Core utilities',slug:'tailwind/utilities'},
+        {label:'Layout',slug:'tailwind/layout'},
+        {label:'States and screen sizes',slug:'tailwind/states'},
+        {label:'Build a profile card',slug:'tailwind/profile-card'}
+      ] },
       { label: '5 · JavaScript', collapsed: true, items: [
         {label:'Build Bop the Bot',slug:'javascript/bop-the-bot'},
         {label:'What is JavaScript?',slug:'javascript'},
