@@ -1,0 +1,770 @@
+---
+title: CSS basics
+description: Style the profile card with selectors, the box model, flexbox, and grid, then center it on the page.
+---
+import Playground from '../../components/Playground.astro';
+import Predict from '../../components/Predict.astro';
+
+HTML gave the card its parts. CSS decides how those parts look and where they sit. Here's the card from the [HTML page](../html/), with no CSS yet:
+
+<Playground height={380}>
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+By the end of this page, it will look like the card at the top of the HTML page. Every example below has a **CSS** tab and an **HTML** tab. The HTML stays the same until the grid example, which adds two more cards.
+
+## What CSS does
+
+CSS is a list of **rules**. Each rule picks some elements and says how they should look:
+
+```text title="One rule"
+h2 {               ← selector: which elements
+  color: #087a80;  ← declaration: property: value;
+}
+```
+
+Each line inside the braces is a **declaration**: a **property** (what to change), a colon, a **value** (what to change it to), and a semicolon. A rule can hold as many declarations as you like. Here are the first two rules for the card:
+
+<Playground height={380}>
+```css
+body {
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+h2 {
+  color: #087a80;
+}
+```
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+`#087a80` is a color written as a **hex code**: two digits each for red, green, and blue. Color names work too.
+
+Some properties, like `color` and `font-family`, are **inherited**: children take them from their parent unless a rule says otherwise. Try it: change the color in `body` to `tomato` and press **▶ Run** again. Every paragraph turns red, although no rule names them. The heading stays teal, because its own rule wins.
+
+In a real project, the CSS lives in its own file, and the HTML page loads it from the `<head>`:
+
+```html title="index.html (inside <head>)"
+<link rel="stylesheet" href="style.css" />
+```
+
+## Pick what to style
+
+The part before `{` is the **selector**. These four cover most of what you'll write:
+
+| Selector | Picks | Example |
+| --- | --- | --- |
+| `h2` | every `<h2>` | `h2 { color: #087a80; }` |
+| `.card-role` | every element with `class="card-role"` | the dot means "class" |
+| `#greeting` | the one element with `id="greeting"` | the `#` means "id" |
+| `.card h2` | every `<h2>` inside a `.card` | a space means "inside" |
+
+<Playground height={380}>
+```css
+body {
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.4rem;
+}
+
+.card-role {
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+`h2` became `.card h2`, so only headings inside a card change. A heading somewhere else on the page keeps its normal look. Prefer class selectors for styling; keep ids for the few elements JavaScript needs to find.
+
+## Every element is a box
+
+The browser draws every element as a rectangle with four layers, from the inside out. This is the **box model**:
+
+```text title="The box model"
+┌──────────────── margin ────────────────┐
+│ ┌───────────── border ───────────────┐ │
+│ │ ┌────────── padding ─────────────┐ │ │
+│ │ │            content             │ │ │
+│ │ └────────────────────────────────┘ │ │
+│ └────────────────────────────────────┘ │
+└────────────────────────────────────────┘
+```
+
+- **content** is the text or image itself.
+- **padding** is space inside the border, between it and the content.
+- **border** is the line around the element.
+- **margin** is space outside the border, pushing other elements away.
+
+<Playground height={420}>
+```css
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.card {
+  max-width: 32rem;
+  padding: 1.25rem;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 1rem;
+}
+
+.card-photo {
+  width: 6rem;
+  height: 6rem;
+  padding: 0.5rem;
+  object-fit: contain;
+  background: #e3f6f6;
+  border-radius: 50%;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.4rem;
+}
+
+.card-role {
+  margin-bottom: 0.5rem;
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+`rem` is a size based on the page's text size, so `1rem` is usually 16px and `1.25rem` is 20px.
+
+`*` selects every element. `box-sizing: border-box` makes `width` include the padding and border, so a box you set to `6rem` stays `6rem`. Almost every project starts with this rule.
+
+`border-radius` rounds the corners, and `50%` turns a square into a circle.
+
+You can see any element's box in the browser. Right-click it, choose **Inspect**, and look for the box diagram in the **Styles** or **Computed** panel. Hover over its layers to highlight them on the page.
+
+<Predict question="How wide is this box on the page?" options={['200px', '220px', '240px']} answer={2}>
+```css
+.box { width: 200px; padding: 20px; }
+```
+
+Without `box-sizing: border-box`, padding is added on both sides: 200 + 20 + 20 = 240px. With `border-box`, the box stays 200px wide and the content shrinks instead.
+</Predict>
+
+## Line things up with flexbox
+
+The photo sits above the text, because the browser stacks blocks from top to bottom. **Flexbox** puts children in a row instead. Add `display: flex` to the parent. From here on, each example's new rules sit at the top of its CSS tab:
+
+<Playground height={320}>
+```css
+/* New: flexbox */
+.card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  max-width: 32rem;
+  padding: 1.25rem;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 1rem;
+}
+
+.card-photo {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  padding: 0.5rem;
+  object-fit: contain;
+  background: #e3f6f6;
+  border-radius: 50%;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* New: each tag as a pill */
+.card-tags li {
+  padding: 0.15rem 0.65rem;
+  color: #087a80;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e3f6f6;
+  border-radius: 999px;
+}
+
+/* From the last step */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.4rem;
+}
+
+.card-role {
+  margin-bottom: 0.5rem;
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+Flexbox is used twice here: once on `.card` for photo and text, and once on `.card-tags` for the list items.
+
+- `display: flex` lines up the element's children in a row.
+- `gap` puts space between them.
+- `align-items` lines them up across the row: `center`, `start`, or `end`.
+- `justify-content` spreads them along the row: try `center` or `space-between` on `.card-tags`.
+- `flex-direction: column` stacks them instead. You'll use it in the next example.
+- `flex-shrink: 0` stops the photo from getting squeezed when space runs out.
+
+## Lay out rows and columns with grid
+
+Flexbox handles one direction at a time. **Grid** handles rows and columns together, which suits a set of cards. Like flexbox, grid goes on the parent, so this example changes the HTML: three cards now sit inside a `<section class="cards">`. Its CSS starts with the new rules:
+
+<Playground height={580}>
+```css
+/* New: grid */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 1.25rem;
+  text-align: center;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 1rem;
+}
+
+/* The rest of the card, a little smaller to fit three */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.card-photo {
+  width: 5rem;
+  height: 5rem;
+  padding: 0.4rem;
+  object-fit: contain;
+  background: #e3f6f6;
+  border-radius: 50%;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.2rem;
+}
+
+.card-role {
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.card-tags li {
+  padding: 0.15rem 0.65rem;
+  color: #087a80;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e3f6f6;
+  border-radius: 999px;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+```html
+<section class="cards">
+  <article class="card">
+    <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+    <div class="card-body">
+      <h2>Niles Cabrera</h2>
+      <p class="card-role">BS MIS · Lead developer</p>
+      <ul class="card-tags">
+        <li>HTML</li>
+        <li>CSS</li>
+      </ul>
+      <a class="card-link" href="https://github.com/">My GitHub</a>
+    </div>
+  </article>
+  <article class="card">
+    <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+    <div class="card-body">
+      <h2>Dana Reyes</h2>
+      <p class="card-role">BS CS · Designer</p>
+      <ul class="card-tags">
+        <li>Figma</li>
+        <li>CSS</li>
+      </ul>
+      <a class="card-link" href="https://github.com/">My GitHub</a>
+    </div>
+  </article>
+  <article class="card">
+    <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+    <div class="card-body">
+      <h2>Alex Santos</h2>
+      <p class="card-role">BS IT · Backend</p>
+      <ul class="card-tags">
+        <li>Python</li>
+        <li>SQL</li>
+      </ul>
+      <a class="card-link" href="https://github.com/">My GitHub</a>
+    </div>
+  </article>
+</section>
+```
+</Playground>
+
+- `display: grid` on `.cards` turns its children into grid items.
+- `grid-template-columns` sets the columns. `repeat(auto-fit, minmax(12rem, 1fr))` means "fit as many columns as you can, each at least `12rem` wide, sharing leftover space equally". On a narrow screen, the cards drop to fewer columns on their own.
+- `1fr` is one **fraction** of the free space. `grid-template-columns: 1fr 1fr 1fr` would always make three equal columns.
+- Inside each card, `flex-direction: column` stacks the photo above the text again.
+
+Which one should you use? Flexbox for a single row or column of things; grid when you're arranging rows and columns at once. Most layouts use both.
+
+## Center anything
+
+Centering used to be famously hard. Now it's two lines on the parent. Here's the finished stylesheet; the new part is at the top, in `body`:
+
+<Playground height={340}>
+```css
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  max-width: 32rem;
+  padding: 1.25rem;
+  color: #102a2c;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 1rem;
+}
+
+.card-photo {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  padding: 0.5rem;
+  object-fit: contain;
+  background: #e3f6f6;
+  border-radius: 50%;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.4rem;
+}
+
+.card-role {
+  margin-bottom: 0.5rem;
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.card-tags li {
+  padding: 0.15rem 0.65rem;
+  color: #087a80;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e3f6f6;
+  border-radius: 999px;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+- `display: grid` plus `place-items: center` centers the children both ways.
+- `min-height: 100vh` makes `body` at least as tall as the window (`vh` is a percent of the viewport height), so there's room to center vertically.
+- With flexbox, the same thing takes three lines: `display: flex; justify-content: center; align-items: center;`.
+
+<details>
+<summary>Read later: units, colors, and the cascade</summary>
+
+**Units.** `px` is a fixed size. `rem` is relative to the page's base font size (usually 16px), so `1.25rem` is 20px and everything grows together if a reader enlarges their text. `%` is relative to the parent. Prefer `rem` for spacing and text.
+
+**CSS variables.** Repeating `#087a80` everywhere gets tiring. Name a value once and reuse it with `var()`. The game's stylesheet in the JavaScript lessons starts this way:
+
+```css
+:root {
+  --teal: #19aab1;
+  --teal-dark: #087a80;
+}
+
+.card h2 {
+  color: var(--teal-dark);
+}
+```
+
+**The cascade.** When two rules set the same property on the same element, the more specific selector wins: an id beats a class, and a class beats an element name. If they're equally specific, the rule that comes later wins.
+
+```css
+p { color: black; }
+.card-role { color: gray; }  /* wins for the role line: a class beats an element */
+```
+
+**Phones.** A **media query** applies rules only when a condition is true, like a narrow screen:
+
+```css
+@media (max-width: 40rem) {
+  .card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+```
+
+</details>
+
+## From CSS to React
+
+CSS works the same in React and Next.js. Two things change:
+
+- You attach classes with `className="card"` instead of `class="card"`, as the [HTML page](../html/#from-html-to-react) showed.
+- Next.js loads styles a little differently. A global stylesheet such as `app/globals.css` is imported once and applies everywhere. A **CSS module** such as `Card.module.css` applies only to the component that imports it, so class names never clash.
+
+Tailwind, a popular way to style with ready-made class names, gets its own module.
+
+## Practice with two games
+
+The best way to make flexbox and grid stick is to play with them:
+
+- [Flexbox Froggy](https://flexboxfroggy.com/): guide frogs to their lily pads with flexbox. Start here.
+- [Grid Garden](https://cssgridgarden.com/): water a carrot garden with grid.
+
+Both run in the browser, and each level adds one new property.
+
+## Save your work
+
+To keep the card, save these two files in one folder:
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My profile card</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <article class="card">
+        <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+        <div class="card-body">
+          <h2>Niles Cabrera</h2>
+          <p class="card-role">BS MIS · Lead developer</p>
+          <p>I build small web tools and never say no to turon.</p>
+          <ul class="card-tags">
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>React</li>
+          </ul>
+          <a class="card-link" href="https://github.com/">My GitHub</a>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>
+```
+
+```css title="style.css"
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  max-width: 32rem;
+  padding: 1.25rem;
+  color: #102a2c;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 1rem;
+}
+
+.card-photo {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  padding: 0.5rem;
+  object-fit: contain;
+  background: #e3f6f6;
+  border-radius: 50%;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.4rem;
+}
+
+.card-role {
+  margin-bottom: 0.5rem;
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.card-tags li {
+  padding: 0.15rem 0.65rem;
+  color: #087a80;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e3f6f6;
+  border-radius: 999px;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+
+Put a photo in an `assets` folder beside them. Either [download MISAbot](/workshop/assets/misabot.png) and save it as `assets/misabot.png`, or use your own photo: put it in `assets`, change `src` to its file name, and change `alt` to describe it. For a real photo, `object-fit: cover; padding: 0;` on `.card-photo` fills the circle. Open `index.html` with Live Preview to see the card.
+
+Then record a version with Git. If the folder isn't a Git repository yet, run `git init` in it once first. Then, from that folder:
+
+```bash
+git status
+git add .
+git commit -m "Add my profile card"
+```
+
+`status` lists what changed. `add .` stages every changed file in the folder. `commit` saves the staged files as one version with a message. [Git and GitHub](../git-github/) explains what each step means.
+
+[Next: say hello →](../build/hello/)

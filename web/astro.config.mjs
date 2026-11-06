@@ -31,6 +31,10 @@ export default defineConfig({
         {label:'What is JavaScript?',slug:'javascript'},
         {label:'Git and GitHub',slug:'git-github'}
       ] },
+      { label: 'HTML and CSS', collapsed: false, items: [
+        {label:'HTML basics',slug:'html'},
+        {label:'CSS basics',slug:'css'}
+      ] },
       { label: 'Part 1 · Intro to JavaScript', collapsed: false, items: [
         {label:'01 · Say hello',slug:'build/hello'},
         {label:'02 · Make decisions',slug:'build/decisions'},

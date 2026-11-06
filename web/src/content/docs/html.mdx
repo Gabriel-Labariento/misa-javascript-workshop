@@ -1,0 +1,368 @@
+---
+title: HTML basics
+description: Learn the HTML patterns you'll use in every project by building a profile card, one element at a time.
+---
+import Playground from '../../components/Playground.astro';
+import Predict from '../../components/Predict.astro';
+
+Every web page starts as HTML, including the ones React and Next.js build for you. We'll learn the patterns that matter by building one thing: a profile card. This is where we're headed:
+
+<Playground autorun height={340}>
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+```css
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  max-width: 32rem;
+  padding: 1.25rem;
+  color: #102a2c;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 1rem;
+}
+
+.card-photo {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  padding: 0.5rem;
+  object-fit: contain;
+  background: #e3f6f6;
+  border-radius: 50%;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.4rem;
+}
+
+.card-role {
+  margin-bottom: 0.5rem;
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.card-tags li {
+  padding: 0.15rem 0.65rem;
+  color: #087a80;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e3f6f6;
+  border-radius: 999px;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+</Playground>
+
+The **HTML** tab is what this page is about. The **CSS** tab is the next page.
+
+## HTML is the page's content
+
+A web page has three layers: **HTML** for what's on the page, **CSS** for how it looks, and **JavaScript** for what it does. HTML comes first, because the other two need something to style and something to change.
+
+HTML isn't a programming language. It doesn't calculate or decide anything. It labels content: "this is a heading", "this is a picture", "this is a list".
+
+## The parts of an element
+
+HTML is made of **elements**. Most elements have an **opening tag**, some content, and a **closing tag**:
+
+```text title="One element"
+<h2>Niles Cabrera</h2>
+^^^^             ^^^^^
+opening tag      closing tag (note the /)
+    ^^^^^^^^^^^^^
+    content
+```
+
+An opening tag can carry **attributes**: extra details written as `name="value"`. An image needs two: `src`, the file to show, and `alt`, a description for anyone who can't see it.
+
+<Playground height={300}>
+```html
+<h2>Niles Cabrera</h2>
+<img src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+```
+</Playground>
+
+`<img>` has no content and no closing tag, because there's nothing to put inside a picture. Elements like this are called **void elements**. The `/` before `>` is optional in HTML, but React requires it, so we'll keep writing it.
+
+Try changing `width="96"` to `width="200"` and press **▶ Run** again.
+
+## Elements live inside elements
+
+Elements can hold other elements. The outer one is the **parent**, and the ones inside are its **children**. We indent children so the shape is easy to see:
+
+<Playground height={200}>
+```html
+<article>
+  <h2>Niles Cabrera</h2>
+  <p>I build small web tools and never say no to turon.</p>
+</article>
+```
+</Playground>
+
+`<article>` is the parent of `<h2>` and `<p>`. Put together, the whole card forms a tree:
+
+```text title="The card as a tree"
+article
+├── img
+└── div
+    ├── h2
+    ├── p
+    ├── p
+    ├── ul
+    │   ├── li
+    │   ├── li
+    │   └── li
+    └── a
+```
+
+Keep this picture in mind. The browser stores every page as a tree like this, JavaScript finds elements by walking it, and in React each branch can become its own **component**.
+
+Close children before their parent. `<article><h2>Hi</article></h2>` is tangled, and the browser has to guess what you meant.
+
+## Build the card
+
+A handful of elements covers most of what you'll write. Start with text:
+
+<Playground height={220}>
+```html
+<article>
+  <h2>Niles Cabrera</h2>
+  <p>BS MIS · Lead developer</p>
+  <p>I build small web tools and never say no to turon.</p>
+</article>
+```
+</Playground>
+
+- `<h2>` is a heading. Headings go from `<h1>` (the page's main title) down to `<h6>`.
+- `<p>` is a paragraph. The browser adds space between paragraphs on its own.
+
+Now add the photo, a list, and a link:
+
+<Playground height={380}>
+```html
+<article>
+  <img src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div>
+    <h2>Niles Cabrera</h2>
+    <p>BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+- `<ul>` is a list, and each `<li>` is one item in it. (`<ol>` makes a numbered list instead.)
+- `<a>` is a link. Its `href` attribute is where the link goes.
+- `<div>` is a plain box with no meaning of its own. Here it groups the text so it can sit beside the photo once we add CSS.
+
+<Predict question="The image file is missing. What does the browser show?" options={['Nothing at all', 'The alt text', 'An error message on the page']} answer={1}>
+```html
+<img src="assets/missing.png" alt="MISAbot waving" />
+```
+
+The browser shows the `alt` text, often next to a broken-image icon. Screen readers read `alt` aloud too, so every `<img>` needs one that says what the picture shows.
+</Predict>
+
+## Name things with class and id
+
+The card looks plain because nothing tells CSS which part is which. The `class` attribute gives an element a name that CSS and JavaScript can find:
+
+<Playground height={380}>
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96" />
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+</Playground>
+
+Nothing changes on screen yet. Classes are labels; the next page uses them.
+
+- A **class** can be shared. Ten cards can all be `class="card"`, and one CSS rule styles all ten.
+- An **id** must be unique on the page, like `id="greeting"`. Use it for the one element JavaScript needs to find. The JavaScript lessons use ids this way.
+
+When in doubt, use a class.
+
+## Pick elements that say what they are
+
+`<div>` and its inline cousin `<span>` mean nothing on their own. Other elements describe their job, which helps screen readers, search engines, and the next person who reads your code. These are called **semantic** elements:
+
+```html title="A page made of semantic elements"
+<header>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/members">Members</a>
+  </nav>
+</header>
+<main>
+  <section>
+    <h1>Dev pool</h1>
+    <article class="card">…</article>
+    <article class="card">…</article>
+  </section>
+</main>
+<footer>
+  <p>Made by MISA</p>
+</footer>
+```
+
+| Element | Use it for |
+| --- | --- |
+| `<header>` | The top of the page or a section |
+| `<nav>` | A group of links for getting around |
+| `<main>` | The page's main content, once per page |
+| `<section>` | A themed group of content, usually with a heading |
+| `<article>` | Something that makes sense on its own, like a card or a post |
+| `<footer>` | The bottom of the page or a section |
+
+Reach for a semantic element first. Use `<div>` when you only need a box to group or style things.
+
+## The whole page
+
+Everything so far goes inside a full HTML file. Every page has the same skeleton:
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My profile card</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <article class="card">…</article>
+    </main>
+  </body>
+</html>
+```
+
+- `<!doctype html>` tells the browser this is modern HTML.
+- `<head>` holds details about the page that aren't shown in it: the tab's `<title>`, the text encoding, a `viewport` setting so phones don't shrink the page, and a `<link>` to the stylesheet.
+- `<body>` holds everything you see.
+
+JavaScript joins at the bottom of the body with `<script src="script.js"></script>`, which is exactly where the JavaScript lessons put it.
+
+<details>
+<summary>Read later: more HTML you'll meet soon</summary>
+
+**Use headings in order.** One `<h1>` per page, then `<h2>` for sections, `<h3>` inside those. Pick a heading for its place in the outline, not its size; CSS handles size.
+
+**Buttons and form fields.** A `<button>` is something to click. An `<input>` lets someone type. Pair each input with a `<label>`, and connect them by matching the label's `for` to the input's `id`:
+
+```html
+<label for="player-name">Your name</label>
+<input id="player-name" type="text" />
+<button type="button">Start</button>
+```
+
+Clicking the label now focuses the input, and screen readers announce the label when the input is focused.
+
+**Comments.** Text between `<!--` and `-->` is ignored by the browser. Use it for short notes to people.
+
+```html
+<!-- Swap in your own photo later -->
+```
+
+**Common mistakes.**
+
+- A missing closing tag, like a `<p>` that never ends. The browser keeps going and the page shifts in odd ways.
+- Attribute values without quotes. Write `class="card-role"`, not `class=card-role`.
+- An `<img>` without `alt`. If the picture is only decoration, write `alt=""` so screen readers skip it.
+
+</details>
+
+## From HTML to React
+
+React lets you write HTML-like code, called **JSX**, inside JavaScript. The card barely changes:
+
+```jsx title="ProfileCard.jsx"
+function ProfileCard() {
+  return (
+    <article className="card">
+      <img className="card-photo" src="/misabot.png" alt="MISAbot smiling" />
+      <div className="card-body">
+        <h2>Niles Cabrera</h2>
+        <p className="card-role">BS MIS · Lead developer</p>
+      </div>
+    </article>
+  );
+}
+```
+
+- `class` becomes `className`, and a label's `for` becomes `htmlFor`, because `class` and `for` already mean something in JavaScript.
+- Void elements must close themselves: `<img />`, `<input />`.
+- A component returns one parent element, like the `<article>` here.
+- Curly braces put JavaScript values inside: `<h2>{name}</h2>`.
+
+Next.js writes the page skeleton (`<html>`, `<head>`, `<body>`) for you. What you write is mostly the part inside `<body>`, which is what we built today.
+
+[Next: CSS basics →](../css/)
