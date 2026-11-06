@@ -1,0 +1,133 @@
+---
+title: States and screen sizes
+description: Change styles on hover and focus, adapt a layout to phones and laptops, and add dark mode.
+---
+import Anatomy from '../../../components/diagrams/Anatomy.astro';
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+
+In plain CSS, you'd write a separate rule for a button's hover style, and a media query for a phone layout. Tailwind does both with a **prefix**: a word and a colon in front of a class, which says when that class should apply.
+
+## Hover, focus, and active
+
+Put `hover:` in front of a class, and it only applies while the mouse is over the element:
+
+<Playground tailwind>
+```html
+<button class="bg-teal-600 hover:bg-teal-800 active:bg-teal-950 text-white font-bold px-4 py-2 rounded-lg">
+  Hover over me
+</button>
+```
+</Playground>
+
+<Anatomy
+  label="A Tailwind class with a prefix: the state, a colon, then an ordinary class"
+  parts={[
+    { text: 'hover', label: 'when' },
+    { text: ':' },
+    { text: 'bg-teal-800', label: 'what' },
+  ]}
+  caption="While the mouse is over the button, use the bg-teal-800 background."
+/>
+
+The plain `bg-teal-600` is the normal color, and `hover:bg-teal-800` takes over during a hover. In CSS, that's the same as writing a second rule with `:hover`:
+
+```css
+.join {
+  background-color: teal;
+}
+
+.join:hover {
+  background-color: darkslategray;
+}
+```
+
+A few prefixes you'll use often:
+
+| Prefix | Applies when |
+| --- | --- |
+| `hover:` | The mouse is over the element |
+| `focus:` | The element is selected, by clicking into it or with the **Tab** key |
+| `active:` | The element is being pressed |
+| `disabled:` | A button or input has the `disabled` attribute |
+
+In Tailwind v4, `hover:` styles only apply on devices that can hover, like a laptop with a mouse or trackpad. On a phone, a tap won't leave a button stuck in its hover color.
+
+## Show where the keyboard is
+
+`focus:` matters most on inputs and buttons. Some people move around a page with the **Tab** key instead of a mouse, and a focus style shows them where they are. Click into each box, or press **Tab** to move between them:
+
+<Playground tailwind>
+```html
+<input class="border border-slate-400 rounded-md px-3 py-2 focus:outline-2 focus:outline-teal-600" placeholder="Your name">
+<input class="border border-slate-400 rounded-md px-3 py-2 mt-3 focus:outline-2 focus:outline-teal-600" placeholder="Your course">
+```
+</Playground>
+
+You can put several prefixed classes on one element, and each one only switches on in its own state.
+
+## Screen sizes
+
+Tailwind's screen-size prefixes switch a class on once the screen is at least a certain width. These are the main ones:
+
+| Prefix | Applies at this width and wider |
+| --- | --- |
+| (none) | Every size, starting from the smallest phone |
+| `sm:` | `640px` |
+| `md:` | `768px` |
+| `lg:` | `1024px` |
+| `xl:` | `1280px` |
+
+In plain CSS, `md:flex` is a class inside a media query:
+
+```css
+@media (min-width: 768px) {
+  .menu {
+    display: flex;
+  }
+}
+```
+
+## Mobile first
+
+The important rule is that a class with no prefix applies everywhere, including phones. A prefixed class adds to it or replaces it on bigger screens. This is called **mobile first**: you design for the small screen, then add changes as the screen grows.
+
+<Playground tailwind height={260}>
+```html
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <div class="bg-teal-600 text-white text-center p-6">1</div>
+  <div class="bg-teal-600 text-white text-center p-6">2</div>
+  <div class="bg-teal-600 text-white text-center p-6">3</div>
+</div>
+```
+</Playground>
+
+On a laptop, you'll probably see three columns. Make your browser window narrow, then run the example again. Below `640px`, `sm:grid-cols-3` switches off and the tiles stack in one column.
+
+The width that counts is the width of the preview, not your whole screen. The preview is narrower than your window, so `lg:` and `xl:` classes may never switch on in it. Try those in your own `index.html` instead, where the page gets the full window.
+
+<Predict question="What color is this text on a phone?" options={['Red', 'Blue', 'Black']} answer={0}>
+```html
+<p class="text-red-600 md:text-blue-600">Hello!</p>
+```
+
+It's red. The class with no prefix applies on every screen, and `md:text-blue-600` only takes over from `768px` and wider. A common mistake is writing `sm:` to mean "on small screens." It actually means "from small screens and up."
+</Predict>
+
+## Dark mode
+
+`dark:` works like the other prefixes. Its classes apply when the device is set to dark mode:
+
+```html
+<div class="bg-white text-slate-900 dark:bg-slate-900 dark:text-white p-6">
+  I follow your system's light or dark setting.
+</div>
+```
+
+By default, `dark:` follows the light or dark setting on the visitor's device, which CSS calls `prefers-color-scheme`. To try it, put this in your own `index.html` with the Play CDN, then switch your computer between light and dark mode.
+
+## Up next
+
+You now know the pieces: utilities, layout, states, and screen sizes. Next, you'll put them all together and build one small component from scratch.
+
+[Next: Build a profile card →](../profile-card/)
