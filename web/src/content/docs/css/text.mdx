@@ -1,0 +1,142 @@
+---
+title: Colors and text
+description: Set colors, fonts, text sizes, and spacing, and choose the right size units.
+---
+import Playground from '../../../components/Playground.astro';
+
+With selectors, you can point at anything on the page. These are the properties you'll use most often once you get there.
+
+## Colors
+
+Two properties handle most of the color on a page. `color` sets the text color, and `background-color` sets the color behind it.
+
+<Playground>
+```html
+<p class="named">A color name</p>
+<p class="hex">A hex code</p>
+<p class="rgb">An rgb value</p>
+```
+```css
+.named {
+  color: white;
+  background-color: teal;
+}
+
+.hex {
+  color: #12403c;
+  background-color: #e6f4f1;
+}
+
+.rgb {
+  color: rgb(255, 255, 255);
+  background-color: rgb(200, 80, 60);
+}
+```
+</Playground>
+
+You can write a color three common ways:
+
+| Way | Example | How it works |
+| --- | --- | --- |
+| Name | `teal` | One of more than 140 built-in names |
+| Hex code | `#12403c` | Red, green, and blue as pairs of hex digits |
+| `rgb()` | `rgb(200, 80, 60)` | Red, green, and blue as numbers from 0 to 255 |
+
+Hex codes are the most common in real projects. You don't need to work them out yourself. Design tools and color pickers give you the code, and VS Code shows a small color square next to each one you write.
+
+Make sure your text stands out from its background. Light gray on white might look clean, but many people won't be able to read it.
+
+## Fonts
+
+`font-family` picks the font:
+
+<Playground>
+```html
+<h1>Bop the Bot</h1>
+<p>A quick game for quick hands.</p>
+```
+```css
+h1 {
+  font-family: Georgia, serif;
+}
+
+p {
+  font-family: system-ui, sans-serif;
+}
+```
+</Playground>
+
+List a few fonts, separated by commas. The browser uses the first one the computer has, so end with a general family like `serif` or `sans-serif` as a backup.
+
+For a font that isn't on most computers, [Google Fonts](https://fonts.google.com/) gives you a `<link>` tag to paste into your `<head>`, plus the `font-family` line to use.
+
+## Size and weight
+
+<Playground>
+```html
+<h1>Score: 22</h1>
+<p class="small">Best score: 30</p>
+<p class="bold">Quick hands!</p>
+```
+```css
+h1 {
+  font-size: 48px;
+}
+
+.small {
+  font-size: 0.875rem;
+}
+
+.bold {
+  font-weight: 700;
+}
+```
+</Playground>
+
+`font-size` sets how big the text is. `font-weight` sets how bold it is, from `100` (thin) to `900` (heavy). `400` is normal and `700` is bold. Not every font has every weight.
+
+## Size units
+
+The examples above use two units for size. These are the ones you'll see most:
+
+| Unit | Means | Good for |
+| --- | --- | --- |
+| `px` | Pixels on the screen | Borders, small fixed details |
+| `rem` | Times the browser's base text size, usually 16px | Text and spacing |
+| `%` | A share of the parent's size | Widths |
+
+`1rem` is usually `16px`, so `1.5rem` is about `24px`. The difference shows up when someone turns up their browser's text size: `rem` sizes grow with it, while `px` sizes stay put. That's why `rem` is the better choice for text.
+
+## Spacing and alignment
+
+A few more properties make text easier to read:
+
+<Playground>
+```html
+<h2>How to play</h2>
+<p>MISAbot pops out of a hole. Bop it before it ducks away. Each round lasts 30 seconds, and the faster you are, the higher you score.</p>
+```
+```css
+h2 {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+p {
+  line-height: 1.6;
+  max-width: 30rem;
+}
+```
+</Playground>
+
+- `text-align` lines text up to the `left`, `center`, or `right`.
+- `line-height` sets the space between lines. Around `1.5` is comfortable for paragraphs.
+- `text-transform` and `letter-spacing` change the capitals and the space between letters.
+- `max-width` keeps lines from getting too long to read.
+
+## Up next
+
+Text is one part of how a page looks. The other part is the space around and between things, and to control that, you need to know how CSS sees every element: as a box.
+
+[Next: The box model →](../box-model/)

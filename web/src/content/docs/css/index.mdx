@@ -1,0 +1,109 @@
+---
+title: What is CSS?
+description: See what CSS does, how a rule is written, and how to connect a stylesheet to your page.
+---
+import Anatomy from '../../../components/diagrams/Anatomy.astro';
+import Playground from '../../../components/Playground.astro';
+
+HTML decides what is on the page. CSS decides how it looks: the colors, the fonts, the spacing, and where everything sits.
+
+The same HTML can look completely different with different CSS. Run this, then delete everything in the **CSS** tab and run it again.
+
+<Playground>
+```html
+<h1>MISAbot</h1>
+<p>Friendly robot. Loves taho.</p>
+```
+```css
+body {
+  background-color: #0f2b2d;
+  font-family: system-ui, sans-serif;
+}
+
+h1 {
+  color: #9ce9e9;
+}
+
+p {
+  color: white;
+}
+```
+</Playground>
+
+With the CSS gone, it's the same content in the browser's plain default style.
+
+## How a rule works
+
+CSS is a list of **rules**. Each rule picks some elements, then says how they should look.
+
+<Anatomy
+  label="A CSS rule: selector, then a property and value inside braces"
+  parts={[
+    { text: 'h1', label: 'selector' },
+    { text: ' { ' },
+    { text: 'color', label: 'property' },
+    { text: ': ' },
+    { text: 'teal', label: 'value' },
+    { text: '; }' },
+  ]}
+  caption="This rule makes every h1 on the page teal."
+/>
+
+The **selector** picks what to style. Inside the braces, each line sets one **property** to a **value**, and ends with a semicolon. A rule can set as many properties as you like:
+
+```css
+h1 {
+  color: teal;
+  font-size: 40px;
+  text-align: center;
+}
+```
+
+If something doesn't work, check the punctuation first. A missing colon, semicolon, or closing brace can quietly break the lines after it.
+
+## Connect CSS to your page
+
+CSS usually lives in its own file, such as `style.css`. You connect it to your page with a `<link>` tag inside `<head>`:
+
+```html title="index.html"
+<head>
+  <meta charset="utf-8">
+  <title>My first page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+```
+
+Now the browser loads `style.css` along with the page. One stylesheet can style every page on your site, so a change in one place shows up everywhere.
+
+You'll also see CSS written straight into HTML, either inside a `<style>` tag in `<head>`, or in a `style` attribute on one element:
+
+```html
+<p style="color: red;">Only this paragraph is red.</p>
+```
+
+Both work, but a separate file keeps things tidy as a site grows. In the examples here, the playground connects the **CSS** tab for you.
+
+## Try CSS in the browser
+
+Your browser can edit CSS live. Right-click anything on a page and choose **Inspect**. The panel that opens lists the CSS rules for that element, and you can click any value to change it.
+
+The changes vanish when you refresh, so it's a safe place to experiment. When you find something you like, copy it into your `style.css`.
+
+## Comments
+
+CSS comments look different from HTML ones:
+
+```css
+/* Colors for the header */
+h1 {
+  color: teal;
+}
+```
+
+The browser skips everything between `/*` and `*/`. **Ctrl+/** (or **Cmd+/**) works here too.
+
+## Up next
+
+So far, each rule has styled every element with a given tag. Usually you want more control than that, and that's what selectors are for.
+
+[Next: Selectors →](./selectors/)

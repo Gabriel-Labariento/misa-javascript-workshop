@@ -1,0 +1,142 @@
+---
+title: Grid
+description: Arrange boxes in rows and columns, make items span more than one cell, and fit any screen size.
+---
+import Playground from '../../../components/Playground.astro';
+
+Flexbox lines things up in one direction. Grid works in two at once: you describe the columns, and the children fill in row by row.
+
+## Make a grid
+
+Like flexbox, grid goes on the parent. `display: grid` turns it on, and `grid-template-columns` describes the columns.
+
+<Playground>
+```html
+<div class="gallery">
+  <div class="tile">A</div>
+  <div class="tile">B</div>
+  <div class="tile">C</div>
+  <div class="tile">D</div>
+  <div class="tile">E</div>
+  <div class="tile">F</div>
+</div>
+```
+```css
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.tile {
+  padding: 24px;
+  background-color: teal;
+  color: white;
+  text-align: center;
+}
+```
+</Playground>
+
+Each value in `grid-template-columns` is one column. Three values make three columns, and the children fill them in order, starting a new row when one is full. `gap` works here too, between both rows and columns.
+
+## The fr unit
+
+`fr` means "one share of the free space." Three columns of `1fr` get equal shares. Change the widths and see what happens:
+
+```css
+grid-template-columns: 2fr 1fr 1fr;   /* the first column is twice as wide */
+grid-template-columns: 200px 1fr;     /* a fixed column, then the rest */
+```
+
+Writing `1fr` over and over gets long, so `repeat()` does it for you. `repeat(3, 1fr)` means the same as `1fr 1fr 1fr`. Try `repeat(2, 1fr)` in the example above.
+
+## Span more than one cell
+
+A child can stretch across several columns or rows:
+
+<Playground>
+```html
+<div class="board">
+  <div class="tile big">Featured</div>
+  <div class="tile">B</div>
+  <div class="tile">C</div>
+  <div class="tile">D</div>
+  <div class="tile wide">Wide</div>
+</div>
+```
+```css
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.tile {
+  padding: 24px;
+  background-color: teal;
+  color: white;
+  text-align: center;
+}
+
+.big {
+  grid-column: span 2;
+  grid-row: span 2;
+  background-color: darkslategray;
+}
+
+.wide {
+  grid-column: span 2;
+}
+```
+</Playground>
+
+`grid-column: span 2` makes a child two columns wide, and `grid-row: span 2` makes it two rows tall. The other children flow around it.
+
+## Fit any screen
+
+So far, the number of columns has been fixed. On a phone, three columns can get cramped. This one line lets the browser decide how many fit:
+
+<Playground>
+```html
+<div class="cards">
+  <div class="tile">1</div>
+  <div class="tile">2</div>
+  <div class="tile">3</div>
+  <div class="tile">4</div>
+  <div class="tile">5</div>
+</div>
+```
+```css
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  padding: 24px;
+  background-color: teal;
+  color: white;
+  text-align: center;
+}
+```
+</Playground>
+
+`minmax(120px, 1fr)` means each column is at least `120px` wide, and grows to share the space. `auto-fit` fits in as many of those columns as the width allows. Make your browser window narrower, and the cards drop to fewer columns on their own.
+
+## Flexbox or grid?
+
+They overlap a lot, and both are fine choices for many layouts. A simple way to pick:
+
+| Use | When |
+| --- | --- |
+| Flexbox | Items in one line, like a menu, a toolbar, or a row of buttons |
+| Grid | Items in rows and columns, like a gallery or a page layout |
+
+Real pages use both, often one inside the other: a grid for the page, and flexbox inside each card.
+
+## Up next
+
+There's one layout question every beginner asks: how do you put something in the exact middle? You already know both tools that answer it.
+
+[Next: Centering →](../centering/)

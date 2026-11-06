@@ -1,0 +1,85 @@
+---
+title: What is HTML?
+description: Learn what HTML does, how tags and elements work, and how every page is laid out.
+---
+import Anatomy from '../../../components/diagrams/Anatomy.astro';
+
+Every web page starts as HTML. It describes what is on the page, such as headings, paragraphs, pictures, and links. The browser reads that HTML and draws the page you see.
+
+How the page looks comes later, with CSS. First we need something on it, so this module is all about content.
+
+## Tags and elements
+
+HTML is plain text with **tags** around the content. A tag is a name inside angle brackets, like `<p>`. Most tags come in pairs: an opening tag, and a closing tag with a slash.
+
+<Anatomy
+  label="An HTML element: opening tag, content, closing tag"
+  parts={[
+    { text: '<p>', label: 'opening tag' },
+    { text: 'Hello, world!', label: 'content' },
+    { text: '</p>', label: 'closing tag' },
+  ]}
+  caption="Together, the three parts make one element. This one is a paragraph."
+/>
+
+The tag name tells the browser what kind of content it is. `p` means paragraph, `h1` means the main heading, and `a` means a link. You'll meet the common ones over the next few pages.
+
+## Elements inside elements
+
+Elements can sit inside other elements. This is called **nesting**, and it's how a whole page gets built.
+
+```html
+<p>This word is <strong>important</strong>.</p>
+```
+
+Here, `<strong>` sits inside `<p>`. A nested element has to close before the element around it does. We also indent nested elements on their own lines, so the structure is easy to see at a glance.
+
+## The page skeleton
+
+Every HTML file follows the same outline:
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My first page</title>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+  </body>
+</html>
+```
+
+The first line tells the browser this is a modern HTML page. Everything else lives inside `<html>`, which has two parts:
+
+- `<head>` holds information about the page that isn't shown on it, like the title in the browser tab.
+- `<body>` holds everything you see.
+
+You don't have to type this from memory. In VS Code, open an empty `.html` file, type `!`, and press **Tab**.
+
+## Make your first page
+
+Now try it on your own laptop.
+
+1. In VS Code, create a file named `index.html`.
+2. Type `!`, press **Tab**, and put an `<h1>` with your name inside `<body>`.
+3. Save the file, right-click it in the file list, and choose **Show Preview**.
+
+Your name appears as a big heading. Change it, save, and the preview updates. If Live Preview isn't installed yet, follow the [setup page](../setup/) first.
+
+## Notes to yourself
+
+Sometimes you want to leave a note in your code that the page doesn't show. That's a **comment**:
+
+```html
+<!-- The snack list goes here -->
+```
+
+The browser skips everything between `<!--` and `-->`. In VS Code, press **Ctrl+/** (or **Cmd+/** on a Mac) to turn a line into a comment and back.
+
+## Up next
+
+You have a working page with one heading. Next, you'll fill it with real content: headings, paragraphs, lists, and links.
+
+[Next: Text and links →](./text/)

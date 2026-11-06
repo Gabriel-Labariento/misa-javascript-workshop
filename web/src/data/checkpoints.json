@@ -2,7 +2,7 @@
   {
     "id": "00-start",
     "title": "Hello, world",
-    "lesson": "build/hello",
+    "lesson": "javascript/hello",
     "files": [
       "index.html",
       "script.js",
@@ -13,7 +13,7 @@
   {
     "id": "01-hello",
     "title": "Greet the player",
-    "lesson": "build/hello",
+    "lesson": "javascript/hello",
     "files": [
       "index.html",
       "script.js",
@@ -24,7 +24,7 @@
   {
     "id": "02-decisions",
     "title": "Make decisions",
-    "lesson": "build/decisions",
+    "lesson": "javascript/decisions",
     "files": [
       "index.html",
       "script.js",
@@ -35,7 +35,7 @@
   {
     "id": "03-board",
     "title": "Build the board",
-    "lesson": "build/board",
+    "lesson": "javascript/board",
     "files": [
       "index.html",
       "script.js",
@@ -46,7 +46,7 @@
   {
     "id": "04-functions",
     "title": "Functions and timers",
-    "lesson": "build/functions",
+    "lesson": "javascript/functions",
     "files": [
       "index.html",
       "script.js",
@@ -57,7 +57,7 @@
   {
     "id": "05-clicks",
     "title": "Listen for clicks",
-    "lesson": "build/clicks",
+    "lesson": "javascript/clicks",
     "files": [
       "index.html",
       "script.js",
@@ -68,7 +68,7 @@
   {
     "id": "06-mouse",
     "title": "Follow the mouse",
-    "lesson": "build/mouse",
+    "lesson": "javascript/mouse",
     "files": [
       "index.html",
       "script.js",
@@ -79,7 +79,7 @@
   {
     "id": "07-keyboard",
     "title": "Use the keyboard",
-    "lesson": "build/keyboard",
+    "lesson": "javascript/keyboard",
     "files": [
       "index.html",
       "script.js",
@@ -90,7 +90,7 @@
   {
     "id": "08-modules",
     "title": "Split into modules",
-    "lesson": "build/modules",
+    "lesson": "javascript/modules",
     "files": [
       "index.html",
       "main.js",
@@ -103,7 +103,7 @@
   {
     "id": "09-classes",
     "title": "Build a class",
-    "lesson": "build/classes",
+    "lesson": "javascript/classes",
     "files": [
       "index.html",
       "main.js",

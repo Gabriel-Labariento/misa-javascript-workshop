@@ -1,0 +1,100 @@
+---
+title: Page structure
+description: Group content with div and span, and give each part of a page a meaningful tag.
+---
+import PageLayout from '../../../components/diagrams/PageLayout.astro';
+import Playground from '../../../components/Playground.astro';
+
+As a page grows, related content belongs together: a title with its picture, or a heading with the paragraphs under it. HTML has tags whose job is grouping.
+
+## Blocks and inline elements
+
+Before grouping anything, it helps to know that elements come in two kinds.
+
+<Playground>
+```html
+<p>A paragraph is a block.</p>
+<p>So is this one. It starts on a new line.</p>
+<p>But <strong>strong</strong> and <a href="#">links</a> are inline. They stay in the line.</p>
+```
+</Playground>
+
+**Block** elements, like `<p>`, `<h1>`, and `<ul>`, start on a new line and stretch across the page. **Inline** elements, like `<strong>`, `<em>`, `<a>`, and `<img>`, sit inside a line of text.
+
+## Group with div and span
+
+The plainest grouping tags have no meaning of their own. They're empty boxes for holding other things.
+
+<Playground>
+```html
+<div>
+  <h2>MISAbot</h2>
+  <p>Friendly robot. Loves <span>taho</span>.</p>
+</div>
+<div>
+  <h2>Bop the Bot</h2>
+  <p>A game about bopping MISAbot.</p>
+</div>
+```
+</Playground>
+
+`<div>` is a block box. Use it to group several elements, like the heading and paragraph above. `<span>` is the inline version, for marking a few words inside a line.
+
+On their own, they change nothing you can see. They become useful once CSS starts styling and arranging boxes.
+
+## Give each part a meaning
+
+Most pages share the same big parts, and HTML has a tag for each one:
+
+<PageLayout caption="A common page layout. Each region is its own element." />
+
+| Tag | What goes in it |
+| --- | --- |
+| `<header>` | The top of the page: a logo, a title |
+| `<nav>` | The main links for getting around the site |
+| `<main>` | The page's main content. Use one per page. |
+| `<section>` | One themed part of the content, usually with its own heading |
+| `<aside>` | Side content, like related links |
+| `<footer>` | The bottom of the page: contact info, credits |
+
+<Playground>
+```html
+<header>
+  <h1>My site</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+  </nav>
+</header>
+
+<main>
+  <section>
+    <h2>About me</h2>
+    <p>I'm learning web development.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Thanks for visiting!</p>
+</footer>
+```
+</Playground>
+
+On screen, these look just like `<div>`s. The difference is meaning. They tell screen readers, search engines, and your teammates what each part is for. Use one when it fits, and use `<div>` when none does.
+
+## Name things for later
+
+Any element can take two attributes that CSS and JavaScript use to find it:
+
+```html
+<div class="card">...</div>
+<h1 id="page-title">...</h1>
+```
+
+A `class` can go on many elements, like every card on the page. An `id` names exactly one element, so use each id only once. You'll use both as soon as you start writing CSS.
+
+## Up next
+
+There's one more kind of content left: the parts people type into and click. Next up are forms and buttons.
+
+[Next: Forms and buttons →](../forms/)

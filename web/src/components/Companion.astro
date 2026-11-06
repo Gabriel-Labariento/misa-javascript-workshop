@@ -6,11 +6,13 @@ import MisaBot from './MisaBot.astro';
 
 const { id, entry, pagination, sidebar } = Astro.locals.starlightRoute;
 
-type Entry = { type: string; href?: string; entries?: Entry[] };
+type Entry = { type: string; label?: string; href?: string; entries?: Entry[] };
 const links = (entries: Entry[]): Entry[] => entries.flatMap((item) => (item.type === 'group' ? links(item.entries ?? []) : [item]));
-const lessons = links(sidebar as Entry[])
-  .map((item) => item.href?.replace(/^\/|\/$/g, '') ?? '')
-  .filter((slug) => slug.startsWith('build/'));
+// The numbered lessons are the links inside the JavaScript "Part …" sidebar groups.
+const partGroups = (entries: Entry[]): Entry[] =>
+  entries.flatMap((item) => (item.type !== 'group' ? [] : item.label?.startsWith('Part ') ? [item] : partGroups(item.entries ?? [])));
+const lessons = links(partGroups(sidebar as Entry[]))
+  .map((item) => item.href?.replace(/^\/|\/$/g, '') ?? '');
 const lessonNumber = lessons.indexOf(id) + 1;
 const next = pagination.next;
 const config = { id, lessons, lessonNumber };

@@ -1,0 +1,51 @@
+---
+title: Everyday actions
+description: Clone, branch, commit, push, pull, and merge, with where to find each one in GitHub Desktop.
+---
+import BranchDiagram from '../../../components/diagrams/BranchDiagram.astro';
+import Flow from '../../../components/diagrams/Flow.astro';
+
+Git has a lot of features, but day to day you'll use only a handful. They come in three groups: getting a project, saving your work, and working with other people.
+
+## Get a project
+
+**Clone** downloads a repository from GitHub to your computer, with its whole history. You do this once per project. In GitHub Desktop, choose **File → Clone repository**, then pick the repository from the list or paste its link.
+
+## Save and share your work
+
+Once a project is on your computer, most of your time goes into a small loop:
+
+<Flow
+  label="Edit your files, commit them, then push the commits to GitHub"
+  steps={['Edit your files', 'Commit', 'GitHub']}
+  actions={['commit', 'push']}
+  caption="Commit often, and push when you want to share or back up your work."
+/>
+
+**Commit** saves a version of the files you changed. In GitHub Desktop, the files you changed appear on the left with checkboxes. Leave a check on the ones you want to save, write a short summary at the bottom, like `Add snack list`, and click **Commit**.
+
+**Push** sends your commits to GitHub. Click **Push origin** at the top. The first time you push a new branch, the button says **Publish branch** instead.
+
+**Pull** gets commits that other people pushed. Click **Fetch origin** to check for new work, then **Pull origin** to download it.
+
+A good commit message says what changed, in a few words. "Add snack list" helps future you. "stuff" doesn't.
+
+## Work alongside others
+
+When several people change the same project, each person works on their own **branch**. A branch is a separate line of work that splits off the main version, called `main`.
+
+<BranchDiagram caption="Your commits stay on your branch until it's merged back into main." />
+
+**Branch** starts a new line of work. In GitHub Desktop, click **Current branch** at the top, then **New branch**, and give it a name that says what it's for, like `add-my-card`.
+
+**Checkout** switches to a different branch. Click **Current branch** and pick one from the list. Your files change to match that branch.
+
+**Pull request** asks for your branch to be added to `main`. It's also where teammates review your change and leave comments. After you push a branch, GitHub Desktop shows a **Create Pull Request** button that opens the form on github.com.
+
+**Merge** adds a branch's commits into another branch. Once a pull request is approved, click **Merge pull request** on github.com, and your work becomes part of `main`.
+
+## Up next
+
+You've met each action on its own. Next, you'll see how they fit together when you make one change to a shared project.
+
+[Next: One change, start to finish →](../workflow/)

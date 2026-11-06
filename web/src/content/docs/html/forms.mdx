@@ -1,0 +1,87 @@
+---
+title: Forms and buttons
+description: Let people type and click with inputs, labels, and buttons.
+---
+import Playground from '../../../components/Playground.astro';
+
+Everything so far has been for reading. Forms are how a page asks people for something, like a name, an answer, or a choice.
+
+## Inputs and labels
+
+<Playground>
+```html
+<label for="name">Your name</label>
+<input id="name" type="text" placeholder="e.g. Alex">
+```
+</Playground>
+
+`<input>` makes a box people can type into. Like `<img>`, it has no closing tag. `placeholder` shows a hint in grey until someone starts typing.
+
+`<label>` is the text that says what the input is for. Its `for` attribute matches the input's `id`, which links the two. Click the words "Your name" in the preview, and the cursor jumps into the box. Screen readers also read the label when someone reaches the input.
+
+## Different kinds of input
+
+The `type` attribute changes what an input accepts:
+
+<Playground>
+```html
+<p>
+  <label for="email">Email</label>
+  <input id="email" type="email">
+</p>
+<p>
+  <label for="age">Age</label>
+  <input id="age" type="number" min="1">
+</p>
+<p>
+  <input id="news" type="checkbox">
+  <label for="news">Send me updates</label>
+</p>
+<p>
+  <label for="level">Level</label>
+  <select id="level">
+    <option>Easy</option>
+    <option>Normal</option>
+    <option>Hard</option>
+  </select>
+</p>
+```
+</Playground>
+
+`email` and `number` boxes check what's typed, and on phones they bring up a fitting keyboard. A `checkbox` is a yes or no. `<select>` isn't an input, but it works like one: it gives a dropdown, with one `<option>` per choice.
+
+## Buttons
+
+<Playground>
+```html
+<button type="button">Start game</button>
+```
+</Playground>
+
+A `<button>` is something to click. Right now, clicking it does nothing, and that's expected. HTML can draw a button, but making it *do* something is JavaScript's job.
+
+## Put a form together
+
+Wrap the inputs and a button in `<form>` to make them one form:
+
+<Playground>
+```html
+<form>
+  <p>
+    <label for="player">Player name</label>
+    <input id="player" type="text" required>
+  </p>
+  <button type="submit">Join</button>
+</form>
+```
+</Playground>
+
+A `type="submit"` button sends the form. `required` means the form won't send until that box is filled in: press **Join** with the box empty, and the browser asks you to fill it.
+
+The playground doesn't send forms, so try this part in your own `index.html` with Live Preview.
+
+## Up next
+
+That's the HTML you need for most pages: text, links, images, structure, and forms. It all works, but it looks plain, with black text, one font, and everything stacked down the page. Changing that is CSS's job.
+
+[Next: What is CSS? →](../../css/)

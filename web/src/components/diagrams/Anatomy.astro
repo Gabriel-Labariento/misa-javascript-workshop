@@ -1,0 +1,67 @@
+---
+// One line of code with labeled parts underneath, such as the pieces of an
+// HTML element or a CSS rule. Parts without a label are plain glue text.
+import Figure from './Figure.astro';
+
+interface Part {
+  text: string;
+  label?: string;
+}
+interface Props {
+  parts: Part[];
+  caption?: string;
+  label: string;
+}
+const { parts, caption, label } = Astro.props;
+---
+
+<Figure caption={caption} label={label}>
+  <div class="anatomy">
+    {parts.map((part) => (
+      <span class:list={['part', { labeled: part.label }]}>
+        <code>{part.text}</code>
+        {part.label && <span class="tag">{part.label}</span>}
+      </span>
+    ))}
+  </div>
+</Figure>
+
+<style>
+  .anatomy {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    row-gap: 1rem;
+  }
+  .part {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .part code {
+    font-family: var(--__sl-font-mono, monospace);
+    font-size: 1.15rem;
+    white-space: pre;
+    background: none;
+    border: 0;
+    padding: 0.2rem 0;
+    text-align: center;
+  }
+  .labeled {
+    margin: 0 0.3rem;
+  }
+  .labeled code {
+    color: var(--sl-color-accent-high);
+    border-bottom: 3px solid var(--sl-color-accent);
+  }
+  .tag {
+    margin-top: 0.4rem;
+    padding: 0 0.25rem;
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    color: var(--sl-color-gray-2);
+    text-align: center;
+    white-space: nowrap;
+  }
+</style>

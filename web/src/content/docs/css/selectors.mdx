@@ -1,0 +1,146 @@
+---
+title: Selectors
+description: Choose exactly which elements a rule styles, and learn which rule wins when two disagree.
+---
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+
+A tag selector like `p` styles every paragraph on the page. Most of the time you want to style only some of them, and selectors let you say which ones.
+
+## Tags, classes, and ids
+
+These three cover most of what you'll write. Run this, then try adding `class="sold-out"` to the first paragraph.
+
+<Playground>
+```html
+<h1 id="title">Snack list</h1>
+<p>Taho</p>
+<p class="sold-out">Banana cue</p>
+<p class="sold-out">Fishballs</p>
+```
+```css
+p {
+  color: darkslategray;
+}
+
+.sold-out {
+  color: gray;
+  text-decoration: line-through;
+}
+
+#title {
+  color: teal;
+}
+```
+</Playground>
+
+| Selector | Matches | In HTML |
+| --- | --- | --- |
+| `p` | Every `<p>` | Nothing extra needed |
+| `.sold-out` | Every element with that class | `class="sold-out"` |
+| `#title` | The one element with that id | `id="title"` |
+
+A class starts with a dot, and an id starts with `#`. A class can go on as many elements as you like, while an id should be used once per page. Most of the time, a class is the one you want.
+
+An element can also have more than one class. Separate them with spaces: `class="card featured"`.
+
+## Combine selectors
+
+Two small patterns save a lot of repeating:
+
+<Playground>
+```html
+<h1>Menu</h1>
+<h2>Drinks</h2>
+<div class="card">
+  <h2>Taho</h2>
+  <p>Warm and sweet.</p>
+</div>
+```
+```css
+h1, h2 {
+  font-family: Georgia, serif;
+}
+
+.card h2 {
+  color: teal;
+}
+```
+</Playground>
+
+- A **comma** applies one rule to several selectors. `h1, h2` styles both kinds of heading.
+- A **space** means "inside." `.card h2` styles only the `<h2>` inside the card, so the "Drinks" heading stays the same.
+
+## Style on hover
+
+Some selectors match an element only in a certain state. The most common is `:hover`, which applies while the mouse is over the element.
+
+<Playground>
+```html
+<button class="start">Start game</button>
+```
+```css
+.start {
+  background-color: teal;
+  color: white;
+}
+
+.start:hover {
+  background-color: darkslategray;
+}
+```
+</Playground>
+
+Move your mouse over the button in the preview. These are called **pseudo-classes**, and they always start with a colon. `:focus` is another useful one: it matches an input while someone is typing in it.
+
+## When rules disagree
+
+Sometimes two rules set the same property on the same element. The browser has to pick one.
+
+<Predict question="What color is the paragraph?" options={['Red', 'Blue', 'Black']} answer={1}>
+```html
+<p class="note">Remember to save!</p>
+```
+```css
+.note { color: blue; }
+p { color: red; }
+```
+
+It's blue. A class is more **specific** than a tag, so `.note` wins even though the `p` rule comes later.
+</Predict>
+
+The browser decides with two checks, in order:
+
+1. **The more specific selector wins.** An id beats a class, and a class beats a tag.
+2. **If they're equally specific, the later rule wins.**
+
+When a style isn't showing up, this is usually why. Inspect the element in your browser, and you'll see the losing rule crossed out.
+
+## Styles that pass down
+
+Some properties pass from an element to everything inside it. That's called **inheritance**.
+
+<Playground>
+```html
+<div class="card">
+  <h2>MISAbot</h2>
+  <p>Loves <strong>taho</strong>.</p>
+</div>
+```
+```css
+.card {
+  color: teal;
+  border: 2px solid teal;
+}
+```
+</Playground>
+
+`color` passes down, so the heading, the paragraph, and the bold word all turn teal. `border` doesn't, so only the card gets one. Text properties like colors and fonts are usually inherited. Box properties like borders and spacing usually aren't.
+
+This is why many sites set the font once, on `body`, and let it pass down to the whole page.
+
+## Up next
+
+You can pick exactly which elements to style. Next, you'll learn the properties you'll reach for most: colors, fonts, and sizes.
+
+[Next: Colors and text →](../text/)

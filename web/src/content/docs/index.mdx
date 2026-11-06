@@ -1,55 +1,50 @@
 ---
-title: Build Bop the Bot in JavaScript
-description: Learn JavaScript, mouse and keyboard events, modules, and classes by making a small browser game.
+title: Welcome
+description: A beginner web development workshop from MISA, from your first HTML page to a full project you build and put online.
 ---
 
 <div class="workshop-intro">
-  <p class="workshop-intro__audience">A JavaScript workshop for<br /><strong>beginner programmers.</strong></p>
+  <p class="workshop-intro__audience">A web development workshop for the<br /><strong>developer pool.</strong></p>
   <img src={`${import.meta.env.BASE_URL}assets/misabot.png`} alt="MISA's smiling robot mascot" width="180" height="180" />
   <p class="workshop-intro__team">From <strong>MISA,</strong><br />with help from <strong>MISAbot.</strong></p>
 </div>
 
-## What we're building toward
+This workshop takes you from your first web page to a full web app you build yourself. You don't need any coding experience. Many of you are just starting out, and every lesson is written with that in mind.
 
-You'll build **Bop the Bot**, a game that runs in your browser. MISAbot pops out of a 3 × 3 board, and you bop it before it ducks away. Click it with the mouse or press the key printed in its hole. Each round lasts 30 seconds and ends with your score and accuracy.
+## How the series runs
 
-<img class="workshop-shot" src={`${import.meta.env.BASE_URL}assets/bop-the-bot.png`} alt="The finished Bop the Bot game: a name box, a speed menu, a Start button, the score and timer, and a 3 by 3 board where MISAbot pops out of the middle hole while a hammer cursor hovers over it." width="1100" height="910" />
+Some parts happen live with mentors, and some you do on your own time. They come in this order:
 
-You don't need to know JavaScript yet. Bring a laptop with a browser, and keep this guide open beside your editor. If installing tools gets in the way, the [browser playground](./playground/) runs every step of the game without any setup.
-
-```text title="The end of a round"
-Dana, you bopped 22 bots with 88% accuracy. Quick hands!
-```
-
-## How we'll build it
-
-The workshop has three parts. Each lesson adds one working piece to the game.
-
-| Part | Lesson | What you'll have working |
+| When | What you learn | How |
 | --- | --- | --- |
-| Intro to JavaScript | [Say hello](./build/hello/) | A greeting that uses the player's name |
-| | [Make decisions](./build/decisions/) | A name and a speed, with fallbacks for odd answers |
-| | [Build the board](./build/board/) | Nine holes made with a loop |
-| | [Give your code a job](./build/functions/) | Functions and timers that move MISAbot around |
-| Mouse and keyboard | [Listen for clicks](./build/clicks/) | A 30-second round you play by clicking |
-| | [Follow the mouse](./build/mouse/) | A hammer cursor that bops the moment you press |
-| | [Use the keyboard](./build/keyboard/) | Key controls, plus Space to start and Escape to stop |
-| Modules and classes | [Split code into modules](./build/modules/) | The game spread across files with `import` and `export` |
-| | [Build a class](./build/classes/) | A `Game` class that runs each round |
-| | [Test and personalize](./build/test/) | Your own version, saved in Git |
+| Before Workshop 1 | JavaScript | On your own |
+| Workshop 1 | HTML, CSS, and Git | Live, with mentors |
+| Between workshops | Tailwind, while you keep going with JavaScript | On your own |
+| Workshop 2 | React, Next.js, and Tailwind | Live, with mentors |
+| Early next semester | Your [final project](./final-project/) | On your own |
+
+The sidebar lists the modules in learning order, which is a little different. JavaScript comes after Tailwind there, because React and Next.js build on it. The JavaScript module is long, though, so you get it first and work through it alongside everything else.
+
+## How the modules connect
+
+Each module adds one layer to what you can build.
+
+HTML gives a page its content, and CSS makes that content look the way you want. Git saves your work and lets you share it with your team. Tailwind gives you a quicker way to write CSS, right inside your HTML.
+
+JavaScript makes a page respond when people click and type. React and Next.js then help you build bigger apps out of those same pieces. The final project is where you put all of it together.
 
 ## How each lesson works
 
-Every lesson explains one idea with a small example you can run right on the page:
+Most pages explain one idea at a time, with small examples you can run right on the page:
 
 - **▶ Run** runs the example. Change anything, run it again, and see what happens. **Reset** brings the original back.
 - **Predict** boxes show some code and ask what it will do before you find out.
 - **Practice** boxes give you a short task with automatic checks. If you get stuck, open a hint or peek at one possible solution.
 
-Once an idea makes sense on its own, we add it to the game in the `workshop` folder.
+Mentors may skip a section during a live session to save time. Every section still makes sense on its own, so you can come back and read it later.
 
-## Before we edit the game
+## Where to start
 
-First, meet [JavaScript](./javascript/) and see where it runs. Then meet [Git and GitHub](./git-github/) before using them for the workshop. If you haven't installed anything yet, start with [setup](./setup/).
+Set up your laptop first, so the live sessions can go straight to coding. Then begin with HTML.
 
-[Start with JavaScript →](./javascript/)
+[Start with setup →](./setup/)

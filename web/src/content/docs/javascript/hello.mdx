@@ -6,6 +6,7 @@ import Checkpoint from '../../../components/Checkpoint.astro';
 import Playground from '../../../components/Playground.astro';
 import Predict from '../../../components/Predict.astro';
 import Exercise from '../../../components/Exercise.astro';
+import Flow from '../../../components/diagrams/Flow.astro';
 
 This step makes the browser talk: first in the console, then on the page itself. Keep editing on `my-game`; use a checkpoint branch only when you need a working reference.
 
@@ -227,11 +228,12 @@ git commit -m "Greet the player by name"
 
 `status` shows changes. `add` stages the saved contents of a file for the next commit. `commit` records that staged snapshot locally. If you edit again after staging, stage again to include the newer edit.
 
-```text title="What the commands do"
-Working files  →  Staging area  →  Local commit  →  GitHub repository
-     save            git add        git commit        git push
-```
+<Flow
+  label="Save files, git add them to the staging area, git commit them, then git push to GitHub"
+  steps={['Working files', 'Staging area', 'Local commit', 'GitHub']}
+  actions={['git add', 'git commit', 'git push']}
+/>
 
-GitHub is a place to share repositories, a little like a shared Drive location. Your local commits stay on your computer until you explicitly push them. We'll leave publishing for [after the build](../../moving-forward/publishing/).
+GitHub is a place to share repositories, a little like a shared Drive location. Your local commits stay on your computer until you explicitly push them. We'll leave publishing for [after the build](../moving-forward/publishing/).
 
 <Checkpoint id="01-hello" />
