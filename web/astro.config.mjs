@@ -70,7 +70,8 @@ export default defineConfig({
         {label:'Flexbox',slug:'css/flexbox'},
         {label:'Grid',slug:'css/grid'},
         {label:'Centering',slug:'css/centering'},
-        {label:'Practice as a team',slug:'css/practice'}
+        {label:'Practice as a team',slug:'css/practice'},
+        {label:'Build a profile card',slug:'css/profile-card'}
       ] },
       { label: '3 · Git', collapsed: true, items: [
         {label:'Git and GitHub',slug:'git-github'},

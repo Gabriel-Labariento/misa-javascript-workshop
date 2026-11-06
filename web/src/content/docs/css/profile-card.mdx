@@ -1,0 +1,178 @@
+---
+title: Build a profile card
+description: Put the HTML and CSS pages together by building a profile card you can keep.
+---
+import Playground from '../../../components/Playground.astro';
+
+You've learned each piece of HTML and CSS on its own. Now put them together in one small thing you can keep: a profile card.
+
+<Playground autorun height={340}>
+```html
+<article class="card">
+  <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96">
+  <div class="card-body">
+    <h2>Niles Cabrera</h2>
+    <p class="card-role">BS MIS · Lead developer</p>
+    <p>I build small web tools and never say no to turon.</p>
+    <ul class="card-tags">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>React</li>
+    </ul>
+    <a class="card-link" href="https://github.com/">My GitHub</a>
+  </div>
+</article>
+```
+```css
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 1rem;
+  color: #102a2c;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #f3fbfb;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+.card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  max-width: 32rem;
+  padding: 1.25rem;
+  color: #102a2c;
+  background: white;
+  border: 2px solid #b9dcdc;
+  border-radius: 1rem;
+}
+
+.card-photo {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  padding: 0.5rem;
+  object-fit: contain;
+  background: #e3f6f6;
+  border-radius: 50%;
+}
+
+.card h2 {
+  margin: 0;
+  color: #087a80;
+  font-size: 1.4rem;
+}
+
+.card-role {
+  margin-bottom: 0.5rem;
+  color: #4a6668;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.card-tags li {
+  padding: 0.15rem 0.65rem;
+  color: #087a80;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e3f6f6;
+  border-radius: 999px;
+}
+
+.card-link {
+  color: #087a80;
+  font-weight: 700;
+}
+```
+</Playground>
+
+Change the name, the role, and the tags in the **HTML** tab to your own, then press **▶ Run**.
+
+## How it's built
+
+Every part of the card comes from a page you've already read:
+
+| Part of the card | What does it | Where you learned it |
+| --- | --- | --- |
+| The photo | `<img>` with `alt` | [Images and attributes](../../html/images/) |
+| The list of tags | `<ul>` and `<li>` | [Text and links](../../html/text/#lists) |
+| Names like `card-photo` | the `class` attribute | [Page structure](../../html/structure/#name-things-for-later) |
+| Photo beside the text | `display: flex` on `.card` | [Flexbox](../flexbox/) |
+| Tags that wrap into pills | `flex-wrap`, `gap`, and `border-radius: 999px` | [Flexbox](../flexbox/#wrap-onto-new-lines) and [the box model](../box-model/#borders-and-corners) |
+| A round photo | `border-radius: 50%` | [The box model](../box-model/#borders-and-corners) |
+| The card in the middle of the page | `display: grid` and `place-items: center` on `body` | [Centering](../centering/#center-anything-across-and-down) |
+
+Two properties are new:
+
+- `flex-shrink: 0` on the photo stops flexbox from squeezing it when the card gets narrow.
+- `object-fit: contain` fits the whole picture inside its box without stretching it.
+
+## Save your work
+
+To keep the card, save these two files in one folder:
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My profile card</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main>
+      <article class="card">
+        <img class="card-photo" src="assets/misabot.png" alt="MISAbot smiling" width="96">
+        <div class="card-body">
+          <h2>Niles Cabrera</h2>
+          <p class="card-role">BS MIS · Lead developer</p>
+          <p>I build small web tools and never say no to turon.</p>
+          <ul class="card-tags">
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>React</li>
+          </ul>
+          <a class="card-link" href="https://github.com/">My GitHub</a>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>
+```
+
+For `style.css`, copy everything in the **CSS** tab of the card at the top of this page.
+
+Put a photo in an `assets` folder beside them. Either [download MISAbot](/workshop/assets/misabot.png) and save it as `assets/misabot.png`, or use your own photo: put it in `assets`, change `src` to its file name, and change `alt` to describe it. For a real photo, `object-fit: cover; padding: 0;` on `.card-photo` fills the circle. Open `index.html` with Live Preview to see the card.
+
+## From CSS to React
+
+CSS works the same in React and Next.js. Two things change:
+
+- You attach classes with `className="card"` instead of `class="card"`, as the [forms page](../../html/forms/#from-html-to-react) showed.
+- Next.js loads styles a little differently. A global stylesheet such as `app/globals.css` is imported once and applies everywhere. A **CSS module** such as `Card.module.css` applies only to the component that imports it, so class names never clash.
+
+Tailwind, a popular way to style with ready-made class names, gets its own module after Git.
+
+## Up next
+
+Your card is saved, but only on your computer. Next comes keeping versions of it safe and sharing it with others, and that's where Git comes in.
+
+[Next: Git and GitHub →](../../git-github/)

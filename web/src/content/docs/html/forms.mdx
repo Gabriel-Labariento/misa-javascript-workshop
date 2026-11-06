@@ -80,6 +80,29 @@ A `type="submit"` button sends the form. `required` means the form won't send un
 
 The playground doesn't send forms, so try this part in your own `index.html` with Live Preview.
 
+## From HTML to React
+
+Later in the workshop, you'll build pages with React. React lets you write HTML-like code, called **JSX**, inside JavaScript. Here's the form from this page, with a class added, written as a React component:
+
+```jsx title="JoinForm.jsx"
+function JoinForm() {
+  return (
+    <form className="join">
+      <label htmlFor="player">Player name</label>
+      <input id="player" type="text" required />
+      <button type="submit">Join</button>
+    </form>
+  );
+}
+```
+
+- `class` becomes `className`, and a label's `for` becomes `htmlFor`, because `class` and `for` already mean something in JavaScript.
+- Elements with no closing tag must close themselves with `/>`, like `<img />` and `<input />`.
+- A component returns one parent element, like the `<form>` here.
+- Curly braces put JavaScript values inside: `<h2>{name}</h2>`.
+
+Next.js writes the page skeleton (`<html>`, `<head>`, `<body>`) for you. What you write is mostly the part inside `<body>`, which is what these HTML pages covered.
+
 ## Up next
 
 That's the HTML you need for most pages: text, links, images, structure, and forms. It all works, but it looks plain, with black text, one font, and everything stacked down the page. Changing that is CSS's job.
