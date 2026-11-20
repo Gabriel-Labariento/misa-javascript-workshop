@@ -125,6 +125,7 @@ export default defineConfig({
         ] }
       ] },
       { label: '6 · React', collapsed: true, items: [
+        {label:'Set up the starter',slug:'react/setup'},
         {label:'What is React?',slug:'react'},
         {label:'Components and JSX',slug:'react/components'},
         {label:'Props and lists',slug:'react/props'},
@@ -132,7 +133,6 @@ export default defineConfig({
         {label:'Build your fun facts',slug:'react/activity'}
       ] },
       { label: '7 · Next.js', collapsed: true, items: [
-        {label:'Set up the starter',slug:'next/setup'},
         {label:'What is Next.js?',slug:'next'},
         {label:'Tour a project',slug:'next/tour'},
         {label:'Folders become pages',slug:'next/pages'},
