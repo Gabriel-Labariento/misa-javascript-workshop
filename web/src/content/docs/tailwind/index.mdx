@@ -1,6 +1,143 @@
 ---
-title: Tailwind
-description: Coming soon.
+title: What is Tailwind?
+description: See how Tailwind styles a page with small classes in your HTML, and how to try it out.
 ---
+import Anatomy from '../../../components/diagrams/Anatomy.astro';
+import Playground from '../../../components/Playground.astro';
 
-Coming soon.
+In the CSS module, you styled a page in two places. The HTML said what was on the page, and a separate stylesheet said how it should look. You gave elements class names, then wrote rules for those classes.
+
+Tailwind is a CSS framework that changes where the styling goes. It comes with thousands of tiny ready-made classes, and each one does one small job. You style an element by putting those classes right on it in your HTML.
+
+You'll work through this module on your own, between the two workshops. Workshop 2 uses Tailwind with React and Next.js, so it helps to arrive already comfortable with the class names.
+
+## The same button, two ways
+
+Here's a button styled the way you already know, with a class and a CSS rule:
+
+<Playground>
+```html
+<button class="join">Join MISA</button>
+```
+```css
+.join {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: teal;
+  color: white;
+  font-weight: bold;
+}
+```
+</Playground>
+
+And here's the same button in Tailwind. There's no CSS tab at all:
+
+<Playground tailwind>
+```html
+<button class="px-4 py-2 rounded-lg bg-teal-600 text-white font-bold">
+  Join MISA
+</button>
+```
+</Playground>
+
+Each class sets one thing. Reading left to right:
+
+| Class | What it does in plain CSS |
+| --- | --- |
+| `px-4` | `16px` of padding on the left and right |
+| `py-2` | `8px` of padding on the top and bottom |
+| `rounded-lg` | `border-radius: 8px` |
+| `bg-teal-600` | A teal `background-color` |
+| `text-white` | `color: white` |
+| `font-bold` | `font-weight: bold` |
+
+Try changing `bg-teal-600` to `bg-rose-600`, or `rounded-lg` to `rounded-full`, then run it again.
+
+In Tailwind, buttons start out with no border, which is why the second version doesn't need anything like `border: none`. You'll see why at the end of this page.
+
+## Reading a class name
+
+Most Tailwind classes follow the same pattern: a short name for the CSS property, then a value.
+
+<Anatomy
+  label="A Tailwind class: a property name, then a value"
+  parts={[
+    { text: 'bg', label: 'property' },
+    { text: '-' },
+    { text: 'teal-600', label: 'value' },
+  ]}
+  caption="bg-teal-600 sets the background color to Tailwind's teal, shade 600."
+/>
+
+These classes are called **utility classes**, or just utilities. A utility does one small job, like setting a color or some padding, and you combine many of them to style an element.
+
+## Why people like it
+
+Writing styles this way feels odd at first. A long list of classes can look messy next to a clean `class="join"`. Here's what you get for it:
+
+- **You stay in one file.** You don't jump between HTML and CSS, or invent a class name for every box.
+- **Changes stay local.** Editing the classes on one button can't break a different part of the page, the way editing a shared CSS rule can.
+- **The values match.** Spacing, colors, and sizes come from one set of choices, so pages look consistent without extra effort.
+
+It's still CSS underneath. Every Tailwind class turns into the same properties you learned in the CSS module, so that knowledge carries straight over. When a class name doesn't make sense, ask yourself which CSS property it might be.
+
+## Try it with one script tag
+
+The quickest way to try Tailwind is the **Play CDN**, a script you add to the `<head>` of any HTML file. (A CDN is a service that hosts files for websites to load.)
+
+```html title="index.html" {5}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Trying Tailwind</title>
+  </head>
+  <body>
+    <h1 class="text-3xl font-bold text-teal-700">Hello, Tailwind!</h1>
+  </body>
+</html>
+```
+
+The script reads the classes on your page and writes the CSS for them while the page loads. Paste this into an `index.html` in VS Code, open it with Live Preview, and you're using Tailwind.
+
+The examples on these pages work the same way. The playground loads that script for you, so you only need to write the HTML.
+
+The Play CDN is meant for learning and quick experiments. The Tailwind docs say it's for development only and not for real, published sites.
+
+## In a real project
+
+A real project installs Tailwind as a package instead. A build tool then scans your files for class names and writes one small CSS file with only the classes you used.
+
+You'll do this in Workshop 2, where Next.js sets most of it up for you. Your stylesheet then starts with this one line:
+
+```css title="globals.css"
+@import "tailwindcss";
+```
+
+You don't need to install anything for this module. The class names are the same either way, and that's the part worth practicing now.
+
+## Tailwind starts from a blank slate
+
+Run this and look closely:
+
+<Playground tailwind>
+```html
+<h1>A heading</h1>
+<p>A paragraph.</p>
+<ul>
+  <li>A list item</li>
+</ul>
+```
+</Playground>
+
+The heading is the same size as the paragraph, and the list has no bullets. Tailwind comes with a reset called **Preflight** that removes the browser's default styles, like heading sizes and the space around paragraphs.
+
+That sounds like a step backward, but it means nothing on the page has a style you didn't choose. You add size, spacing, and bullets back with classes, which is what the next page is about.
+
+## Up next
+
+You've seen what a utility looks like. Next, you'll meet the ones you'll use most: colors, spacing, sizes, text, and borders.
+
+[Next: Core utilities →](./utilities/)

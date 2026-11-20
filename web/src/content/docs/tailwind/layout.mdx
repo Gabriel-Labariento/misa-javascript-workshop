@@ -1,0 +1,144 @@
+---
+title: Layout
+description: Build rows, columns, and grids with Tailwind's flexbox and grid classes, and center anything.
+---
+import FlexAxes from '../../../components/diagrams/FlexAxes.astro';
+import Playground from '../../../components/Playground.astro';
+
+Flexbox and grid work exactly as they did in the CSS module. The parent still turns the layout on, and the children still follow it. The only change is that each property becomes a class on the parent, so you can see the whole layout in the HTML.
+
+If any of this feels shaky, the [flexbox](../../css/flexbox/) and [grid](../../css/grid/) pages explain the ideas in more detail.
+
+## Flexbox
+
+`flex` is `display: flex`, and `gap-` adds space between the children, using the same spacing scale as padding:
+
+<Playground tailwind>
+```html
+<div class="flex gap-3">
+  <div class="bg-teal-600 text-white p-5">1</div>
+  <div class="bg-teal-600 text-white p-5">2</div>
+  <div class="bg-teal-600 text-white p-5">3</div>
+</div>
+```
+</Playground>
+
+Here's the same layout in both styles, side by side:
+
+| Plain CSS | Tailwind |
+| --- | --- |
+| `display: flex` | `flex` |
+| `gap: 12px` | `gap-3` |
+| `flex-direction: column` | `flex-col` |
+| `flex-wrap: wrap` | `flex-wrap` |
+| `flex: 1` | `flex-1` |
+
+## Line items up
+
+Remember the two directions? `justify-content` works along the main axis, and `align-items` works across it.
+
+<FlexAxes caption="In Tailwind, justify- classes work along the main axis and items- classes work across it." />
+
+In Tailwind, they become `justify-` and `items-` classes. Try swapping in values from the table below:
+
+<Playground tailwind>
+```html
+<div class="flex justify-between items-center h-40 border-2 border-dashed border-slate-400">
+  <div class="bg-teal-600 text-white p-5">1</div>
+  <div class="bg-teal-600 text-white p-5">2</div>
+  <div class="bg-teal-600 text-white p-5">3</div>
+</div>
+```
+</Playground>
+
+| CSS | Tailwind classes to try |
+| --- | --- |
+| `justify-content` | `justify-start`, `justify-center`, `justify-end`, `justify-between`, `justify-around` |
+| `align-items` | `items-start`, `items-center`, `items-end`, `items-stretch` |
+
+Like before, the parent needs some height for `items-` to have room to work. That's what `h-40` does here. Add `flex-col` to the parent, and the two kinds of classes trade jobs, just as they did in CSS.
+
+## Grow and wrap
+
+`flex-1` makes a child take the leftover space, and `flex-wrap` lets items move onto a new line:
+
+<Playground tailwind>
+```html
+<div class="flex gap-2 mb-4">
+  <input class="flex-1 border border-slate-400 rounded-md px-2" type="text" placeholder="Search snacks">
+  <button class="bg-teal-600 text-white rounded-md px-4 py-1">Go</button>
+</div>
+
+<div class="flex flex-wrap gap-2 max-w-64">
+  <span class="bg-teal-100 rounded-full px-3 py-1">HTML</span>
+  <span class="bg-teal-100 rounded-full px-3 py-1">CSS</span>
+  <span class="bg-teal-100 rounded-full px-3 py-1">Git</span>
+  <span class="bg-teal-100 rounded-full px-3 py-1">Tailwind</span>
+  <span class="bg-teal-100 rounded-full px-3 py-1">JavaScript</span>
+  <span class="bg-teal-100 rounded-full px-3 py-1">React</span>
+</div>
+```
+</Playground>
+
+The input grows to fill the row, and the button keeps its size. Below it, the tags wrap onto a second line because `max-w-64` keeps their parent narrow.
+
+## Grid
+
+`grid` is `display: grid`, and `grid-cols-3` makes three equal columns, the same as `repeat(3, 1fr)`:
+
+<Playground tailwind>
+```html
+<div class="grid grid-cols-3 gap-3">
+  <div class="bg-teal-600 text-white text-center p-6 col-span-2 row-span-2">Featured</div>
+  <div class="bg-teal-600 text-white text-center p-6">B</div>
+  <div class="bg-teal-600 text-white text-center p-6">C</div>
+  <div class="bg-teal-600 text-white text-center p-6">D</div>
+  <div class="bg-teal-600 text-white text-center p-6">E</div>
+</div>
+```
+</Playground>
+
+| Plain CSS | Tailwind |
+| --- | --- |
+| `display: grid` | `grid` |
+| `grid-template-columns: repeat(3, 1fr)` | `grid-cols-3` |
+| `grid-column: span 2` | `col-span-2` |
+| `grid-row: span 2` | `row-span-2` |
+
+Change `grid-cols-3` to `grid-cols-2` or `grid-cols-4` and watch the tiles reflow.
+
+On the grid page, you used `auto-fit` to change the number of columns on smaller screens. Tailwind usually handles that differently, with screen-size prefixes. You'll learn those on the next page.
+
+## Centering
+
+Every centering trick from the [centering page](../../css/centering/) has a Tailwind version:
+
+<Playground tailwind>
+```html
+<p class="text-center mb-3">Centered text</p>
+
+<div class="w-48 mx-auto bg-teal-100 p-3 mb-3">A centered box</div>
+
+<div class="flex justify-center items-center h-28 border-2 border-dashed border-slate-400 mb-3">
+  <div class="bg-teal-600 text-white p-3">Flex</div>
+</div>
+
+<div class="grid place-items-center h-28 border-2 border-dashed border-slate-400">
+  <div class="bg-teal-600 text-white p-3">Grid</div>
+</div>
+```
+</Playground>
+
+| To center | Plain CSS | Tailwind |
+| --- | --- | --- |
+| Text inside a box | `text-align: center` | `text-center` |
+| A box, left to right | `margin: 0 auto` with a `width` | `mx-auto` with a `w-` class |
+| Anything, in both directions | Flexbox or grid on the parent | `flex justify-center items-center` or `grid place-items-center` |
+
+The parent still needs a height to center into, which is why the last two boxes have `h-28`.
+
+## Up next
+
+Your layouts look right on one screen size, and they don't react to anything yet. Next, you'll make styles change when someone hovers, clicks, or opens the page on a phone.
+
+[Next: States and screen sizes →](../states/)

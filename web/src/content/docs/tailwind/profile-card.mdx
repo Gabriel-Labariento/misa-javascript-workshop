@@ -1,0 +1,161 @@
+---
+title: Build a profile card
+description: Put Tailwind's utilities, layout, and prefixes together by building a profile card step by step.
+---
+import Playground from '../../../components/Playground.astro';
+
+Time to use everything from this module on one real component: a profile card for MISAbot. You'll build it in small steps, and each step adds one kind of class. Run every step, and change things as you go.
+
+## Step 1: the content
+
+Start with plain HTML and no classes. Thanks to Preflight, it looks very plain:
+
+<Playground tailwind>
+```html
+<div>
+  <img src="assets/misabot.png" alt="MISAbot, a smiling robot">
+  <div>
+    <h2>MISAbot</h2>
+    <p>Friendly robot. Loves taho.</p>
+  </div>
+  <div>
+    <span>HTML</span>
+    <span>CSS</span>
+    <span>Tailwind</span>
+  </div>
+  <button>Say hi</button>
+</div>
+```
+</Playground>
+
+This is the same order as building with CSS. Content comes first, and style comes after.
+
+## Step 2: the card
+
+Turn the outer `<div>` into a card. It gets a width limit, centering, padding, a border, rounded corners, and a soft shadow:
+
+<Playground tailwind height={340}>
+```html
+<div class="max-w-sm mx-auto p-6 border border-slate-200 rounded-xl shadow-md">
+  <img src="assets/misabot.png" alt="MISAbot, a smiling robot">
+  <div>
+    <h2>MISAbot</h2>
+    <p>Friendly robot. Loves taho.</p>
+  </div>
+  <div>
+    <span>HTML</span>
+    <span>CSS</span>
+    <span>Tailwind</span>
+  </div>
+  <button>Say hi</button>
+</div>
+```
+</Playground>
+
+`shadow-md` adds a `box-shadow`, which you haven't seen yet. Try `shadow-sm` and `shadow-lg` to compare.
+
+## Step 3: the picture and the name
+
+Make the picture a small circle, and put it in a row with the name:
+
+<Playground tailwind height={240}>
+```html
+<div class="max-w-sm mx-auto p-6 border border-slate-200 rounded-xl shadow-md">
+  <div class="flex items-center gap-4">
+    <img class="w-16 h-16 rounded-full bg-teal-100" src="assets/misabot.png" alt="MISAbot, a smiling robot">
+    <div>
+      <h2 class="text-xl font-bold">MISAbot</h2>
+      <p class="text-slate-600">Friendly robot. Loves taho.</p>
+    </div>
+  </div>
+  <div>
+    <span>HTML</span>
+    <span>CSS</span>
+    <span>Tailwind</span>
+  </div>
+  <button>Say hi</button>
+</div>
+```
+</Playground>
+
+A new `<div>` wraps the picture and the text, so `flex` can line the two up. `items-center` keeps the name level with the middle of the picture.
+
+## Step 4: tags and a button
+
+Style the tags as small pills, and give the button a hover and focus style:
+
+<Playground tailwind height={280}>
+```html
+<div class="max-w-sm mx-auto p-6 border border-slate-200 rounded-xl shadow-md">
+  <div class="flex items-center gap-4">
+    <img class="w-16 h-16 rounded-full bg-teal-100" src="assets/misabot.png" alt="MISAbot, a smiling robot">
+    <div>
+      <h2 class="text-xl font-bold">MISAbot</h2>
+      <p class="text-slate-600">Friendly robot. Loves taho.</p>
+    </div>
+  </div>
+  <div class="flex flex-wrap gap-2 mt-4">
+    <span class="bg-teal-100 text-teal-900 text-sm rounded-full px-3 py-1">HTML</span>
+    <span class="bg-teal-100 text-teal-900 text-sm rounded-full px-3 py-1">CSS</span>
+    <span class="bg-teal-100 text-teal-900 text-sm rounded-full px-3 py-1">Tailwind</span>
+  </div>
+  <button class="w-full mt-6 bg-teal-600 hover:bg-teal-800 focus:outline-2 focus:outline-offset-2 focus:outline-teal-600 text-white font-bold py-2 rounded-lg">
+    Say hi
+  </button>
+</div>
+```
+</Playground>
+
+`mt-4` and `mt-6` space the sections apart. `w-full` stretches the button across the card. `focus:outline-offset-2` leaves a small gap between the button and its focus ring.
+
+## Step 5: fit small and large screens
+
+On a phone, a centered card often looks better than a row. Mobile first, the classes with no prefix describe the phone. `sm:` classes switch to the row on wider screens:
+
+<Playground tailwind height={340}>
+```html
+<div class="max-w-sm mx-auto p-6 border border-slate-200 rounded-xl shadow-md">
+  <div class="flex flex-col items-center text-center gap-4 sm:flex-row sm:text-left">
+    <img class="w-16 h-16 rounded-full bg-teal-100" src="assets/misabot.png" alt="MISAbot, a smiling robot">
+    <div>
+      <h2 class="text-xl font-bold">MISAbot</h2>
+      <p class="text-slate-600">Friendly robot. Loves taho.</p>
+    </div>
+  </div>
+  <div class="flex flex-wrap justify-center gap-2 mt-4 sm:justify-start">
+    <span class="bg-teal-100 text-teal-900 text-sm rounded-full px-3 py-1">HTML</span>
+    <span class="bg-teal-100 text-teal-900 text-sm rounded-full px-3 py-1">CSS</span>
+    <span class="bg-teal-100 text-teal-900 text-sm rounded-full px-3 py-1">Tailwind</span>
+  </div>
+  <button class="w-full mt-6 bg-teal-600 hover:bg-teal-800 focus:outline-2 focus:outline-offset-2 focus:outline-teal-600 text-white font-bold py-2 rounded-lg">
+    Say hi
+  </button>
+</div>
+```
+</Playground>
+
+Narrow your browser window and run it again. Below `640px`, the picture sits above the name and everything is centered.
+
+## Make it yours
+
+Change the card into one about you:
+
+1. Swap the name, the line about you, and the tags for your own.
+2. Pick a different color and change every `teal` to it, such as `indigo` or `rose`.
+3. Add a second button next to the first. Wrap both in a `<div>` with `flex gap-2`, and give each button `flex-1` in place of `w-full`.
+
+If something looks wrong, right-click it in the preview and choose **Inspect**. Next to each class, you'll find the CSS that Tailwind made for it.
+
+## Those long class lists
+
+Look at the three tags in step 4. Each one repeats the same six classes, and changing their color means editing all three. On a bigger page, that copying adds up.
+
+Tailwind's answer is to avoid copying the HTML in the first place. In React, which you'll learn in Workshop 2, you write the card once as a **component**, a reusable piece of a page, and then use it as many times as you like. The classes live in one place, so one edit updates every copy.
+
+For now, a little repetition is fine. Your editor's multi-cursor (**Alt+click**, or **Option+click** on a Mac) makes it easy to edit several identical lines at once.
+
+## Up next
+
+You've finished the Tailwind module. React builds on JavaScript, so if you haven't finished the JavaScript module yet, keep going with it before Workshop 2.
+
+[Next: Build Bop the Bot →](../../javascript/bop-the-bot/)
