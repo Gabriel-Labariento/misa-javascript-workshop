@@ -17,8 +17,13 @@ function assetBase() {
   return new URL(`${base.replace(/\/?$/, '/')}workshop/`, window.location.href).href;
 }
 
+// Tailwind's browser build: it reads the class names on the page and writes the CSS
+// for them. Pinned so a new release can't change lessons without us noticing.
+const TAILWIND_SCRIPT = '<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>';
+
 // Turns lesson files (an HTML fragment, CSS, and scripts) into a small website.
-export function siteFiles(files, module) {
+// With `tailwind`, the page also loads Tailwind's browser build.
+export function siteFiles(files, module, tailwind = false) {
   let page = '';
   let css = '';
   const scripts = [];
@@ -39,7 +44,7 @@ export function siteFiles(files, module) {
     tags = scripts.map((name) => `<script src="${name}"></script>`).join('\n');
   }
   if (css) result['style.css'] = css;
-  result['index.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8">${css ? '<link rel="stylesheet" href="style.css">' : ''}</head><body>\n${page}\n${tags}\n</body></html>`;
+  result['index.html'] = `<!doctype html><html lang="en"><head><meta charset="utf-8">${tailwind ? TAILWIND_SCRIPT : ''}${css ? '<link rel="stylesheet" href="style.css">' : ''}</head><body>\n${page}\n${tags}\n</body></html>`;
   return result;
 }
 
@@ -172,7 +177,7 @@ class PlaygroundElement extends HTMLElement {
       output.console.clear();
       runner.start({
         mode: 'run',
-        files: siteFiles(workspace.current(), config.module),
+        files: siteFiles(workspace.current(), config.module, config.tailwind),
         assetBase: assetBase(),
         baseStyle: PREVIEW_STYLE,
       });
