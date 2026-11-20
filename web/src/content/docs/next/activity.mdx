@@ -1,0 +1,135 @@
+---
+title: Build your mini site
+description: A hands-on activity of about 30 minutes. Turn the starter project into a small two-page site with your own card and a working button.
+---
+
+You'll take a starter site and make it yours. Work through it at your own pace.
+
+If you haven't got the starter running yet, follow [set up the starter](../../react/setup/) first.
+
+Each mission builds on the last. The times are rough guides, so take as long as you need.
+
+## Mission 1: Make it yours (5 minutes)
+
+Run `npm run dev` in the VS Code terminal and open [http://localhost:3000](http://localhost:3000).
+
+1. Find the file that holds the name on the card. Which file do you think it is?
+2. Change the name, role, bio, and tags to your own.
+3. Save, and watch the browser update by itself.
+
+<details>
+<summary>Stuck? Which file was it?</summary>
+
+It's `app/page.js`, because that's the page at `/`. The name is passed to `ProfileCard` as a prop. `components/ProfileCard.js` only decides how the card looks, and it works for any name.
+
+</details>
+
+**Done when:** the card shows your name without you reloading the page.
+
+## Mission 2: Add a page (8 minutes)
+
+Your site needs an About page at `/about`.
+
+1. In VS Code, inside the `app` folder, make a new folder called `about`.
+2. Inside it, make a new file called `page.js`.
+3. Copy this in, write your own sentence, and save:
+
+```jsx title="app/about/page.js"
+export default function AboutPage() {
+  return (
+    <section className="page">
+      <h1>About me</h1>
+      <p>Write one sentence about yourself here.</p>
+    </section>
+  );
+}
+```
+
+4. Go to [http://localhost:3000/about](http://localhost:3000/about). You should see your new page, with the header and footer already around it. You didn't write those. Where did they come from?
+5. Nobody can find a page without a link. Open `app/layout.js`, and add this line right below the Home link:
+
+```jsx
+<Link href="/about">About</Link>
+```
+
+**Done when:** you can click between Home and About, and the header stays put.
+
+<details>
+<summary>Stuck? I get a 404 page</summary>
+
+Check the path in VS Code's file list. It should be exactly `app/about/page.js`, all lowercase, and the file needs to be saved. A common slip is putting `about` next to `app` instead of inside it.
+
+</details>
+
+## Mission 3: Break it, then fix it (7 minutes)
+
+There's a ready-made like button at `components/LikeButton.js`. Put it on the home page.
+
+1. In `app/page.js`, add this at the very top:
+
+```jsx
+import LikeButton from "@/components/LikeButton";
+```
+
+2. Still in `app/page.js`, put the button right after the `ProfileCard`, before `</section>`:
+
+```jsx
+<LikeButton />
+```
+
+3. Save and look at the browser. You should get a big error. **That's supposed to happen.**
+4. Read the message carefully. What is it asking you to do, and in which file? Try to fix it before opening the answer.
+
+<details>
+<summary>Open this once you've tried</summary>
+
+The button uses `useState` and `onClick`, so it needs to run in the browser. Add this as the very first line of `components/LikeButton.js`, and save:
+
+```jsx
+"use client";
+```
+
+The error goes away. The rest of your home page still runs on the server, because only the button needed to change.
+
+</details>
+
+**Done when:** the button counts up when you click it.
+
+## Mission 4: Your choice (7 minutes)
+
+Add one more page, on your own, with no code to copy. Pick one:
+
+- A `/projects` page listing things you've built or want to build.
+- A `/favorites` page with your top three of anything.
+- A `/team` page that shows your card and a friend's card by using `ProfileCard` twice.
+
+Don't forget the link in the nav.
+
+If you use an AI tool, you're welcome to use it here. It's completely optional. Just check you can still answer the questions below about what it made.
+
+<details>
+<summary>Hint: using ProfileCard on another page</summary>
+
+Bring it in with the same import line that's at the top of `app/page.js`:
+
+```jsx
+import ProfileCard from "@/components/ProfileCard";
+```
+
+That line works from any folder, because `@` always means the top of the project.
+
+</details>
+
+## Wrap up: Explain it (3 minutes)
+
+Point at something on your site and answer these, out loud or in writing:
+
+1. **Which file** does it come from?
+2. **Which URL** does it show up on?
+3. Does it run on the **server or in the browser**? How can you tell?
+
+## Keep going
+
+Your site is on your laptop, so nobody else can see it yet. Whenever you're ready, you can give it a real address.
+
+[Next: Put it online →](../deploy/)

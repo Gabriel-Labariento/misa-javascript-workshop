@@ -1,0 +1,92 @@
+---
+title: Folders become pages
+description: How Next.js turns the folders inside app into the URLs of your site.
+---
+import Flow from '../../../components/diagrams/Flow.astro';
+import Predict from '../../../components/Predict.astro';
+
+With plain HTML, each page is a file: `about.html` is the about page. Next.js keeps that simple idea and moves it into folders.
+
+**A folder inside `app/` is a piece of the URL. A file named `page.js` inside it is what people see there.**
+
+<Flow
+  label="The file app/about/page.js becomes the URL /about"
+  steps={['app/about/page.js', 'yoursite.com/about']}
+  actions={['becomes']}
+/>
+
+| File | URL |
+| --- | --- |
+| `app/page.js` | `/` |
+| `app/about/page.js` | `/about` |
+| `app/projects/page.js` | `/projects` |
+| `app/projects/game/page.js` | `/projects/game` |
+
+This is called **file-based routing**. A **route** is just a URL your site responds to. There's no list of pages to keep up to date anywhere. If the folder and the file exist, so does the page.
+
+## What goes in a page
+
+A page is a React component in a file called `page.js`, exported with `export default`:
+
+```jsx title="app/about/page.js"
+export default function AboutPage() {
+  return (
+    <section className="page">
+      <h1>About me</h1>
+      <p>I joined MISA to build things people actually use.</p>
+    </section>
+  );
+}
+```
+
+The function can have any name. The file can't. It has to be exactly `page.js`, in lowercase.
+
+## Try reading some
+
+<Predict question="What URL does this file create?" options={['/app/contact', '/contact/page', '/contact']} answer={2}>
+```text
+app/contact/page.js
+```
+
+The address is `/contact`. The `app` folder is the starting point, so it never appears in the URL, and neither does the word `page`.
+</Predict>
+
+<Predict question="What URL does this file create?" options={['/page', '/', '/home']} answer={1}>
+```text
+app/page.js
+```
+
+A `page.js` directly inside `app` is the home page, at `/`.
+</Predict>
+
+<Predict question="What URL does this file create?" options={['/orgs/misa/events', '/events', '/misa/events']} answer={0}>
+```text
+app/orgs/misa/events/page.js
+```
+
+Every folder adds one piece to the URL, in order: `/orgs/misa/events`.
+</Predict>
+
+<Predict question="What URL does this file create?" options={['/contact/form', '/contact', 'None. It makes no new URL.']} answer={2}>
+```text
+app/contact/form.js
+```
+
+Only a file named `page.js` creates a URL. You can keep other files next to it, and visitors can't open them directly. Your page can still import them.
+</Predict>
+
+## You'll see square brackets
+
+Sometimes a site has hundreds of pages with the same shape, like one per product. Nobody makes hundreds of folders. They make one, with square brackets in its name:
+
+```text
+app/projects/[slug]/page.js
+```
+
+That single file handles `/projects/game`, `/projects/flashcards`, and any other word in that spot. This is a **dynamic route**. You don't need to write one yet. It's enough to recognize the brackets and know what they're for.
+
+## Up next
+
+Each page so far is only its own content. Next comes the part that puts the same nav on all of them.
+
+[Next: Layouts and links →](../layouts/)

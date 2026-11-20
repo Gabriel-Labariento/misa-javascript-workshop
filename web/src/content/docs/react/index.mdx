@@ -1,6 +1,57 @@
 ---
-title: React
-description: Coming soon.
+title: What is React?
+description: Why React exists, how it differs from the JavaScript you wrote for Bop the Bot, and the three questions to take away.
 ---
+import Flow from '../../../components/diagrams/Flow.astro';
 
-Coming soon.
+React is a JavaScript library for building pages out of small, reusable pieces.
+
+This module and the Next.js module make up Workshop 2. You can work through it anytime before the [final project](../final-project/), and it covers the tools that help most there.
+
+You won't leave this module a React expert, and you don't need to memorize anything. The goal is to read a React page and see how it's put together. By the end, you should be able to point at any part of a page and answer three questions:
+
+1. **What are the pieces?** These are called components.
+2. **What does each piece get handed?** These are called props.
+3. **What does each piece remember?** This is called state.
+
+## The problem it solves
+
+In Bop the Bot, you changed the page by hand. When the score went up, your code found the score on the page and changed its text:
+
+```js
+score = score + 1;
+scoreText.textContent = `Score: ${score}`;
+```
+
+That works for one number. Now picture a whole site: a nav, a dozen cards, a cart, a form. Every time something changes, you'd have to remember every spot on the page that shows it, and update each one yourself. Miss one, and the page shows the wrong thing.
+
+React turns this around. Instead of saying **how** to change the page, you describe **what** the page should look like for the data you have. When the data changes, React updates the page to match.
+
+<Flow
+  label="Your data goes into a component, the component describes the page, and React updates the screen"
+  steps={['Your data', 'Your component', 'The screen']}
+  actions={['goes into', 'React updates']}
+/>
+
+| In Bop the Bot | In React |
+| --- | --- |
+| Find an element with `querySelector` | Write the element where it belongs, in the component |
+| Change its text yourself | Change the data, and React changes the text |
+| Copy HTML to make another card | Use the same component again, with different values |
+| `addEventListener("click", ...)` | `onClick={...}` right on the button |
+
+## Pieces you already know
+
+React is the JavaScript from the [JavaScript module](../javascript/) with some HTML-like code mixed in, so you'll keep running into things you've met before. Every React component is a function. Components live in their own files and use `import` and `export`, as in [the modules lesson](../javascript/modules/). Lists on the page come from arrays, and clicks and typing still drive everything.
+
+## Where React fits
+
+React builds the pieces. To turn those pieces into a full website with several pages and a real address, you'll use **Next.js**, which is the next module. The starter project you'll use in this module is already a Next.js project, so the code you write here carries straight over.
+
+If you haven't got the starter running yet, follow [set up the starter](./setup/) first.
+
+## Up next
+
+Start with the smallest piece of React: one component.
+
+[Next: Components and JSX →](./components/)

@@ -1,0 +1,152 @@
+---
+title: Props and lists
+description: Hand values to a component with props, and turn an array into a list of components with map.
+---
+import Predict from '../../../components/Predict.astro';
+
+A component that always shows the same thing isn't very useful. **Props** let you hand a component different values each time you use it, like attributes on a tag.
+
+## Pass a prop
+
+You pass props where you use the component. They look just like HTML attributes:
+
+```jsx
+<Greeting name="Niles" />
+<Greeting name="Yani" />
+```
+
+Inside the component, you receive them in curly braces at the top, then use them with more curly braces:
+
+```jsx title="components/Greeting.js"
+export default function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+```
+
+Now the same component shows **Hello, Niles!** in one spot and **Hello, Yani!** in the other.
+
+Think of a component as a form template with blanks, and props as what you write in the blanks. The template stays the same, and only the answers change.
+
+## More than one prop
+
+A component can take as many props as it needs. Here's the profile card from the starter project:
+
+```jsx title="components/ProfileCard.js"
+export default function ProfileCard({ name, role, bio, tags }) {
+  return (
+    <article className="card">
+      <img className="card-photo" src="/misabot.png" alt="MISAbot smiling" />
+      <div className="card-body">
+        <h2>{name}</h2>
+        <p className="card-role">{role}</p>
+        <p>{bio}</p>
+        {/* tags is handled below */}
+      </div>
+    </article>
+  );
+}
+```
+
+And here's how the home page uses it:
+
+```jsx title="app/page.js"
+<ProfileCard
+  name="Niles Cabrera"
+  role="BS MIS · Lead developer"
+  bio="I build small web tools and never say no to turon."
+  tags={["HTML", "CSS", "JavaScript"]}
+/>
+```
+
+Text goes in quotes. Anything else, like a number or an array, goes in curly braces: `tags={["HTML", "CSS"]}`, or `age={20}`.
+
+Props only go one way, from the outside in. A component reads its props but never changes them.
+
+## Lists come from arrays
+
+The card has a list of tags, and the page doesn't know ahead of time how many there will be. You can't write a fixed number of `<li>` tags. Instead, you turn the array into tags with `map`:
+
+```jsx
+<ul className="card-tags">
+  {tags.map((tag) => (
+    <li key={tag}>{tag}</li>
+  ))}
+</ul>
+```
+
+`map` goes through the array and makes one `<li>` for each item, so three tags give you three `<li>`s and ten give you ten, without any change to the component.
+
+### What's the key for?
+
+Each item in a list needs a `key`: a value that's different for every item, such as its name or ID. React uses it to keep track of which item is which when the list changes. If you forget it, the page still works, but the console shows a warning:
+
+```text
+Each child in a list should have a unique "key" prop.
+```
+
+## Lists of components
+
+`map` works for whole components, too. This is how real sites show a dozen cards from one array:
+
+```jsx
+const team = [
+  { name: "Niles", role: "Lead developer" },
+  { name: "Yani", role: "Co-AVP" },
+  { name: "Gabe", role: "Co-AVP" },
+];
+
+export default function TeamPage() {
+  return (
+    <section>
+      {team.map((person) => (
+        <Greeting key={person.name} name={person.name} />
+      ))}
+    </section>
+  );
+}
+```
+
+To add a fourth person, you add one line to the array, and the page updates to match.
+
+## Check yourself
+
+<Predict question="What does this show?" options={['Hello, name!', 'Hello, Ken!', 'Hello, {name}!']} answer={1}>
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+
+<Greeting name="Ken" />
+```
+
+The prop `name` is `"Ken"`, and the curly braces put it on the page.
+</Predict>
+
+<Predict question="How many <li> elements does this make?" options={['1', '3', '4']} answer={2}>
+```jsx
+const foods = ["turon", "siomai", "kwek-kwek", "isaw"];
+
+<ul>
+  {foods.map((food) => (
+    <li key={food}>{food}</li>
+  ))}
+</ul>
+```
+
+One `<li>` for each of the four items in the array.
+</Predict>
+
+<Predict question="Which line passes the number 3, not the text “3”?" options={['count="3"', 'count={3}', 'They are the same']} answer={1}>
+```jsx
+<Stars count="3" />
+<Stars count={3} />
+```
+
+Quotes always give text. Curly braces give the JavaScript value, which here is the number `3`. It matters if the component does math with it.
+</Predict>
+
+## Up next
+
+Props come from outside a component. Next is the other kind of data, the kind a component keeps for itself and can change.
+
+[Next: State and events →](../state/)

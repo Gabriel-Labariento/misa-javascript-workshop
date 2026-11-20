@@ -1,0 +1,182 @@
+---
+title: Build your fun facts
+description: A hands-on activity of about 30 minutes. Add your own components to the starter project, with props, a list, and a button that remembers.
+---
+
+You'll add a "fun facts" section under the profile card in the starter project, one React idea at a time. Work through it at your own pace.
+
+If you haven't got the starter running yet, follow [set up the starter](../setup/) first.
+
+Leave the name on the profile card as it is for now. You'll make that yours in the Next.js activity.
+
+Each mission builds on the last. The times are rough guides, so take as long as you need.
+
+## Mission 1: Your first component (6 minutes)
+
+Run `npm run dev` in the VS Code terminal and open [http://localhost:3000](http://localhost:3000).
+
+1. In the `components` folder, make a new file called `FunFact.js`.
+2. Copy this in, change the fact to one about you, and save:
+
+```jsx title="components/FunFact.js"
+export default function FunFact() {
+  return (
+    <div className="card">
+      <p>🍜 My favorite food is turon.</p>
+    </div>
+  );
+}
+```
+
+3. Open `app/page.js`. At the very top, under the other `import`, bring your component in:
+
+```jsx
+import FunFact from "@/components/FunFact";
+```
+
+4. Still in `app/page.js`, use it three times, right after the `ProfileCard` and before `</section>`:
+
+```jsx
+<FunFact />
+<FunFact />
+<FunFact />
+```
+
+**Done when:** you see your fact three times under the card. All three are the same. That's the problem Mission 2 fixes.
+
+<details>
+<summary>Stuck? Nothing shows up, or there's an error</summary>
+
+- Check the file is exactly `components/FunFact.js`, with a capital F in both places.
+- Check the `import` line is at the top of `app/page.js`, outside the function.
+- Check that `<FunFact />` has the `/` before `>`.
+
+</details>
+
+## Mission 2: Give it props (7 minutes)
+
+Make each fact different by passing it values.
+
+1. In `components/FunFact.js`, change the first line so the component receives two props, and use them in the JSX:
+
+```jsx title="components/FunFact.js"
+export default function FunFact({ emoji, text }) {
+  return (
+    <div className="card">
+      <p>{emoji} {text}</p>
+    </div>
+  );
+}
+```
+
+2. In `app/page.js`, give each `<FunFact />` its own values. Write three facts about yourself:
+
+```jsx
+<FunFact emoji="🍜" text="My favorite food is turon." />
+<FunFact emoji="🎧" text="I code with lo-fi playing." />
+<FunFact emoji="🏀" text="I play for my dorm team." />
+```
+
+**Done when:** you see three different facts, from one component.
+
+## Mission 3: Make it a list (7 minutes)
+
+Typing `<FunFact ... />` over and over gets old. Put the facts in an array, and let `map` make the components.
+
+1. In `app/page.js`, above `export default function HomePage()`, add an array with your three facts:
+
+```jsx
+const facts = [
+  { emoji: "🍜", text: "My favorite food is turon." },
+  { emoji: "🎧", text: "I code with lo-fi playing." },
+  { emoji: "🏀", text: "I play for my dorm team." },
+];
+```
+
+2. Replace your three `<FunFact ... />` lines with this:
+
+```jsx
+{facts.map((fact) => (
+  <FunFact key={fact.text} emoji={fact.emoji} text={fact.text} />
+))}
+```
+
+3. The page should look the same as before. Now add a fourth fact, by changing **only the array**.
+
+**Done when:** your fourth fact appears and you didn't touch the JSX to get it.
+
+<details>
+<summary>Stuck? The console says each child needs a "key"</summary>
+
+The `key={fact.text}` part is missing. Every item that `map` makes needs a `key` that's different from the others. The fact's text works, as long as no two facts are the same.
+
+</details>
+
+## Mission 4: A button that remembers (8 minutes)
+
+Hide one fact behind a button. This needs **state**.
+
+1. In `components`, make a new file called `SecretFact.js` and copy this in:
+
+```jsx title="components/SecretFact.js"
+"use client";
+
+import { useState } from "react";
+
+export default function SecretFact() {
+  const [shown, setShown] = useState(false);
+
+  return (
+    <div className="card">
+      <button className="like-button" onClick={() => setShown(true)}>
+        Show my secret fact
+      </button>
+
+      {shown && <p>🤫 Write a surprising fact about yourself here.</p>}
+    </div>
+  );
+}
+```
+
+Leave the first line, `"use client"`, exactly as it is. The Next.js module explains what it does.
+
+2. Write your own secret fact, then import `SecretFact` in `app/page.js` and use it under your list, the same way you did in Mission 1.
+3. Click the button. Your fact should appear.
+4. **Your turn:** right now, there's no way to hide the fact again. Change the button so it **toggles**: each click flips the fact between shown and hidden, and the button says **Show** or **Hide** to match. Try it yourself before opening the hint.
+
+<details>
+<summary>Hint</summary>
+
+You need two changes, both covered on [State and events](../state/#show-something-or-dont):
+
+- `!shown` flips a `true` to `false`, and a `false` to `true`.
+- `shown ? "Hide" : "Show"` picks a word based on the state.
+
+</details>
+
+<details>
+<summary>Open this once you've tried</summary>
+
+```jsx
+<button className="like-button" onClick={() => setShown(!shown)}>
+  {shown ? "Hide" : "Show"} my secret fact
+</button>
+```
+
+</details>
+
+**Done when:** you can show and hide your secret fact as many times as you like.
+
+## Wrap up: Explain it (2 minutes)
+
+Look at your page and answer these, out loud or in writing:
+
+1. **What are the pieces?** Name every component on your page.
+2. **What does each piece get handed?** Name the props of `FunFact`.
+3. **What does each piece remember?** Which component has state, and what is it?
+
+## Keep going
+
+Your facts are React components inside a Next.js project. Next, you'll see how that project turns into a whole site with more than one page.
+
+[Next: What is Next.js? →](../../next/)

@@ -1,6 +1,66 @@
 ---
-title: Next.js
-description: Coming soon.
+title: What is Next.js?
+description: What Next.js adds on top of React, and what you need to take away from this module.
 ---
 
-Coming soon.
+Next.js is a tool for building complete websites with React.
+
+This module is about finding your way around a project, so there's nothing to memorize. By the end, you should be able to look at any part of a Next.js site and answer three questions:
+
+1. **Which file** is this in?
+2. **Which URL** does it show up on?
+3. Does it run on the **server or in the browser**?
+
+## The problem it solves
+
+React is very good at one job: building pieces of a page, like a card or a button. But a website needs more than pieces. It needs separate pages with their own addresses, a nav that appears on all of them, and somewhere to run the parts that shouldn't happen in a visitor's browser.
+
+With React alone, you have to choose and connect extra tools for all of that. Next.js comes with those decisions already made, so you can get straight to writing pages.
+
+| What you want | How Next.js does it |
+| --- | --- |
+| A new page at `/about` | Make a folder called `about` with a `page.js` in it |
+| The same nav on every page | Write it once in `layout.js` |
+| Code that visitors can't see | Components run on the server by default |
+| A clicky button | Add `"use client"` to that component |
+| Your site on the internet | Push to GitHub and let Vercel publish it |
+
+The next few pages cover these one at a time.
+
+## Just enough React
+
+You've seen these in the React module. Here's a quick reminder, because Next.js uses them everywhere.
+
+A **component** is a function that returns something that looks like HTML:
+
+```jsx
+function Greeting() {
+  return <h1>Hello!</h1>;
+}
+```
+
+That HTML-like code is called **JSX**. It's nearly the HTML you already know, with [a few small changes](../html/forms/#from-html-to-react), the most common being `className` instead of `class`. You use a component like a tag, as in `<Greeting />`.
+
+**Props** are values you hand to a component, like attributes on a tag:
+
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+
+<Greeting name="Niles" />
+```
+
+**State** is a value a component remembers and can change. When it changes, that part of the page updates. You create it with `useState`:
+
+```jsx
+const [likes, setLikes] = useState(0);
+```
+
+That's all the React you need to read the rest of this module.
+
+## Up next
+
+First, make sure the starter project runs on your laptop. If it doesn't yet, [set up the starter](../react/setup/). If you've done that, go on and see what's inside it.
+
+[Next: Tour a project →](./tour/)
