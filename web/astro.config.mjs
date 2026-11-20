@@ -118,8 +118,24 @@ export default defineConfig({
           {label:'Flashcard deck',slug:'javascript/projects/flashcards'}
         ] }
       ] },
-      { label: '6 · React', collapsed: true, items: [{label:'Coming soon',slug:'react'}] },
-      { label: '7 · Next.js', collapsed: true, items: [{label:'Coming soon',slug:'next'}] },
+      { label: '6 · React', collapsed: true, items: [
+        {label:'What is React?',slug:'react'},
+        {label:'Components and JSX',slug:'react/components'},
+        {label:'Props and lists',slug:'react/props'},
+        {label:'State and events',slug:'react/state'},
+        {label:'Build your fun facts',slug:'react/activity'}
+      ] },
+      { label: '7 · Next.js', collapsed: true, items: [
+        {label:'Set up the starter',slug:'next/setup'},
+        {label:'What is Next.js?',slug:'next'},
+        {label:'Tour a project',slug:'next/tour'},
+        {label:'Folders become pages',slug:'next/pages'},
+        {label:'Layouts and links',slug:'next/layouts'},
+        {label:'Server or browser?',slug:'next/server-browser'},
+        {label:'Build your mini site',slug:'next/activity'},
+        {label:'Put it online',slug:'next/deploy'},
+        {label:'When something breaks',slug:'next/help'}
+      ] },
       { label: '★ Final project', collapsed: true, items: [{label:'About the project',slug:'final-project'}] },
       { label: 'Keep these handy', collapsed: false, items: [{label:'Checkpoints and recovery',slug:'checkpoints'},{label:'Troubleshooting',slug:'help'},{label:'Open the playground',slug:'playground'}] }
     ]

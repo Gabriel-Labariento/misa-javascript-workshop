@@ -1,0 +1,86 @@
+---
+title: Tour a project
+description: See which files in a Next.js project matter, and which ones you can leave alone.
+---
+import { FileTree } from '@astrojs/starlight/components';
+
+A new Next.js project has a lot of files, and most of them you'll never open. Here is the starter project. The bold files are the ones to get to know first.
+
+<FileTree>
+- app/ your pages live here
+  - **layout.js** the frame around every page
+  - **page.js** the home page
+  - globals.css styles for the whole site
+- components/ reusable pieces of the page
+  - ProfileCard.js
+  - LikeButton.js
+- public/ images and other files, as they are
+  - misabot.png
+- node_modules/ downloaded libraries, never edit
+- .next/ built output, never edit
+- package.json the project's name, commands, and libraries
+- package-lock.json the exact library versions, never edit
+- next.config.mjs settings for Next.js
+- jsconfig.json settings for VS Code and imports
+</FileTree>
+
+## The three folders you'll use
+
+**`app/`** decides what pages your site has. Next.js reads this folder to work out your URLs, which is the topic of the next page.
+
+**`components/`** holds React components that pages can share. The name is only a habit, and Next.js doesn't treat it as special.
+
+**`public/`** holds files that should be served exactly as they are. A file at `public/misabot.png` is available at `/misabot.png`, so you write `src="/misabot.png"` without the word `public`.
+
+## Follow one thing from file to screen
+
+Open `app/page.js`:
+
+```jsx title="app/page.js"
+import ProfileCard from "@/components/ProfileCard";
+
+export default function HomePage() {
+  return (
+    <section className="page">
+      <h1>Hello, welcome to my site!</h1>
+
+      <ProfileCard
+        name="Niles Cabrera"
+        role="BS MIS · Lead developer"
+        bio="I build small web tools and never say no to turon."
+        tags={["HTML", "CSS", "JavaScript"]}
+      />
+    </section>
+  );
+}
+```
+
+Read it from the top:
+
+- `import` brings in a component from another file, as in [the modules lesson](../../javascript/modules/). The `@` means the top folder of the project, so `@/components/ProfileCard` works the same from any file.
+- `export default function` is the page itself. Next.js finds it and shows whatever it returns.
+- `<ProfileCard ... />` uses the component and hands it some values.
+
+When you save a change to this file, the browser updates on its own. If `npm run dev` is running, you don't need to reload.
+
+## The two commands to remember
+
+| Command | When you run it | What it does |
+| --- | --- | --- |
+| `npm install` | Once per project, and after adding a library | Downloads what the project needs |
+| `npm run dev` | Every time you sit down to work | Starts your site at `localhost:3000` |
+
+`localhost` means "this computer." Nobody else can open that address. Putting your site online is a separate step.
+
+<details>
+<summary>What about files ending in .ts or .tsx?</summary>
+
+Those are TypeScript, which is JavaScript with labels describing what kind of value everything holds. Many Next.js projects use it, and you'll see it in tutorials. This starter sticks to JavaScript so there's one less new thing to learn. A `.tsx` page works exactly like a `.js` page.
+
+</details>
+
+## Up next
+
+You know where pages live. Next, see how a folder turns into a URL.
+
+[Next: Folders become pages →](../pages/)

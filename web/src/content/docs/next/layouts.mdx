@@ -1,0 +1,120 @@
+---
+title: Layouts and links
+description: Share one frame across every page with layout.js, and move between pages with Link.
+---
+import LayoutFrame from '../../../components/diagrams/LayoutFrame.astro';
+import Playground from '../../../components/Playground.astro';
+
+Imagine a plain HTML site with ten pages. The nav is copied into all ten files. Add one link, and you have ten files to edit and ten chances to miss one.
+
+A **layout** fixes that. You write the frame once, and each page slots into the middle.
+
+<LayoutFrame caption="The frame comes from layout.js. Only the middle changes from page to page." />
+
+## Read the layout
+
+Here's the important part of the starter's layout:
+
+```jsx title="app/layout.js"
+import Link from "next/link";
+import "./globals.css";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <header className="site-header">
+          <strong>My mini site</strong>
+          <nav className="site-nav">
+            <Link href="/">Home</Link>
+          </nav>
+        </header>
+
+        <main className="site-main">{children}</main>
+
+        <footer className="site-footer">
+          Made at the MISA web development workshop
+        </footer>
+      </body>
+    </html>
+  );
+}
+```
+
+Two things to notice:
+
+- `{children}` is the hole in the frame. Next.js puts the current page there.
+- `<html>` and `<body>` appear here and nowhere else. Your pages only return their own content.
+
+`import "./globals.css"` loads one stylesheet for the whole site, so your CSS from earlier works just as it did before.
+
+## Move between pages with Link
+
+For links inside your own site, use `<Link>` instead of `<a>`:
+
+```jsx
+<Link href="/about">About</Link>
+```
+
+It looks and acts like a normal link. The difference is what happens when you click it. An `<a>` makes the browser throw away the page and load a new one. A `<Link>` swaps only the part that changed, so moving around feels instant.
+
+For links to other websites, a regular `<a>` is still right.
+
+Try the idea below. It's plain JavaScript, not Next.js, but it behaves the same way. Press the buttons and watch: the frame never reloads, and only the middle changes.
+
+<Playground autorun height={260}>
+```html
+<header>
+  <strong>My mini site</strong>
+  <nav>
+    <button data-page="home">Home</button>
+    <button data-page="about">About</button>
+  </nav>
+</header>
+
+<main id="page"></main>
+
+<footer>This footer never changes.</footer>
+```
+```css
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+header, footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  color: white;
+  background: #087a80;
+}
+
+main {
+  min-height: 6rem;
+  padding: 0 1rem;
+}
+```
+```js
+const pages = {
+  home: "<h1>Home</h1><p>This is app/page.js.</p>",
+  about: "<h1>About</h1><p>This is app/about/page.js.</p>",
+};
+
+const page = document.querySelector("#page");
+
+document.querySelectorAll("nav button").forEach((button) => {
+  button.addEventListener("click", () => {
+    page.innerHTML = pages[button.dataset.page];
+  });
+});
+
+page.innerHTML = pages.home;
+```
+</Playground>
+
+## Up next
+
+So far, all your code has been about what shows up on the page. The last big idea is about where that code runs.
+
+[Next: Server or browser? →](../server-browser/)

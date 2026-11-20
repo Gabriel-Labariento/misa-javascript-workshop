@@ -1,0 +1,61 @@
+---
+// One layout shown around two different pages: the frame repeats, the middle changes.
+import Figure from './Figure.astro';
+const { caption } = Astro.props;
+const pages = [
+  { url: '/', file: 'app/page.js' },
+  { url: '/about', file: 'app/about/page.js' },
+];
+---
+
+<Figure caption={caption} label="The same header and footer from layout.js around two different pages">
+  <div class="sites">
+    {pages.map((page) => (
+      <div class="site">
+        <p class="url"><code>{page.url}</code></p>
+        <div class="region frame"><code>layout.js</code> header and nav</div>
+        <div class="region swap"><code>{page.file}</code></div>
+        <div class="region frame"><code>layout.js</code> footer</div>
+      </div>
+    ))}
+  </div>
+</Figure>
+
+<style>
+  .sites {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1rem;
+  }
+  .site {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .url {
+    margin: 0;
+    text-align: center;
+  }
+  .url code,
+  .region code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-weight: 700;
+    color: var(--sl-color-white);
+  }
+  .region {
+    padding: 0.7rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0.45rem;
+    background: var(--sl-color-gray-5);
+    font-size: var(--sl-text-sm);
+    text-align: center;
+  }
+  .swap {
+    display: grid;
+    place-items: center;
+    min-height: 5rem;
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-accent-low);
+  }
+</style>

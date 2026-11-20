@@ -1,0 +1,135 @@
+---
+title: Components and JSX
+description: Write a component, use it like a tag, and learn the few ways JSX differs from HTML.
+---
+import Anatomy from '../../../components/diagrams/Anatomy.astro';
+import Predict from '../../../components/Predict.astro';
+
+A **component** is a JavaScript function that returns a piece of the page.
+
+```jsx title="components/Greeting.js"
+export default function Greeting() {
+  return <h1>Hello, MISA!</h1>;
+}
+```
+
+That's a whole component. The HTML-looking part after `return` is called **JSX**.
+
+<Anatomy
+  label="The parts of a component"
+  parts={[
+    { text: 'export default', label: 'other files can import it' },
+    { text: ' function ' },
+    { text: 'Greeting', label: 'name starts with a capital' },
+    { text: '() {' },
+    { text: ' return <h1>Hello!</h1>; ', label: 'what it shows' },
+    { text: '}' },
+  ]}
+/>
+
+## Use it like a tag
+
+Once a component exists, you use it the same way you'd use `<h1>` or `<img>`, as a tag:
+
+```jsx title="app/page.js"
+import Greeting from "@/components/Greeting";
+
+export default function HomePage() {
+  return (
+    <section>
+      <Greeting />
+      <Greeting />
+      <p>Welcome to my site.</p>
+    </section>
+  );
+}
+```
+
+This shows the greeting twice, then the paragraph. A page is itself a component, built out of smaller ones. A real site is components all the way down: a page holds a nav, cards, and a footer, and a card might hold a button.
+
+Two rules keep this working:
+
+- **Component names start with a capital letter.** That's how React tells `<Greeting />`, your component, apart from `<p>`, a normal HTML tag.
+- **Self-closing tags need a slash.** `<Greeting />` and `<img />` both need the `/` before `>`.
+
+## JSX is almost HTML
+
+You saw this at the end of the [forms lesson](../../html/forms/#from-html-to-react). Here are the differences again, since you'll hit them constantly:
+
+| In HTML | In JSX | Why |
+| --- | --- | --- |
+| `class="card"` | `className="card"` | `class` already means something in JavaScript |
+| `for="name"` | `htmlFor="name"` | Same reason, for `for` |
+| `<img src="a.png">` | `<img src="a.png" />` | Every tag must be closed |
+| `onclick="..."` | `onClick={...}` | Event names are in camelCase |
+
+There's one more rule that trips people up: **a component returns one parent element.** If you want two things side by side, wrap them in something, such as a `<section>` or a `<div>`.
+
+## Curly braces mean JavaScript
+
+Inside JSX, anything between `{` and `}` is JavaScript. React works it out and puts the result on the page:
+
+```jsx
+export default function Today() {
+  const name = "Niles";
+  const year = 2026;
+
+  return (
+    <p>
+      Hi, {name}! Next year is {year + 1}.
+    </p>
+  );
+}
+```
+
+This shows **Hi, Niles! Next year is 2027.** It's the same idea as `${name}` in a template literal, from [Say hello](../../javascript/hello/).
+
+## Spot the mistake
+
+<Predict question="React complains about this. What's wrong?" options={['The name should start with a capital letter', 'It needs to return two elements', 'class should be className']} answer={2}>
+```jsx
+export default function Card() {
+  return <div class="card">Hello</div>;
+}
+```
+
+In JSX, use `className`. React still shows the page, but the console warns: "Invalid DOM property `class`. Did you mean `className`?"
+</Predict>
+
+<Predict question="Why does this break?" options={['It returns two elements with no parent', 'The h1 has no class', 'You can’t use p inside a component']} answer={0}>
+```jsx
+export default function Intro() {
+  return (
+    <h1>Hi!</h1>
+    <p>I'm new here.</p>
+  );
+}
+```
+
+A component returns one thing. Wrap both in a parent, such as `<section>…</section>`, and it works.
+</Predict>
+
+<Predict question="What shows up on the page?" options={['Score: points * 2', 'Score: {points * 2}', 'Score: 10']} answer={2}>
+```jsx
+const points = 5;
+
+<p>Score: {points * 2}</p>
+```
+
+The curly braces run `points * 2`, which is `10`.
+</Predict>
+
+<Predict question="React treats these two lines differently. Why?" options={['<button> is HTML, <Button /> is your component', 'They do the same thing', 'Capital letters are an error']} answer={0}>
+```jsx
+<button>Save</button>
+<Button />
+```
+
+Lowercase means a normal HTML tag. A capital letter tells React to look for a component called `Button`.
+</Predict>
+
+## Up next
+
+Right now, every `<Greeting />` says exactly the same thing. Next, you'll hand each one its own values.
+
+[Next: Props and lists →](../props/)

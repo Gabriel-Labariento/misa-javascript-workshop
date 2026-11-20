@@ -1,0 +1,70 @@
+---
+title: When something breaks
+description: Fixes for the most common Next.js setup problems and error messages.
+---
+
+Look in two places. Errors in your code show up in the **browser** and in the **VS Code terminal** where `npm run dev` is running. Read the first error, and look for a file name and a line number.
+
+## Setup problems
+
+### `npm` or `node` isn't recognized
+
+Close the terminal and open a new one, since a terminal that was already open can't see newly installed programs. In VS Code, close the whole app and reopen it. Then run `node --version`.
+
+### "Running scripts is disabled on this system"
+
+This is a Windows PowerShell setting. The easiest way around it is to type `npm.cmd` wherever the instructions say `npm`, such as `npm.cmd run dev`. You can also open the dropdown beside the **+** in VS Code's terminal and choose **Command Prompt**.
+
+### `npm` says it can't find `package.json`
+
+The terminal is in the wrong folder. In VS Code, choose **File → Open Folder** and pick the folder that directly contains `package.json`. Unzipping sometimes creates a folder inside a folder, so check that you've picked the inner one.
+
+### `next` isn't recognized, or "Cannot find module"
+
+The project's libraries aren't installed. Run `npm install`, then `npm run dev` again.
+
+## While you're working
+
+### The browser says the site can't be reached
+
+The dev server isn't running. Check the terminal, and run `npm run dev` if it's stopped. Then look at the line starting with `Local:` for the right address. If port 3000 is taken, Next.js may choose another one, like `localhost:3001`.
+
+### My page shows 404
+
+Check that:
+
+- the file is named exactly `page.js`, in lowercase,
+- its folder is inside `app`,
+- the folder name matches the URL, and
+- the file is saved. An unsaved file has a dot on its tab.
+
+### "You're importing a module that depends on `useState`"
+
+The component needs the browser. Add `"use client";` as the first line of the file named in the error. [Server or browser?](../server-browser/) explains why.
+
+### "Event handlers cannot be passed to Client Component props"
+
+This is the same problem in different words. Something with `onClick` or another event is in a server component. Move that part into its own component with `"use client"` at the top.
+
+### "Module not found: Can't resolve..."
+
+An `import` points to a file that isn't there. Compare the path with the real file, letter by letter, including capitals. `@/components/ProfileCard` needs a file at `components/ProfileCard.js`.
+
+### My change doesn't show up
+
+Save the file first. Then reload the browser, and make sure you're looking at the right tab and URL. If it still doesn't change, stop the server with **Ctrl+C**, delete the `.next` folder, and run `npm run dev` again. Next.js rebuilds that folder by itself, so deleting it is safe.
+
+### "Hydration failed" or "didn't match"
+
+The server and the browser produced different HTML. Your own code can cause it, often by showing a random number or the current time, and browser extensions can cause it as well. Try the page in a private window to rule out extensions.
+
+## If you use AI tools
+
+AI is optional in this workshop. If you do use it, two things are specific to Next.js:
+
+- **It may write the older style.** Next.js has two ways of organizing a project. This module uses the current one, called the **App Router**. If you're given a `pages/` folder or something called `getServerSideProps`, that's the older way. Tell it you're using the App Router.
+- **Check it against the three questions.** Which file did it change, which URL does that affect, and is it running on the server or in the browser? As the [final project](../../final-project/) says, you should be able to explain how your project works.
+
+## Still stuck?
+
+Send a mentor the full error message and the file it mentions. The official [Next.js docs](https://nextjs.org/docs) are also good once you know the words to search for.

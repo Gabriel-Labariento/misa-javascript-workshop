@@ -1,0 +1,58 @@
+---
+title: Put it online
+description: Publish your site with GitHub Desktop and Vercel, on your own time, so anyone can open it with a link.
+---
+import Flow from '../../../components/diagrams/Flow.astro';
+
+Do this whenever you're ready. It takes about 15 minutes and uses the same steps you'll want for your [final project](../../final-project/).
+
+**Vercel** is a hosting service from the company that makes Next.js. You connect it to a GitHub repository once. After that, your site updates whenever you push.
+
+<Flow
+  label="Commit your work, push it to GitHub, and Vercel publishes your site"
+  steps={['Your laptop', 'GitHub', 'Your live site']}
+  actions={['push', 'Vercel builds']}
+/>
+
+GitHub Pages, which you may have used for your game, only serves plain files. A Next.js site can also run code on a server, and that's what Vercel adds.
+
+Before you start, read through your pages. Everything you've written will be public, so remove anything you wouldn't want strangers to see, like a phone number.
+
+## 1. Put your project on GitHub
+
+1. Stop the dev server by clicking on the terminal and pressing **Ctrl+C**.
+2. In GitHub Desktop, choose **File → Add local repository** and select your `next-mini-site` folder.
+3. GitHub Desktop will say it isn't a Git repository yet. Click the **create a repository** link in that message, then click **Create repository**.
+4. Click **Publish repository** at the top. It can be public or private, and Vercel works with both.
+
+The project's `.gitignore` file keeps `node_modules` and `.next` off GitHub. They're huge, and Vercel makes its own copies.
+
+## 2. Connect it to Vercel
+
+1. Go to [vercel.com](https://vercel.com) and sign up with **Continue with GitHub**. Choose the free **Hobby** plan.
+2. Add a new project and pick your `next-mini-site` repository from the list. If you don't see it, follow the prompt to give Vercel access to it.
+3. Vercel recognizes Next.js by itself, so leave the settings as they are and click **Deploy**.
+
+After a minute or so, you'll get an address ending in `.vercel.app`. Open it on your phone. That's your site, on the internet.
+
+## 3. Update your site
+
+This is the best part, because there's nothing new to learn:
+
+1. Change something and check it at `localhost:3000`.
+2. In GitHub Desktop, **commit** your change.
+3. Click **Push origin**.
+
+Vercel notices the push and publishes the new version by itself.
+
+## If the deploy fails
+
+A site can work with `npm run dev` and still fail on Vercel, usually because of a mistake that only shows up in the full build. To see the same thing on your laptop, run:
+
+```bash
+npm run build
+```
+
+Fix the first error it shows, then commit and push again. Capital letters are a common cause, because Windows and Mac treat `Profilecard.js` and `ProfileCard.js` as the same file, and Vercel doesn't.
+
+[Next: When something breaks →](../help/)

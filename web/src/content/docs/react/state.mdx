@@ -1,0 +1,176 @@
+---
+title: State and events
+description: Let a component remember a value with useState, change it from a click, and watch the page follow.
+---
+import Playground from '../../../components/Playground.astro';
+import Predict from '../../../components/Predict.astro';
+
+Props are handed to a component from outside. **State** is a value a component keeps for itself, and can change. When state changes, React redraws that component, so the page always matches.
+
+The score in Bop the Bot was state. So is whether a menu is open, what someone has typed into a search box, or how many likes a post has.
+
+## The idea, without React
+
+Before the React version, here's the same idea in plain JavaScript you already know. There's one variable, and one function that draws the page from it. Every click changes the variable, then draws again:
+
+<Playground autorun height={200}>
+```html
+<div id="app"></div>
+```
+```css
+body { font-family: system-ui, sans-serif; padding: 1rem; }
+button {
+  padding: 0.5rem 1rem;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  background: #087a80;
+  border: 0;
+  border-radius: 999px;
+}
+```
+```js
+let likes = 0;
+
+function render() {
+  const app = document.querySelector("#app");
+  app.innerHTML = `<button>♥ ${likes} likes</button>`;
+  app.querySelector("button").addEventListener("click", () => {
+    likes = likes + 1;
+    render();
+  });
+}
+
+render();
+```
+</Playground>
+
+Notice the pattern: **change the data, then draw the page from the data.** You never edit the button's text directly. React works exactly like this, except it calls `render()` for you, and only redraws what changed.
+
+## The same thing in React
+
+```jsx title="components/LikeButton.js"
+import { useState } from "react";
+
+export default function LikeButton() {
+  const [likes, setLikes] = useState(0);
+
+  return (
+    <button onClick={() => setLikes(likes + 1)}>
+      ♥ {likes} likes
+    </button>
+  );
+}
+```
+
+Read the important line slowly:
+
+```jsx
+const [likes, setLikes] = useState(0);
+```
+
+- `useState(0)` asks React to remember a value, starting at `0`.
+- `likes` is the value right now.
+- `setLikes` is the function you call to change it. Calling it is what tells React to redraw.
+
+The names are up to you, but the habit is `thing` and `setThing`: `[open, setOpen]`, `[name, setName]`, `[score, setScore]`.
+
+## Always use the setter
+
+This is the mistake almost everyone makes once:
+
+```jsx
+likes = likes + 1;      // ✗ the number changes, but React never redraws
+setLikes(likes + 1);    // ✓ React changes it and redraws
+```
+
+If you change the variable yourself, React doesn't know anything happened, so the page stays the same.
+
+## Events go right on the element
+
+In Bop the Bot, you found a button, then attached a listener with `addEventListener`. In React, you put the listener right on the element:
+
+```jsx
+<button onClick={() => setLikes(likes + 1)}>Like</button>
+```
+
+You pass `onClick` a function, and React calls it on each click. Other common events work the same way: `onChange` for inputs, `onSubmit` for forms, and `onMouseEnter` for hovering.
+
+## Show something, or don't
+
+State is often just `true` or `false`, such as whether something is shown. You can use it with `&&` to show part of the page only when it's true:
+
+```jsx
+const [open, setOpen] = useState(false);
+
+return (
+  <section>
+    <button onClick={() => setOpen(!open)}>
+      {open ? "Hide" : "Show"} my fun fact
+    </button>
+
+    {open && <p>I can solve a Rubik's cube in under a minute.</p>}
+  </section>
+);
+```
+
+- `!open` flips it: `true` becomes `false`, and `false` becomes `true`.
+- `open ? "Hide" : "Show"` is a short if/else, called a **ternary**: if `open` is true, use `"Hide"`, otherwise use `"Show"`.
+- `open && <p>...</p>` shows the paragraph only while `open` is `true`.
+
+## Check yourself
+
+<Predict question="You click the button three times. What does it show?" options={['♥ 0', '♥ 3', '♥ 1']} answer={0}>
+```jsx
+const [likes, setLikes] = useState(0);
+
+<button onClick={() => { likes = likes + 1; }}>♥ {likes}</button>
+```
+
+It stays at `♥ 0`. The code changes the variable directly instead of calling `setLikes`, so React never redraws. JavaScript won't even let you reassign `likes`, because it's a `const`, so each click also logs an error in the console.
+</Predict>
+
+<Predict question="What does this show before anyone clicks?" options={['Nothing at all', 'Only the button', 'The button and the menu']} answer={1}>
+```jsx
+const [open, setOpen] = useState(false);
+
+<nav>
+  <button onClick={() => setOpen(!open)}>Menu</button>
+  {open && <ul className="menu">...</ul>}
+</nav>
+```
+
+`open` starts as `false`, so the menu is hidden until the first click.
+</Predict>
+
+<Predict question="Is this a prop or state?" options={['A prop: it comes from outside', 'State: the component changes it']} answer={0}>
+```jsx
+<ProfileCard name="Niles Cabrera" />
+```
+
+The page hands `name` to the card, and the card only reads it. That's a prop.
+</Predict>
+
+<Predict question="Is this a prop or state?" options={['A prop: it comes from outside', 'State: the component changes it']} answer={1}>
+```jsx
+const [search, setSearch] = useState("");
+
+<input value={search} onChange={(e) => setSearch(e.target.value)} />
+```
+
+The component keeps what's been typed, and changes it on every keystroke. That's state.
+</Predict>
+
+## The three questions
+
+That's everything you need to read a React page. For any part of it, ask:
+
+1. **What are the pieces?** Look for the capitalized tags. Those are components.
+2. **What does each piece get handed?** Look at the attributes where it's used. Those are props.
+3. **What does each piece remember?** Look for `useState`. That's state.
+
+## Up next
+
+That's all the reading. Time to build some components of your own.
+
+[Next: Build your fun facts →](../activity/)

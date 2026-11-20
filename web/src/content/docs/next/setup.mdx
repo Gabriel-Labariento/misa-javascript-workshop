@@ -1,0 +1,76 @@
+---
+title: Set up the starter
+description: Install Node.js and get the starter project running, so you can go straight to building.
+---
+
+Do this page first, before the rest of Workshop 2. It takes about 15 minutes.
+
+You're done when you can see the starter site in your browser.
+
+## Why there's something new to install
+
+Until now, the browser did all the work. Next.js also runs code on your own computer while you build, and that needs **Node.js**, a program that runs JavaScript outside the browser. Installing it also gives you **npm**, which downloads the libraries a project uses.
+
+## 1. Install Node.js
+
+<details>
+<summary>Windows</summary>
+
+Open **Windows Terminal** or **PowerShell** from the Start menu and run:
+
+```powershell
+winget install --id OpenJS.NodeJS.LTS -e
+```
+
+Close the terminal when it finishes, then open it again so it can find the new program.
+
+</details>
+
+<details>
+<summary>macOS</summary>
+
+You installed Homebrew during the [first setup](../../setup/). Open **Terminal** and run:
+
+```bash
+brew install node
+```
+
+</details>
+
+Check that it worked:
+
+```bash
+node --version
+npm --version
+```
+
+Each one should print a version number. Node.js needs to be **20.9 or newer**.
+
+## 2. Get the starter project
+
+1. [Download the starter project](/downloads/next-mini-site.zip).
+2. Unzip it into a folder you can find, such as Documents. On Windows, right-click the file and choose **Extract All**, because the project won't run from inside the zip. Stay out of OneDrive folders, which can interfere with installing.
+3. In VS Code, choose **File → Open Folder** and pick the `next-mini-site` folder. You should see `package.json` in the file list.
+
+## 3. Install and run it
+
+In VS Code, choose **Terminal → New Terminal**. Run these one at a time:
+
+```bash
+npm install
+npm run dev
+```
+
+`npm install` downloads what the project needs into a folder called `node_modules`. You run it once per project. A warning or two is fine.
+
+`npm run dev` starts the **development server**. It's the same idea as Live Preview: a small server on your own laptop, watching your files. This one keeps running, so the terminal won't give you a new prompt.
+
+Open [http://localhost:3000](http://localhost:3000) in your browser. You should see a profile card for Niles Cabrera.
+
+To stop the server, click on the terminal and press **Ctrl+C**, on Mac too.
+
+## If it didn't work
+
+Check [when something breaks](../help/) for the common setup problems. If you're still stuck, ask a mentor and include the full error message.
+
+[Next: What is Next.js? →](../)

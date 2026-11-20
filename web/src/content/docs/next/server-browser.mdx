@@ -1,0 +1,134 @@
+---
+title: Server or browser?
+description: The one big idea in modern Next.js, where your code runs, and when you need "use client".
+---
+import Flow from '../../../components/diagrams/Flow.astro';
+import Predict from '../../../components/Predict.astro';
+
+In Bop the Bot, all your JavaScript ran in the browser. In Next.js, there are two places your code can run. This page is the hardest idea in the module, and you only need the main rule.
+
+Think of a carinderia. The cooking happens in the **kitchen**, where customers can't see the ingredients or touch the stove. At the **table**, customers can do things for themselves, like mixing their own sawsawan.
+
+| | Kitchen: the **server** | Table: the **browser** |
+| --- | --- | --- |
+| Where it is | A computer you control | The visitor's phone or laptop |
+| Good for | Preparing the page, reading a database, using secret keys | Clicks, typing, anything that responds right away |
+| Can visitors see the code? | No | Yes |
+
+<Flow
+  label="A visitor asks for a page, the server prepares it, and the browser shows it"
+  steps={['Visitor opens /about', 'Server runs your page', 'Browser shows it']}
+  actions={['asks', 'sends HTML']}
+/>
+
+## The rule
+
+**Your components run on the server unless you say otherwise. Add `"use client"` to a file when it needs to respond to the person using the page.**
+
+You need it when a component uses:
+
+- events, like `onClick` or `onChange`,
+- state, like `useState`, or
+- browser features, like `window` or `localStorage`.
+
+`"use client"` goes at the very top of the file, before the imports:
+
+```jsx title="components/LikeButton.js" {1}
+"use client";
+
+import { useState } from "react";
+
+export default function LikeButton() {
+  const [likes, setLikes] = useState(0);
+
+  return <button onClick={() => setLikes(likes + 1)}>♥ {likes}</button>;
+}
+```
+
+Why not put it on everything? Because all browser code has to be downloaded by every visitor, and the server can do things the browser can't. Keep it on the smallest piece that needs it. Here, only the button needs it, and the page around it can stay on the server.
+
+<details>
+<summary>A more exact picture, if you're curious</summary>
+
+"Client" components also run once on the server to produce the first HTML, so the page appears quickly. Then their JavaScript loads in the browser and they become clickable. A better name might be "also runs in the browser." The rule above stays the same.
+
+</details>
+
+## The error you'll definitely meet
+
+If you forget `"use client"`, Next.js stops and tells you exactly what's wrong:
+
+```text
+You're importing a module that depends on `useState` into a
+React Server Component module. This API is only available in
+Client Components. To fix, mark the file (or its parent) with
+the `"use client"` directive.
+```
+
+It looks scary, but the fix is written right there in the last sentence.
+
+## Sort these out
+
+<Predict question="Where does this need to run?" options={['Server, which is the default', 'Browser, so add "use client"']} answer={1}>
+```jsx
+<button onClick={openMenu}>Menu</button>
+```
+
+`onClick` responds to a person, so this needs the browser.
+</Predict>
+
+<Predict question="Where does this need to run?" options={['Server, which is the default', 'Browser, so add "use client"']} answer={0}>
+```jsx
+<h1>Upcoming MISA events</h1>
+```
+
+Nothing here responds to anyone. It's fine on the server, so you don't need to add anything.
+</Predict>
+
+<Predict question="Where should this code run?" options={['Server, which is the default', 'Browser, so add "use client"']} answer={0}>
+```js
+const members = await database.getMembers(process.env.DATABASE_PASSWORD);
+```
+
+Anything sent to the browser can be read by anyone. Passwords and secret keys have to stay in the kitchen.
+</Predict>
+
+<Predict question="Where does this need to run?" options={['Server, which is the default', 'Browser, so add "use client"']} answer={1}>
+```jsx
+const [search, setSearch] = useState("");
+
+<input value={search} onChange={(e) => setSearch(e.target.value)} />
+```
+
+`useState` and `onChange` both react to what someone is doing right now, so this needs the browser.
+</Predict>
+
+## You'll see pages that get data
+
+Because pages run on the server, they can load data directly and then return the result. It tends to look like this:
+
+```jsx title="app/members/page.js"
+export default async function MembersPage() {
+  const members = await getMembers();
+
+  return <p>We have {members.length} members.</p>;
+}
+```
+
+`async` and `await` mean "wait for this to finish before moving on." You don't need to write this yet. When you see it in a project, you'll know why it works: this code is in the kitchen.
+
+## The three questions
+
+You've now got everything you need to find your way around a Next.js project. For any piece of code, ask:
+
+1. **Which file** is this in?
+2. **Which URL** does it show up on?
+3. Does it run on the **server or in the browser**?
+
+If you can answer those, you can read a Next.js project, even one you didn't write.
+
+## Up next
+
+That's all the reading. Time to build something.
+
+[Next: Build your mini site →](../activity/)
