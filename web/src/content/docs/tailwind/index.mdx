@@ -74,11 +74,7 @@ These classes are called **utility classes**, or just utilities. A utility does 
 
 ## Why people like it
 
-Writing styles this way feels odd at first. A long list of classes can look messy next to a clean `class="join"`. Here's what you get for it:
-
-- **You stay in one file.** You don't jump between HTML and CSS, or invent a class name for every box.
-- **Changes stay local.** Editing the classes on one button can't break a different part of the page, the way editing a shared CSS rule can.
-- **The values match.** Spacing, colors, and sizes come from one set of choices, so pages look consistent without extra effort.
+Writing styles this way feels odd at first, and a long list of classes can look messy next to a clean `class="join"`. In return, you stay in one file instead of jumping between HTML and CSS, and you don't have to invent a class name for every box. Editing the classes on one button can't break another part of the page, which can happen when you edit a shared CSS rule. And since spacing, colors, and sizes all come from Tailwind's own set of values, your pages tend to look consistent without extra effort.
 
 It's still CSS underneath. Every Tailwind class turns into the same properties you learned in the CSS module, so that knowledge carries straight over. When a class name doesn't make sense, ask yourself which CSS property it might be.
 

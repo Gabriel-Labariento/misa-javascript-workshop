@@ -23,9 +23,9 @@ export default function Greeting({ name }) {
 }
 ```
 
-Now one component shows **Hello, Niles!** and **Hello, Yani!** Same shape, different values.
+Now the same component shows **Hello, Niles!** in one spot and **Hello, Yani!** in the other.
 
-Think of a component as a form template with blanks, and props as what you write in the blanks. The template doesn't change. Only the answers do.
+Think of a component as a form template with blanks, and props as what you write in the blanks. The template stays the same, and only the answers change.
 
 ## More than one prop
 
@@ -74,7 +74,7 @@ The card has a list of tags, and the page doesn't know ahead of time how many th
 </ul>
 ```
 
-`map` goes through the array and makes one `<li>` for each item. Give it three tags, and you get three `<li>`s. Give it ten, and you get ten. You don't touch the component.
+`map` goes through the array and makes one `<li>` for each item, so three tags give you three `<li>`s and ten give you ten, without any change to the component.
 
 ### What's the key for?
 
@@ -106,7 +106,7 @@ export default function TeamPage() {
 }
 ```
 
-To add a fourth person, you add one line to the array. The page takes care of the rest.
+To add a fourth person, you add one line to the array, and the page updates to match.
 
 ## Check yourself
 
